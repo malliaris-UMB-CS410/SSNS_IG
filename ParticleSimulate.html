@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Particle Simulation</title>
+        <style>
+            #canvasContainer {
+                overflow: auto;
+                margin-top: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div style="display: grid; grid-template-columns: 1fr 100px; grid-template-rows: repeat(6, auto); gap: 10px;
+         width: 320px; height: 100px;">
+            <label for="boxWidth" style="grid-column: 1; grid-row: 1; text-align: right;">Box Width:</label>
+            <input type="number" id="boxWidth" min="0" value="4" style="grid-column: 2; grid-row: 1;">
+
+            <label for="boxHeight" style="grid-column: 1; grid-row: 2; text-align: right;">Box Height:</label>
+            <input type="number" id="boxHeight" min="0" value="4" style="grid-column: 2; grid-row: 2;">
+
+            <label for="velocityMagnitude" style="grid-column: 1; grid-row: 3; text-align: right;">Velocity Magnitude:</label>
+            <input type="number" id="velocityMagnitude" min="0" value="2" style="grid-column: 2; grid-row: 3;">
+
+            <label for="numParticles" style="grid-column: 1; grid-row: 4; text-align: right;">Number of Particles:</label>
+            <input type="number" id="numParticles" min="0" value="10" style="grid-column: 2; grid-row: 4;">
+            
+            <label for="mode" style="grid-column: 1; grid-row: 6; text-align: right;">Mode:</label>
+            <select id="mode" style="grid-column: 2; grid-row: 6;">
+                <option value="0">Bounce</option>
+                <option value="1">Wrap</option>
+            </select>
+            
+            <button id="startSimulation" style="grid-column: 1 / span 2; grid-row: 7;">Start Simulation</button>
+        </div>
+        <div id="canvasContainer"></div>
+        <script src="js/ParticleSimulate.js"></script>
+    </body>
+</html>

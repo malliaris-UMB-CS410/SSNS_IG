@@ -1,0 +1,108 @@
+
+/*  SSNS.css  */
+
+#navbar_div_container {} /*background-color: #eee; }*/
+.nav-link {color: #222222; }
+#navbar_message       {color: #505050; font-size: 16px; }
+#plot_container {}
+
+
+#copyright_text {
+    font-size: 65%;
+}
+
+.lrg_bg_areas {
+    background-color: #f0f0f0;/*f7f7f7;*/
+}
+
+/* NOTE: 350px and related values are just placeholders -- actual values are set programmatically in SSNS.js */
+/* NOTE: ***** DO NOT ***** set CSS width, height of .plot_target since some targets are canvas elements which take attributes */
+.plot_target          {margin-left: 2em; display:none; }  /* match margin-left here */
+#plot_x_axis_lbl      {margin-left: 2em; height: 3em; width: 350px; font-size: 18px; padding-top: 0.25em; text-align: center; }  /* and margin-left here */
+#plot_y_axis_lbl      {position: absolute; height: 2em; width: 350px; left: 0px; top: 0px; font-size: 18px; padding-top: 0.0em; text-align: center;  /* with height here */
+		       transform: rotate(-90deg) translateX(-175px); transform-origin: left top; }
+
+.btn-ssns {
+    color: #ffffff;
+    background-color: #bbbbbb;
+    border-color: #ffffff;
+}
+.btn-ssns:hover {
+    color: #ffffff;
+    background-color: #b0b0b0;
+}
+.btn-ssns[disabled] {
+    color: #eeeeee;
+    background-color: #cccccc;
+    border-color: #eeeeee;
+    opacity: 1.0;
+}
+.btn-ssns-emphasis {
+    color: #ffffff;
+    background-color: #999999;
+    border-color: #ffffff;
+}
+.btn-ssns-emphasis:hover {  /* needed on mobile (!) */
+    color: #ffffff;
+    background-color: #999999;
+}
+.btn-ssns-demo {
+    color: #ffffff;
+    background-color: #bbbbbb;
+    pointer-events: none;
+}
+.emulated_help_btn {
+    background-color: #999999;
+    pointer-events: none;
+    padding: 0 4px 1px 4px;
+    margin-bottom: 4px;
+}
+.plot_icon_axes            {border-left: 3px solid; border-bottom: 3px solid; border-radius: 0px 0px 0px 3px; }
+
+.gentle_warning            {color: #bbbbbb; }
+.btn_contrast_txt          {color: #aaaaaa; }
+
+.btn_w_txt                 {letter-spacing: 0.05em; }
+
+.t_indicators_etc          {pointer-events: none; color: #000000; background-color: #cccccc; }  /* match colors to .btn-ssns entries above */
+#PRMS_icon_and_indicator   {border: 0px solid yellow; }
+.dd_caret                  {color: #eeeeee; }
+
+.SA_selected               {background-color: #edc078; }  /* f0c175  ...........e9e5e2 is background of main site banner image */
+.SA_unselected:hover       {background-color: #f2c988; }  /*  */
+.SA_unselected             {background-color: #f5d095; }  /* f5cb89 */
+.ST_selected               {background-color: #f0db7a; }  /* f5da61 f0d975 */
+.ST_unselected:hover       {background-color: #f4e290; }  /*  */
+.ST_unselected             {background-color: #f7e7a1; }  /* fce682 f5e18a */
+.ST_unselected_disabled    {background-color: #f9edb9; }  /* NOTE: was easier to use class w "_disabled" than selector ":disabled" */
+
+.katex_txt                 {color: #666666; }
+.ctrl_eff_immed            {background-color: #e1f3ff; }       /* controls for which a change takes effect "immediately" */
+.ctrl_eff_reload           {background-color: #dbffe8; }       /* controls for which a change takes effect on next reload */
+.katex_symb                {width: 3.2em; }
+
+#md_txt                    {font-size: 18px; margin-bottom: -0.75rem; }  /* (negative margin-bottom offsets positive margin-bottom from p, ul, etc.) */
+#md_txt p                  {margin-bottom: 1.0rem; }
+#md_txt ul                 {margin-bottom: 1.0rem; padding-left: 1.5rem; }
+#md_header                 {line-height: 26px; }
+.hv_view                   {display: none; }
+.hv_link                   {color: #108bff; text-decoration: underline; }
+.hv_link:hover             {color: #108bff; text-decoration: none; cursor:pointer; }
+.hv_link:focus             {color: #108bff; text-decoration: underline; }
+.hv_ext_link               {color: #0505bb; text-decoration: underline; }
+.hv_ext_link:hover         {color: #0505bb; text-decoration: none; }
+.hv_disabled_link          {color: #cccccc; pointer-events: none; }
+.hv_home_curr              {color: #000000; pointer-events: none; padding-top: 0.6rem; border: 1px solid #333333; }
+.hv_home_curr:hover        {color: #000000; }  /* needed for Android Chrome mobile (!) */
+.hv_curr_page              {padding: 0.06rem 0.2rem; color: #333333; border: 1px solid #333333; }
+.hv_curr_page_not_ready    {padding: 0.06rem 0.2rem; color: #333333; border: 1px solid orange; }  /* DELETE WHEN READY */
+.hv_emulated_btn           {color: #ffffff; background-color: #bbbbbb; }  /* match colors to .btn-ssns entries above */
+.hv_emulated_btn_td        {text-align: center; vertical-align: middle !important; }
+.hv_emulated_btn_span      {color: #ffffff; background-color: #bbbbbb; }  /* match colors to .btn-ssns entries above */
+.hv_emulated_PRMS_span     {padding: 2px 0 0 0; color: #ffffff; background-color: #bbbbbb; }  /* match colors to .btn-ssns entries above */
+.hv_emulated_CTRL_span     {padding: 2px 0 0 0; color: #ffffff; background-color: #bbbbbb; }  /* match colors to .btn-ssns entries above */
+.hv_emulated_SYS_span      {padding: 1px 2px 0 2px; color: #ffffff; background-color: #bbbbbb; }  /* match colors to .btn-ssns entries above */
+#hv_back_btn               {border-right: 1px solid #cccccc; border-top: 1px solid #cccccc; border-radius: 0px 5px 0px 0px; }
+.hv_close_btn              {color: #7f7f7f; }
+.hv_fw_img                 {display: block; margin: 0 auto 0.75em auto; }  /* NOTE: width set programmatically in js HelpViewer() */
+#hv_ssns_screenshot        {float: right; margin-bottom: 0.75em; padding-left: 0.5rem; }  /* NOTE: width set programmatically in js HelpViewer() */

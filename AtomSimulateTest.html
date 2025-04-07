@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>Atom Simulation</title>
+        <style>
+             #canvasContainer {
+                overflow: auto;
+                margin-top: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div style="display: grid; grid-template-columns: 1fr 100px; grid-template-rows: repeat(6, auto); gap: 10px;
+         width: 320px; height: 100px;">
+            <label for="volume" style="grid-column: 1; grid-row: 1; text-align: right;">Volume:</label>
+            <input type="number" id="volume" value="5" style="grid-column: 2; grid-row: 1;">
+            
+
+            <label for="temperature" style="grid-column: 1; grid-row: 2; text-align: right;">Temperature:</label>
+            <input type="number" id="temperature" value="20" style="grid-column: 2; grid-row: 2;">
+
+            <label for="pressure" style="grid-column: 1; grid-row: 3; text-align: right;">Pressure:</label>
+            <input type="number" id="pressure" value="1" style="grid-column: 2; grid-row: 3;">
+
+            <label for="particles" style="grid-column: 1; grid-row: 4; text-align: right;">N:</label>
+            <input type="number" id="particles" value="6000" style="grid-column: 2; grid-row: 4;">
+
+            <label for="maxSteps" style="grid-column: 1; grid-row: 5; text-align: right;">Max Steps:</label>
+            <input type="number" id="maxSteps" value="999" style="grid-column: 2; grid-row: 5;">
+
+            <label for="mode" style="grid-column: 1; grid-row: 6; text-align: right;">Mode (0-bounce / 1-wrap):</label>
+            <input type="number" id="mode" value="0" style="grid-column: 2; grid-row: 6;">
+
+            <button id="startSimulation" style="grid-column: 1 / span 2; grid-row: 7;">Start Simulation</button>
+        </div>
+
+        <div>
+
+        </div  style="display: grid; grid-template-columns: 1fr 100px; grid-template-rows: repeat(6, auto); gap: 10px;
+         width: 320px; height: 100px;">
+         
+         </div  style="display: grid; grid-template-columns: 1fr 100px; grid-template-rows: repeat(6, auto); gap: 10px;
+         width: 320px; height: 100px;">
+
+        <div id="canvasContainer" style="display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 130px;">
+            <div id="atomContainer" style="width: 10%;">
+            </div>
+            <div id="distributionContainer" style="width: 20%;">
+            </div>
+        </div>
+        <script src="js/AtomSimulate.js"></script>
+    </body>
+</html>
