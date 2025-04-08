@@ -176,6 +176,7 @@ document.getElementById('startSimulation').addEventListener('click', function ()
     const userVelocity = parseFloat(document.getElementById('velocityMagnitude').value) / 10;
     const numParticles = parseInt(document.getElementById('numParticles').value);
     const mode = parseInt(document.getElementById('mode').value);
+    const isCollision = parseInt(document.getElementById('isCollision').value);
 
     // validate the input
     if (!validateInput(userBoxWidth) || !validateInput(userBoxHeight) || !validateInput(userVelocity)
@@ -310,7 +311,7 @@ document.getElementById('startSimulation').addEventListener('click', function ()
         // limited 30 FPS
         const timeStep = Math.min(deltaTime / 1000, maxTimeStep);
 
-        handleCollisions();
+        if (isCollision) handleCollisions();
 
         // update particles position
         particles.forEach(atom => {
