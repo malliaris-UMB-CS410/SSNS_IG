@@ -89,6 +89,28 @@ class PlotTypeHM extends PlotType {
     }
 }
 
+class PlotTypeHM_IG extends PlotTypeHM {
+
+    constructor(trj) {
+
+	super();
+
+	this.trj = trj;
+	console.log(trj);
+	this.determine_tile_canv_dims(this.trj.mc.N);
+	this.setup_canvas_etc();
+    }
+
+    get_html_targ_id_str() {
+	return "plot_HM_IG";  // heatmaps are rendered on an html canvas and maintain state, so must be ST-dependent
+    }
+
+    get_color_from_spin_val(v) {  // translates a numeric spin value into an html color string
+
+	return ((v == 0) ? "hsl(29, 85%, 44%)" : "hsl(52, 100%, 51%)");  // dark orange hsl(29, 85%, 44%), bright yellow hsl(52, 100%, 51%)
+    }
+}
+
 class PlotTypeHM_IS extends PlotTypeHM {
 
     constructor(trj) {

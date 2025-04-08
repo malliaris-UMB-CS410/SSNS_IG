@@ -86,6 +86,7 @@
 <div id="plot_y_axis_lbl"></div>
 
 <div id="plot_flot" class="plot_target"></div>
+<canvas id="plot_HM_IG" class="plot_target"></canvas>
 <canvas id="plot_HM_IS" class="plot_target"></canvas>
 <canvas id="plot_HM_XY" class="plot_target"></canvas>
 
@@ -201,6 +202,17 @@
 
 <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SP_CH_x_0'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ x_0 $$ </span></div>
     <label for="UI_P_SP_CH_x_0"></label><input id="UI_P_SP_CH_x_0" class="form-control" type="number" min="0" max="10000" step="1" value="5" onchange="Coords_CH.x_0.try_update(this.value); "></div></div>
+
+</div><!-- CLOSES div class="row" -->
+
+
+<div class="row" id="UI_P_SM_IG">
+
+    <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SM_IG_T'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_immed px-2 py-1"> $$ T $$ </span></div>
+    <label for="UI_P_SM_IG_T"></label><input id="UI_P_SM_IG_T" class="form-control" type="number" min="0.0" max="1000000000" step="0.01" value="0.0" onchange="Params_IG.T.try_update(this.value); "></div></div>
+
+    <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SM_IG_N'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ N $$ </span></div>
+    <label for="UI_P_SM_IG_N"></label><input id="UI_P_SM_IG_N" class="form-control" type="number" min="2" max="10000" step="1" value="4" onchange="Coords_IG.N.try_update(this.value); "></div></div>
 
 </div><!-- CLOSES div class="row" -->
 
@@ -470,7 +482,7 @@
 
 <div id="UI_ST_area_SM">
 <div id="UI_ST_SM_IG_form_check" class="form-check pl-4 py-1">
-<input class="form-check-input" type="radio" name="UI_ST" id="UI_ST_SM_IG" value="IG" onchange="window.sim.process_cmd('ST'); " disabled>
+<input class="form-check-input" type="radio" name="UI_ST" id="UI_ST_SM_IG" value="IG" onchange="window.sim.process_cmd('ST'); ">
 <label class="form-check-label w-100" for="UI_ST_SM_IG">2D ideal gas ($$ \texttt{IG} $$)</label>
 </div>
 <div id="UI_ST_SM_IS_form_check" class="form-check pl-4 py-1">
@@ -1231,6 +1243,7 @@ parameters are speed of upper, lower boundaries and of "observer", pressure grad
 <script src="js/system_types/RW.js"></script>
 <script src="js/system_types/MN.js"></script>
 <script src="js/system_types/CH.js"></script>
+<script src="js/system_types/IG.js"></script>
 <script src="js/system_types/IS.js"></script>
 <script src="js/system_types/XY.js"></script>
 <script src="js/system_types/LM.js"></script>
