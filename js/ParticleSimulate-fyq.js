@@ -181,7 +181,9 @@ document.getElementById('startSimulation').addEventListener('click', function ()
     const air_mass = 28.96*10^(-3);
     const m = air_mass;
     const k = 1.38*10^(-23);
-    const userVelocity = Math.sqrt((3*k*temperature)/m)*1000*1000*1000;
+    //var userVelocity = Math.sqrt((3*k*temperature)/m)*1000*1000*1000;
+    var userVelocity = temperature / 10;
+    var bounce = 0;
     
 
     // validate the input
@@ -344,8 +346,9 @@ document.getElementById('startSimulation').addEventListener('click', function ()
     }
     animationId = requestAnimationFrame(animate);
 });
-function collision_pressure_calc(mass, magnitude) {
-    
+function collision_pressure_calc(mass, magnitude, bounce) {
+    Bounce += 1;
+
 
 }
 
