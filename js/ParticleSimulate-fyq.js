@@ -192,9 +192,15 @@ document.getElementById('startSimulation').addEventListener('click', function ()
     //var userVelocity = temperature / 10;
 
     const Bounce_Count = document.getElementById("Bounce_Count");
-    var bounce = 0;
+    var Bounce = 0;
     Bounce_Count.textContent = bounce;
     
+
+    function collision_pressure_calc(){//mass, magnitude, bounce) {
+        Bounce += 1;
+        Bounce_Count.textContent = Bounce;
+    
+    }
 
     // validate the input
     if (!validateInput(userBoxSize) || !validateInput(userBoxSize) || !validateInput(userVelocity)
@@ -356,11 +362,6 @@ document.getElementById('startSimulation').addEventListener('click', function ()
     }
     animationId = requestAnimationFrame(animate);
 });
-function collision_pressure_calc(){//mass, magnitude, bounce) {
-    Bounce += 1;
-    Bounce_Count.textContent = Bounce;
-
-}
 
 
 
