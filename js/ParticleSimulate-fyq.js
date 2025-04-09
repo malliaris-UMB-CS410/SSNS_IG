@@ -1,3 +1,35 @@
+const Bounce_Count = document.getElementById("Bounce_Count");
+var Pressure_calc = document.getElementById("Pressure_calc");
+var Pressure_sim = document.getElementById("Pressure_sim");
+const userBoxSize = parseFloat(document.getElementById('boxSize').value);
+const temperature = parseFloat(document.getElementById('temperature').value);
+var numParticles = parseInt(document.getElementById('numParticles').value);
+const boundaryType = parseInt(document.getElementById('boundaryType').value);				// interaction with walls
+const interactionType = parseInt(document.getElementById('interactionType').value); // interaction with particles
+
+const air_mass = 5.32 * Math.pow(10, -26);
+console.log(air_mass);
+const m = air_mass;
+const k = 1.38 * Math.pow(10, -23);;
+var userVelocity = Math.sqrt((3*k*temperature)/m)/1000;
+var pressure_calc = (numParticles*k*temperature) / userBoxSize;
+Pressure_calc.textContent = pressure_calc;
+var pressure_sim = 0;
+var Bounce = 0;
+Bounce_Count.textContent = Bounce;
+var sim_time = 0;
+
+
+
+function collision_pressure_calc(time){//mass, magnitude, bounce) {
+    Bounce += 1;
+    Bounce_Count.textContent = Bounce;
+    sim_time += time;
+    pressure_sim = ((2*m*userVelocity) / (userBoxSize*sim_time))*Bounce;
+    Pressure_sim.textContent = pressure_sim;
+
+}
+
 class Atom {
     constructor(x, y, vx, vy, radius=5, mass=1) {
         this.x = x;
@@ -17,16 +49,20 @@ class Atom {
             // Wrap mode
             if (newX < -BoxSize / 2) {
                 this.x = newX + BoxSize;
+                collision_pressure_calc(timeStep);
             } else if (newX > BoxSize / 2) {
                 this.x = newX - BoxSize;
+                collision_pressure_calc(timeStep);
             } else {
                 this.x = newX;
             }
 
             if (newY < -BoxSize / 2) {
                 this.y = newY + BoxSize;
+                collision_pressure_calc(timeStep);
             } else if (newY > BoxSize / 2) {
                 this.y = newY - BoxSize;
+                collision_pressure_calc(timeStep);
             } else {
                 this.y = newY;
             }
@@ -39,12 +75,14 @@ class Atom {
 
                 // prevents particles from getting stuck in boundaries
                 this.x = Math.max(-BoxSize / 2 + radiusOffset, Math.min(BoxSize / 2 - radiusOffset, newX));
+                collision_pressure_calc(timeStep);
             }
             if (newY - radiusOffset < -BoxSize / 2 || newY + radiusOffset > BoxSize / 2) {
                 this.vy *= -1; // Reverse velocity in Y
 
                 // prevents particles from getting stuck in boundaries
                 this.y = Math.max(-BoxSize / 2 + radiusOffset, Math.min(BoxSize / 2 - radiusOffset, newY));
+                collision_pressure_calc(timeStep);
             }
             this.x = newX;
             this.y = newY;
@@ -157,6 +195,14 @@ class Atom {
 let animationId = null;
 document.getElementById('startSimulation').addEventListener('click', function () {
     // clean previous animation frame resource
+    Bounce = 0;
+    Bounce_Count.textContent = Bounce;
+    pressure_calc = (numParticles*k*temperature) / userBoxSize;
+    Pressure_calc.textContent = pressure_calc;
+    console.log(numParticles);
+    numParticles = parseInt(document.getElementById('numParticles').value);
+
+    sim_time = 0;
     if (animationId) {
         cancelAnimationFrame(animationId);
         const canvasContainer = document.getElementById('canvasContainer');
@@ -172,13 +218,6 @@ document.getElementById('startSimulation').addEventListener('click', function ()
         return true;
     }
 
-    const userBoxSize = parseFloat(document.getElementById('boxSize').value);
-    const userVelocity = parseFloat(document.getElementById('velocityMagnitude').value) / 10;
-    const numParticles = parseInt(document.getElementById('numParticles').value);
-    const boundaryType = parseInt(document.getElementById('boundaryType').value);				// interaction with walls
-    const interactionType = parseInt(document.getElementById('interactionType').value); // interaction with particles
-    
-    
 
     // validate the input
     if (!validateInput(userBoxSize) || !validateInput(userBoxSize) || !validateInput(userVelocity)
@@ -340,3 +379,6 @@ document.getElementById('startSimulation').addEventListener('click', function ()
     }
     animationId = requestAnimationFrame(animate);
 });
+
+
+
