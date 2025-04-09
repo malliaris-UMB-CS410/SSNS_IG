@@ -180,7 +180,7 @@ document.getElementById('startSimulation').addEventListener('click', function ()
 
     const air_mass = 28.96*10^-3;
     const k = 1.38*10^(-38);
-    const userVelocity = sqrt((3*k*temperature)/m)*1000*1000;
+    const userVelocity = Math.sqrt((3*k*temperature)/m)*1000*1000;
     
     
 
