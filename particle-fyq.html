@@ -12,9 +12,9 @@
         </style>
     </head>
     <body>
-        <div style="display: grid; grid-template-columns: 1fr 100px; grid-template-rows: repeat(7, auto); gap: 10px;
+        <div style="display: grid; grid-template-columns: 1fr 180px; grid-template-rows: repeat(100, auto); gap: 10px;
          width: 320px; height: 100px;">
-            <label for="boxSize" style="grid-column: 1; grid-row: 2; text-align: right;">Box Size:</label>
+            <label for="boxSize" style="grid-column: 1; grid-row: 2; text-align: right;">Volume:</label>
             <input type="number" id="boxSize" min="0" value="4" style="grid-column: 2; grid-row: 2;">
 
             <label for="temperature" style="grid-column: 1; grid-row: 3; text-align: right;">temperature:</label>
@@ -37,11 +37,17 @@
             
             <button id="startSimulation" style="grid-column: 1 / span 2; grid-row: 7;">Start Simulation</button>
 
-            <label for="Bounce_Count" style="grid-column: 1; grid-row: 8; text-align: right;">Bounce Count:</label>
-            <span id="Bounce_Count" style="grid-column: 2; grid-row: 8;">0</span>
-            
+            <label for="Bounce_Count" style="grid-column: 1; grid-row: 50; text-align: right;">Bounce Count:</label>
+            <span id="Bounce_Count" style="grid-column: 2; grid-row: 50;">0</span>
+
+            <label for="Pressure_calc" style="grid-column: 1; grid-row: 51; text-align: right;">Pressure_Calc:</label>
+            <span id="Pressure_calc" style="grid-column: 2; grid-row: 51;">0</span>
+
+            <label for="Pressure_sim" style="grid-column: 1; grid-row: 52; text-align: right;">Pressure_Sim:</label>
+            <span id="Pressure_sim" style="grid-column: 2; grid-row: 52;">0</span>
         </div>
         <div id="canvasContainer"></div>
         <script src="js/ParticleSimulate-fyq.js"></script>
+
     </body>
 </html>
