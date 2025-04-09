@@ -172,7 +172,7 @@ document.getElementById('startSimulation').addEventListener('click', function ()
         return true;
     }
 
-    const userBoxSize = parseFloat(document.getElementById('boxSize').value);
+    const userBoxSize = parseFloat(document.getElementById('BoxSize').value);
     const userVelocity = parseFloat(document.getElementById('velocityMagnitude').value) / 10;
     const numParticles = parseInt(document.getElementById('numParticles').value);
     const boundaryType = parseInt(document.getElementById('boundaryType').value);				// interaction with walls
@@ -241,7 +241,7 @@ document.getElementById('startSimulation').addEventListener('click', function ()
                 console.warn('Could not find non-overlapping position after', maxAttempts, 'attempts');
                 break;
             }
-        } while (!isPositionValid(x, y, particles, minDistance, userBoxSize, userBoxSize));
+        } while (!isPositionValid(x, y, particles, minDistance, userBoxSize));
 
         const atom = new Atom(
             x, y, vx, vy, particleRadius, 1 // x, y, vx, vy, radius, mass
@@ -323,7 +323,7 @@ document.getElementById('startSimulation').addEventListener('click', function ()
 
         
         particles.forEach(atom => {
-    atom.updatePosition(timeStep, userBoxSize, userBoxSize, boundaryType);
+    atom.updatePosition(timeStep, userBoxSize, boundaryType);
     
     if (!boundaryType) {
         const radiusOffset = atom.radius / 100;
