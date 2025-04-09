@@ -173,10 +173,14 @@ document.getElementById('startSimulation').addEventListener('click', function ()
     }
 
     const userBoxSize = parseFloat(document.getElementById('boxSize').value);
-    const userVelocity = parseFloat(document.getElementById('velocityMagnitude').value) / 10;
+    const temperature = parseFloat(document.getElementById('temperature').value);
     const numParticles = parseInt(document.getElementById('numParticles').value);
     const boundaryType = parseInt(document.getElementById('boundaryType').value);				// interaction with walls
     const interactionType = parseInt(document.getElementById('interactionType').value); // interaction with particles
+
+    const air_mass = 28.96*10^-3;
+    const k = 1.38*10^(-38);
+    const userVelocity = sqrt((3*k*temperature)/m)*1000*1000;
     
     
 
@@ -340,3 +344,10 @@ document.getElementById('startSimulation').addEventListener('click', function ()
     }
     animationId = requestAnimationFrame(animate);
 });
+function collision_pressure_calc(mass, magnitude) {
+    
+
+}
+
+
+
