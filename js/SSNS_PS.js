@@ -21,16 +21,23 @@ class ParticleSimulate {
         // Clear existing particles
         this.particles = [];
 
+        // Calculate root mean square speed based on temperature
+        const rmsSpeed = Math.sqrt(3 * this.params.T); // v_rms = sqrt(3 * T)
+
         // Initialize new particles
         for (let i = 0; i < N; i++) {
+            // Generate random direction and scale by rmsSpeed
+            const theta = Math.random() * 2 * Math.PI; // Random angle in [0, 2π)
+            const speed = rmsSpeed * Math.sqrt(-2 * Math.log(Math.random())); // Maxwell-Boltzmann distribution
             this.particles.push({
                 x: Math.random(), // Random x position in [0, 1)
                 y: Math.random(), // Random y position in [0, 1)
-                vx: (Math.random() - 0.5) * 2, // Random velocity in [-1, 1)
-                vy: (Math.random() - 0.5) * 2 // Random velocity in [-1, 1)
+                vx: speed * Math.cos(theta), // Velocity x-component
+                vy: speed * Math.sin(theta) // Velocity y-component
             });
         }
     }
+
 
     update(dt) {
         // Update particle positions based on velocity
@@ -92,6 +99,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const particleSimulate = new ParticleSimulate(params);
     const canvas = document.getElementById('plot_HM_IG');
     const ctx = canvas.getContext('2d');
+
+    // Listen for changes in T
+    inputT.addEventListener("input", () => {
+        const newT = parseFloat(inputT.value);
+        if (!isNaN(newT)) {
+            params.T = newT;
+            particleSimulate.params.T = newT; // Update temperature in the simulation
+            particleSimulate.updateParticles(params.N); // Reinitialize particles with new speed
+        }
+    });
+
 
     // Listen for changes in N
     inputN.addEventListener("input", () => {
