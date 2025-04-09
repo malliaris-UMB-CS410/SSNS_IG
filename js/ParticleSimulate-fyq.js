@@ -1,3 +1,13 @@
+const Bounce_Count = document.getElementById("Bounce_Count");
+var Bounce = 0;
+Bounce_Count.textContent = Bounce;
+
+function collision_pressure_calc(){//mass, magnitude, bounce) {
+    Bounce += 1;
+    Bounce_Count.textContent = Bounce;
+
+}
+
 class Atom {
     constructor(x, y, vx, vy, radius=5, mass=1) {
         this.x = x;
@@ -17,20 +27,20 @@ class Atom {
             // Wrap mode
             if (newX < -BoxSize / 2) {
                 this.x = newX + BoxSize;
-                collision_pressure_calc()
+                collision_pressure_calc();
             } else if (newX > BoxSize / 2) {
                 this.x = newX - BoxSize;
-                collision_pressure_calc()
+                collision_pressure_calc();
             } else {
                 this.x = newX;
             }
 
             if (newY < -BoxSize / 2) {
                 this.y = newY + BoxSize;
-                collision_pressure_calc()
+                collision_pressure_calc();
             } else if (newY > BoxSize / 2) {
                 this.y = newY - BoxSize;
-                collision_pressure_calc()
+                collision_pressure_calc();
             } else {
                 this.y = newY;
             }
@@ -190,17 +200,6 @@ document.getElementById('startSimulation').addEventListener('click', function ()
     const k = 1.38 * Math.pow(10, -23);;
     var userVelocity = Math.sqrt((3*k*temperature)/m)/1000;
     //var userVelocity = temperature / 10;
-
-    const Bounce_Count = document.getElementById("Bounce_Count");
-    var Bounce = 0;
-    Bounce_Count.textContent = Bounce;
-    
-
-    function collision_pressure_calc(){//mass, magnitude, bounce) {
-        Bounce += 1;
-        Bounce_Count.textContent = Bounce;
-    
-    }
 
     // validate the input
     if (!validateInput(userBoxSize) || !validateInput(userBoxSize) || !validateInput(userVelocity)
