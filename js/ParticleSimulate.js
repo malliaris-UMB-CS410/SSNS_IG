@@ -254,13 +254,13 @@ document.getElementById('startSimulation').addEventListener('click', function ()
     canvas.height = userBoxHeight * 100;
     canvas.style.border = "1px solid black";
 
-    const button = document.getElementById('startSimulation');
-    const buttonTop = button.getBoundingClientRect().top;
-    const buttonHeight = button.offsetHeight
+    const boxWidthObj = document.getElementById('boxWidth');
+    const boxWidthRect = boxWidthObj.getBoundingClientRect();
 
     const canvasContainer = document.getElementById('canvasContainer');
     canvasContainer.style.position = "absolute";
-    canvasContainer.style.top = `${buttonTop + buttonHeight}px`;
+    canvasContainer.style.top = `${boxWidthRect.top - 10}px`;
+    canvasContainer.style.left = `${boxWidthRect.right + 20}px`
     canvasContainer.innerHTML = '';
     canvasContainer.style.width = `${canvas.width * 1.5}px`;
     canvasContainer.style.height = `${canvas.height * 1.5}px`;
