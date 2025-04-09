@@ -179,6 +179,7 @@ document.getElementById('startSimulation').addEventListener('click', function ()
     const interactionType = parseInt(document.getElementById('interactionType').value); // interaction with particles
 
     const air_mass = 28.96*10^-3;
+    const m = air_mass;
     const k = 1.38*10^(-38);
     const userVelocity = Math.sqrt((3*k*temperature)/m)*1000*1000;
     
