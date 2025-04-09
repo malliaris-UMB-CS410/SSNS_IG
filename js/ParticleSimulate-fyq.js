@@ -17,16 +17,20 @@ class Atom {
             // Wrap mode
             if (newX < -BoxSize / 2) {
                 this.x = newX + BoxSize;
+                collision_pressure_calc()
             } else if (newX > BoxSize / 2) {
                 this.x = newX - BoxSize;
+                collision_pressure_calc()
             } else {
                 this.x = newX;
             }
 
             if (newY < -BoxSize / 2) {
                 this.y = newY + BoxSize;
+                collision_pressure_calc()
             } else if (newY > BoxSize / 2) {
                 this.y = newY - BoxSize;
+                collision_pressure_calc()
             } else {
                 this.y = newY;
             }
@@ -39,12 +43,14 @@ class Atom {
 
                 // prevents particles from getting stuck in boundaries
                 this.x = Math.max(-BoxSize / 2 + radiusOffset, Math.min(BoxSize / 2 - radiusOffset, newX));
+                collision_pressure_calc()
             }
             if (newY - radiusOffset < -BoxSize / 2 || newY + radiusOffset > BoxSize / 2) {
                 this.vy *= -1; // Reverse velocity in Y
 
                 // prevents particles from getting stuck in boundaries
                 this.y = Math.max(-BoxSize / 2 + radiusOffset, Math.min(BoxSize / 2 - radiusOffset, newY));
+                collision_pressure_calc()
             }
             this.x = newX;
             this.y = newY;
@@ -184,7 +190,10 @@ document.getElementById('startSimulation').addEventListener('click', function ()
     const k = 1.38 * Math.pow(10, -23);;
     var userVelocity = Math.sqrt((3*k*temperature)/m)/1000;
     //var userVelocity = temperature / 10;
+
+    const Bounce_Count = document.getElementById("Bounce_Count");
     var bounce = 0;
+    Bounce_Count.textContent = bounce;
     
 
     // validate the input
@@ -347,9 +356,9 @@ document.getElementById('startSimulation').addEventListener('click', function ()
     }
     animationId = requestAnimationFrame(animate);
 });
-function collision_pressure_calc(mass, magnitude, bounce) {
+function collision_pressure_calc(){//mass, magnitude, bounce) {
     Bounce += 1;
-
+    Bounce_Count.textContent = Bounce;
 
 }
 
