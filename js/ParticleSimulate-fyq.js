@@ -182,7 +182,7 @@ document.getElementById('startSimulation').addEventListener('click', function ()
     console.log(air_mass);
     const m = air_mass;
     const k = 1.38*10^(-23);
-    var userVelocity = Math.sqrt((3*k*temperature)/m)/1000;
+    var userVelocity = Math.sqrt((3*k*temperature)/m);
     //var userVelocity = temperature / 10;
     var bounce = 0;
     
