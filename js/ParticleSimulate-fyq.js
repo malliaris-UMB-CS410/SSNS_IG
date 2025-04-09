@@ -172,7 +172,7 @@ document.getElementById('startSimulation').addEventListener('click', function ()
         return true;
     }
 
-    const userBoxSize = parseFloat(document.getElementById('BoxSize').value);
+    const userBoxSize = parseFloat(document.getElementById('boxSize').value);
     const userVelocity = parseFloat(document.getElementById('velocityMagnitude').value) / 10;
     const numParticles = parseInt(document.getElementById('numParticles').value);
     const boundaryType = parseInt(document.getElementById('boundaryType').value);				// interaction with walls
