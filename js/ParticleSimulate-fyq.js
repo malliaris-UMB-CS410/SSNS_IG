@@ -193,7 +193,7 @@ document.getElementById('startSimulation').addEventListener('click', function ()
 
     const Bounce_Count = document.getElementById("Bounce_Count");
     var Bounce = 0;
-    Bounce_Count.textContent = bounce;
+    Bounce_Count.textContent = Bounce;
     
 
     function collision_pressure_calc(){//mass, magnitude, bounce) {
