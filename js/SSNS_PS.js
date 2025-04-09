@@ -28,7 +28,8 @@ class ParticleSimulate {
         for (let i = 0; i < N; i++) {
             // Generate random direction and scale by rmsSpeed
             const theta = Math.random() * 2 * Math.PI; // Random angle in [0, 2π)
-            const speed = rmsSpeed * Math.sqrt(-2 * Math.log(Math.random())); // Maxwell-Boltzmann distribution
+            let speed = rmsSpeed * Math.sqrt(-2 * Math.log(Math.random())); // Maxwell-Boltzmann distribution
+
             this.particles.push({
                 x: Math.random(), // Random x position in [0, 1)
                 y: Math.random(), // Random y position in [0, 1)
@@ -37,6 +38,7 @@ class ParticleSimulate {
             });
         }
     }
+
 
 
     update(dt) {
@@ -54,14 +56,19 @@ class ParticleSimulate {
             // Handle boundary conditions (bounce back with radius consideration)
             if (particle.x - normalizedRadius < 0 || particle.x + normalizedRadius > 1) {
                 particle.vx = -particle.vx; // Reverse x velocity
-                particle.x = Math.max(normalizedRadius, Math.min(1 - normalizedRadius, particle.x)); // Clamp position
+
+                // Fix position to prevent particle from escaping
+                particle.x = Math.max(normalizedRadius, Math.min(1 - normalizedRadius, particle.x));
             }
             if (particle.y - normalizedRadius < 0 || particle.y + normalizedRadius > 1) {
                 particle.vy = -particle.vy; // Reverse y velocity
-                particle.y = Math.max(normalizedRadius, Math.min(1 - normalizedRadius, particle.y)); // Clamp position
+
+                // Fix position to prevent particle from escaping
+                particle.y = Math.max(normalizedRadius, Math.min(1 - normalizedRadius, particle.y));
             }
         });
     }
+
 
     draw(ctx) {
         // Set canvas background to white
