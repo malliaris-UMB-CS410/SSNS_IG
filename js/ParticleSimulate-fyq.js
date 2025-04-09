@@ -178,11 +178,11 @@ document.getElementById('startSimulation').addEventListener('click', function ()
     const boundaryType = parseInt(document.getElementById('boundaryType').value);				// interaction with walls
     const interactionType = parseInt(document.getElementById('interactionType').value); // interaction with particles
 
-    const air_mass = 5.32*10^(-26);
+    const air_mass = 5.32 * Math.pow(10, -26);
     console.log(air_mass);
     const m = air_mass;
-    const k = 1.38*10^(-23);
-    var userVelocity = Math.sqrt((3*k*temperature)/m);
+    const k = 1.38 * Math.pow(10, -23);;
+    var userVelocity = Math.sqrt((3*k*temperature)/m)/1000;
     //var userVelocity = temperature / 10;
     var bounce = 0;
     
