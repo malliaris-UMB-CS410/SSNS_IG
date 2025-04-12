@@ -209,11 +209,21 @@
 <div class="row" id="UI_P_SM_IG">
     <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1">
         <div class="input-group input-group-lg">
+            <div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SM_IG_V'); ">
+                <span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_immed px-2 py-1"> $$ V $$ </span>
+            </div>
+            <label for="UI_P_SM_IG_V"></label>
+            <input id="UI_P_SM_IG_V" class="form-control" type="number" min="100" max="400" step="1" value="200">
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1">
+        <div class="input-group input-group-lg">
             <div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SM_IG_T'); ">
                 <span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_immed px-2 py-1"> $$ T $$ </span>
             </div>
             <label for="UI_P_SM_IG_T"></label>
-            <input id="UI_P_SM_IG_T" class="form-control" type="number" min="0.0" max="1000000000" step="0.01" value="0.0" onchange="Params_IG.T.try_update(this.value); ">
+            <input id="UI_P_SM_IG_T" class="form-control" type="number" min="0" max="1000" step="1" value="1" onchange="Params_IG.T.try_update(this.value); ">
         </div>
     </div>
 
@@ -223,7 +233,7 @@
                 <span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ N $$ </span>
             </div>
             <label for="UI_P_SM_IG_N"></label>
-            <input id="UI_P_SM_IG_N" class="form-control" type="number" min="2" max="10000" step="1" value="4" onchange="Coords_IG.N.try_update(this.value); ">
+            <input id="UI_P_SM_IG_N" class="form-control" type="number" min="1" max="1000" step="1" value="4" onchange="Coords_IG.N.try_update(this.value); ">
         </div>
     </div>
 
