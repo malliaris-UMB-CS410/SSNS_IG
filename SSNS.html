@@ -473,11 +473,11 @@
 <label class="form-check-label w-100" for="UI_ST_SP">stochastic processes</label>
 </div>
 <div id="UI_ST_SM_form_check" class="form-check pl-4 py-1">
-<input class="form-check-input" type="radio" name="UI_ST_area" id="UI_ST_SM" value="SM" onchange="window.sim.ui.update_ST_area_settings(); ">
+<input class="form-check-input" type="radio" name="UI_ST_area" id="UI_ST_SM" value="SM" onchange="window.sim.ui.update_ST_area_settings(); " checked>
 <label class="form-check-label w-100" for="UI_ST_SM">statistical mechanics</label>
 </div>
 <div id="UI_ST_ND_form_check" class="form-check pl-4 py-1">
-<input class="form-check-input" type="radio" name="UI_ST_area" id="UI_ST_ND" value="ND" onchange="window.sim.ui.update_ST_area_settings(); " checked>
+<input class="form-check-input" type="radio" name="UI_ST_area" id="UI_ST_ND" value="ND" onchange="window.sim.ui.update_ST_area_settings(); ">
 <label class="form-check-label w-100" for="UI_ST_ND">nonlinear dynamics</label>
 </div>
 <div id="UI_ST_FD_form_check" class="form-check pl-4 py-1">
@@ -514,7 +514,7 @@
     </div>
 </div>
 <div id="UI_ST_SM_IS_form_check" class="form-check pl-4 py-1">
-<input class="form-check-input" type="radio" name="UI_ST" id="UI_ST_SM_IS" value="IS" onchange="window.sim.process_cmd('ST'); ">
+<input class="form-check-input" type="radio" name="UI_ST" id="UI_ST_SM_IS" value="IS" onchange="window.sim.process_cmd('ST'); " checked>
 <label class="form-check-label w-100" for="UI_ST_SM_IS">2D Ising model ($$ \texttt{IS} $$)</label>
 </div>
 <div id="UI_ST_SM_XY_form_check" class="form-check pl-4 py-1">
@@ -525,7 +525,7 @@
 
 <div id="UI_ST_area_ND">
 <div id="UI_ST_ND_LM_form_check" class="form-check pl-4 py-1">
-<input class="form-check-input" type="radio" name="UI_ST" id="UI_ST_ND_LM" value="LM" onchange="window.sim.process_cmd('ST'); " checked>
+<input class="form-check-input" type="radio" name="UI_ST" id="UI_ST_ND_LM" value="LM" onchange="window.sim.process_cmd('ST'); ">
 <label class="form-check-label w-100" for="UI_ST_ND_LM">logistic map ($$ \texttt{LM} $$)</label>
 </div>
 <div id="UI_ST_ND_GM_form_check" class="form-check pl-4 py-1">
@@ -1253,7 +1253,7 @@ parameters are speed of upper, lower boundaries and of "observer", pressure grad
 <script src="js/PlotType.js"></script>
 <script src="js/PlotTypeXT.js"></script>
 <script src="js/PlotTypeHX.js"></script>
-<script src="js/PlotTypeCV.js"></script>
+<script src="js/SSNT_PlotTypeCV.js"></script>
 <script src="js/PlotTypePP.js"></script>
 <script src="js/PlottingMachinery.js"></script>
 <script src="js/help_viewer.js"></script>
