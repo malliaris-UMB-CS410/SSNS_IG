@@ -44,8 +44,9 @@ class PlottingMachinery {
 	    this.plots["CH"]["HX"] = new PlotTypeHX_CH(this.sim.trjs["CH"]);
 	    break;
 	case "IG":
-		this.plots["IG"] = {};
-		this.plots["IG"]["HM"] = new PlotTypeHM_IG(this.sim.trjs["IG"]);
+	    this.plots["IG"] = {};
+	    this.plots["IG"]["HM"] = new PlotTypeHM_IG(this.sim.trjs["IG"]);
+	    break;
 	case "IS":
 	    this.plots["IS"] = {};
 	    this.plots["IS"]["HM"] = new PlotTypeHM_IS(this.sim.trjs["IS"]);
