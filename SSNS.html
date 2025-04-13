@@ -223,7 +223,7 @@
                 <span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_immed px-2 py-1"> $$ T $$ </span>
             </div>
             <label for="UI_P_SM_IG_T"></label>
-            <input id="UI_P_SM_IG_T" class="form-control" type="number" min="0" max="1000" step="1" value="1" onchange="Params_IG.T.try_update(this.value); ">
+            <input id="UI_P_SM_IG_T" class="form-control" type="number" min="0" max="1000" step="0.01" value="1" onchange="Params_IG.T.try_update(this.value); ">
         </div>
     </div>
 
@@ -1284,6 +1284,6 @@ parameters are speed of upper, lower boundaries and of "observer", pressure grad
   window.sim = new Simulator();  // done here at end of file so that everything it depends on is already loaded...
 </script>
 
-
+</div>
 </body>
 </html>
