@@ -86,9 +86,9 @@
 <div id="plot_y_axis_lbl"></div>
 
 <div id="plot_flot" class="plot_target"></div>
-<canvas id="plot_HM_IG" class="plot_target"></canvas>
-<canvas id="plot_HM_IS" class="plot_target"></canvas>
-<canvas id="plot_HM_XY" class="plot_target"></canvas>
+<canvas id="plot_CV_IG" class="plot_target"></canvas>
+<canvas id="plot_CV_IS" class="plot_target"></canvas>
+<canvas id="plot_CV_XY" class="plot_target"></canvas>
 
 <div id="plot_x_axis_lbl"></div>
 
@@ -363,7 +363,7 @@
 <div class="btn-group btn-group-lg d-flex">
 <button id="UI_PT_XT_btn" type="button" class="btn btn-ssns px-0 w-100"><span class="plot_icon_axes p-1"><i class="fas fa-fw fa-lg fa-arrow-trend-up"></i></span></button>
 <button id="UI_PT_HX_btn" type="button" class="btn btn-ssns px-0 w-100"><span class="plot_icon_axes p-1"><i class="fas fa-fw fa-lg fa-chart-simple"></i></span></button>
-<button id="UI_PT_HM_btn" type="button" class="btn btn-ssns px-0 w-100"><span class="plot_icon_axes p-1"><i class="fab fa-fw fa-lg fa-buromobelexperte"></i></span></button>
+<button id="UI_PT_CV_btn" type="button" class="btn btn-ssns px-0 w-100"><span class="plot_icon_axes p-1"><i class="fab fa-fw fa-lg fa-buromobelexperte"></i></span></button>
 <button id="UI_PT_PP_btn" type="button" class="btn btn-ssns px-0 w-100"><span class="plot_icon_axes p-1"><i class="fas fa-fw fa-lg fa-arrows-spin"></i></span></button>
 </div>
 </div><!-- CLOSES div class="col-12 ..." -->
@@ -473,11 +473,11 @@
 <label class="form-check-label w-100" for="UI_ST_SP">stochastic processes</label>
 </div>
 <div id="UI_ST_SM_form_check" class="form-check pl-4 py-1">
-<input class="form-check-input" type="radio" name="UI_ST_area" id="UI_ST_SM" value="SM" onchange="window.sim.ui.update_ST_area_settings(); " checked>
+<input class="form-check-input" type="radio" name="UI_ST_area" id="UI_ST_SM" value="SM" onchange="window.sim.ui.update_ST_area_settings(); ">
 <label class="form-check-label w-100" for="UI_ST_SM">statistical mechanics</label>
 </div>
 <div id="UI_ST_ND_form_check" class="form-check pl-4 py-1">
-<input class="form-check-input" type="radio" name="UI_ST_area" id="UI_ST_ND" value="ND" onchange="window.sim.ui.update_ST_area_settings(); ">
+<input class="form-check-input" type="radio" name="UI_ST_area" id="UI_ST_ND" value="ND" onchange="window.sim.ui.update_ST_area_settings(); " checked>
 <label class="form-check-label w-100" for="UI_ST_ND">nonlinear dynamics</label>
 </div>
 <div id="UI_ST_FD_form_check" class="form-check pl-4 py-1">
@@ -508,13 +508,13 @@
 </div>
 
 <div id="UI_ST_area_SM">
-    <div id="UI_ST_SM_IG_form_check" class="form-check pl-4 py-1">
-        <input class="form-check-input" type="radio" name="UI_ST" id="UI_ST_SM_IG" value="IG" onchange="window.sim.process_cmd('ST'); ">
-        <label class="form-check-label w-100" for="UI_ST_SM_IG">2D ideal gas ($$ \texttt{IG} $$)</label>
-    </div>
+<div id="UI_ST_SM_IG_form_check" class="form-check pl-4 py-1">
+<input class="form-check-input" type="radio" name="UI_ST" id="UI_ST_SM_IG" value="IG" onchange="window.sim.process_cmd('ST'); ">
+<label class="form-check-label w-100" for="UI_ST_SM_IG">2D ideal gas ($$ \texttt{IG} $$)</label>
+</div>
 </div>
 <div id="UI_ST_SM_IS_form_check" class="form-check pl-4 py-1">
-<input class="form-check-input" type="radio" name="UI_ST" id="UI_ST_SM_IS" value="IS" onchange="window.sim.process_cmd('ST'); " checked>
+<input class="form-check-input" type="radio" name="UI_ST" id="UI_ST_SM_IS" value="IS" onchange="window.sim.process_cmd('ST'); ">
 <label class="form-check-label w-100" for="UI_ST_SM_IS">2D Ising model ($$ \texttt{IS} $$)</label>
 </div>
 <div id="UI_ST_SM_XY_form_check" class="form-check pl-4 py-1">
@@ -529,7 +529,7 @@
 <label class="form-check-label w-100" for="UI_ST_ND_LM">logistic map ($$ \texttt{LM} $$)</label>
 </div>
 <div id="UI_ST_ND_GM_form_check" class="form-check pl-4 py-1">
-<input class="form-check-input" type="radio" name="UI_ST" id="UI_ST_ND_GM" value="GM" onchange="window.sim.process_cmd('ST'); ">
+<input class="form-check-input" type="radio" name="UI_ST" id="UI_ST_ND_GM" value="GM" onchange="window.sim.process_cmd('ST'); " checked>
 <label class="form-check-label w-100" for="UI_ST_ND_GM">gingerbread-man map ($$ \texttt{GM} $$)</label>
 </div>
 </div>
@@ -1253,14 +1253,14 @@ parameters are speed of upper, lower boundaries and of "observer", pressure grad
 <script src="js/PlotType.js"></script>
 <script src="js/PlotTypeXT.js"></script>
 <script src="js/PlotTypeHX.js"></script>
-<script src="js/SSNT_PlotTypeCV.js"></script>
+<script src="js/PlotTypeCV.js"></script>
 <script src="js/PlotTypePP.js"></script>
 <script src="js/PlottingMachinery.js"></script>
 <script src="js/help_viewer.js"></script>
 <script src="js/RunState.js"></script>
 <script src="js/UserInterface.js"></script>
 <script src="js/Simulator.js"></script>
-<script src="js/SSNS_PS.js"></script>
+<!-- <script src="js/SSNS_PS.js"></script> DISABLED FOR NOW WHILE PlotTypeCV CHANGES GO IN...  -->
 
 
 

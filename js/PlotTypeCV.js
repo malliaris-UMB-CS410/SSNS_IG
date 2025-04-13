@@ -49,7 +49,7 @@ class PlotTypeCV extends PlotType {
     }
 }
 
-class PlotTypeCV_Gas extends PlotTypeCV {
+class PlotTypeCV_IG extends PlotTypeCV {
 
     constructor(trj) {
 
