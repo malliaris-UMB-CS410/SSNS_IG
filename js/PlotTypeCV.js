@@ -60,24 +60,6 @@ class PlotTypeCV_IG extends PlotTypeCV {
 	this.setup_canvas();
     }
 
-    // take x, y coordinates and radius R -- all in relative units, i.e., on the unit square -- and draw corresponding circle on canvas
-    draw_circle(x, y, R, filled, color) {
-
-	let xc = this.rtoa(x);
-	let yc = this.fyc(this.rtoa(y));
-	let Rc = this.rtoa(R);
-
-	this.cc.beginPath();
-	this.cc.arc(xc, yc, Rc, 0, 2*Math.PI);
-	if (filled) {
-	    this.cc.fillStyle = color;
-	    this.cc.fill();
-	} else {  // outlined
-	    this.cc.strokeStyle = color;
-	    this.cc.stroke();
-	}
-    }
-
     get_ext_x_axis_lbl_str() {
 	return "x";
     }
@@ -87,21 +69,10 @@ class PlotTypeCV_IG extends PlotTypeCV {
     }
 
     get_html_targ_id_str() {
-	return "plot_CV_IG";  // heatmaps are rendered on an html canvas and maintain state, so must be ST-dependent
+	return "plot_CV_IG";
     }
 
-    update_canvas(t) {
-
-	this.clear_canvas();
-	for (let i = 0; i < Coords_IG.N.v; i++) {
-
-	    let cp = this.trj.get_x(t).particles[i];  // cp = current particle
-	    this.draw_circle(cp.x, cp.y, cp.R, true, "black");
-	}
-    }
-    
     plot(t) {
-	this.update_canvas(t);
     }
 }
 
