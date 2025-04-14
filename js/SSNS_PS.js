@@ -162,25 +162,42 @@ class ParticleSimulate {
 document.addEventListener("DOMContentLoaded", () => {
     const inputN = document.getElementById('UI_P_SM_IG_N');
     const inputT = document.getElementById('UI_P_SM_IG_T');
+    const inputV = document.getElementById('UI_P_SM_IG_V');
     const inputCollision = document.getElementById('UI_P_SM_IG_COLLISION');
+
+    // update volume size of square
+    function updateVolumeSize(newV) {
+        if (!isNaN(newV) && newV >= 100 && newV <= 400) {
+            params.V = newV;
+            canvas.width = params.V;
+            canvas.height = params.V;
+        }
+    }
 
     // Default parameters
     let params = {
         T: parseFloat(inputT?.value || 0),
         N: parseInt(inputN?.value || 4),
-        isCollision: document.getElementById('UI_P_SM_IG_COLLISION')?.checked || false
+        isCollision: inputCollision?.checked || false,
+        V: parseInt(inputV?.value || 200)
     };
 
     const particleSimulate = new ParticleSimulate(params);
     const canvas = document.getElementById('plot_HM_IG');
-    canvas.width = 400;
-    canvas.height = 400;
+
+    updateVolumeSize(params.V);
     const ctx = canvas.getContext('2d');
+
+    // Listen for changes in V
+    inputV.addEventListener("input", () => {
+        const newV = parseInt(inputV.value);
+        updateVolumeSize(newV);
+    });
 
     // Listen for changes in T
     inputT.addEventListener("input", () => {
         const newT = parseFloat(inputT.value);
-        if (!isNaN(newT)) {
+        if (!isNaN(newT) && newT >= 1 && newT <= 1000) {
             params.T = newT;
             particleSimulate.params.T = newT; // Update temperature in the simulation
             particleSimulate.updateParticles(params.N); // Reinitialize particles with new speed
@@ -190,7 +207,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Listen for changes in N
     inputN.addEventListener("input", () => {
         const newN = parseInt(inputN.value);
-        if (!isNaN(newN)) {
+        if (!isNaN(newN) && newN >= 1 && newN <= 1000) {
             params.N = newN;
             particleSimulate.updateParticles(newN);
         }
@@ -202,7 +219,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     function animate() {
-        particleSimulate.update(0.01);
+        particleSimulate.update(0.01 / Math.sqrt(particleSimulate.params.T || 1));
         particleSimulate.draw(ctx);
         requestAnimationFrame(animate);
     }

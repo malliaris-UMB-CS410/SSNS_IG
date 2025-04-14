@@ -1,33 +1,33 @@
 const Bounce_Count = document.getElementById("Bounce_Count");
 var Pressure_calc = document.getElementById("Pressure_calc");
 var Pressure_sim = document.getElementById("Pressure_sim");
-const userBoxSize = parseFloat(document.getElementById('boxSize').value);
-const temperature = parseFloat(document.getElementById('temperature').value);
+var userBoxSize = parseFloat(document.getElementById('boxSize').value);
+var temperature = parseFloat(document.getElementById('temperature').value);
 var numParticles = parseInt(document.getElementById('numParticles').value);
-const boundaryType = parseInt(document.getElementById('boundaryType').value);				// interaction with walls
-const interactionType = parseInt(document.getElementById('interactionType').value); // interaction with particles
-
+var boundaryType = parseInt(document.getElementById('boundaryType').value);				// interaction with walls
+var interactionType = parseInt(document.getElementById('interactionType').value); // interaction with particles
 const air_mass = 5.32 * Math.pow(10, -26);
 console.log(air_mass);
 const m = air_mass;
 const k = 1.38 * Math.pow(10, -23);;
-var userVelocity = Math.sqrt((3*k*temperature)/m)/1000;
+var userVelocity = Math.sqrt((k*temperature)/m);
 var pressure_calc = (numParticles*k*temperature) / userBoxSize;
 Pressure_calc.textContent = pressure_calc;
 var pressure_sim = 0;
+var instant_pressure = 0;
+var total_pressure = 0;
 var Bounce = 0;
 Bounce_Count.textContent = Bounce;
 var sim_time = 0;
 
 
 
-function collision_pressure_calc(time){//mass, magnitude, bounce) {
-    Bounce += 1;
-    Bounce_Count.textContent = Bounce;
-    sim_time += time;
-    pressure_sim = ((2*m*userVelocity) / (userBoxSize*sim_time))*Bounce;
+function collision_pressure_calc(time,V){//mass, magnitude, bounce) {
+    instant_pressure = (2*m*Math.abs(V)) / (time*Math.sqrt(userBoxSize));
+    total_pressure = total_pressure + instant_pressure;
+    pressure_sim = total_pressure / (Math.sqrt(userBoxSize)*sim_time);
     Pressure_sim.textContent = pressure_sim;
-
+    Pressure_calc.textContent = pressure_calc;
 }
 
 class Atom {
@@ -44,25 +44,36 @@ class Atom {
     updatePosition(timeStep, BoxSize, boundaryType) {
         let newX = this.x + this.vx * timeStep;
         let newY = this.y + this.vy * timeStep;
-
+        //console.log(this.x);
+        //console.log(this.y);
+        //console.log(timeStep);
+        //console.log(userVelocity);
         if (boundaryType) {
             // Wrap mode
             if (newX < -BoxSize / 2) {
                 this.x = newX + BoxSize;
-                collision_pressure_calc(timeStep);
+                Bounce += 1;
+                Bounce_Count.textContent = Bounce;
+                collision_pressure_calc(timeStep, this.x);
             } else if (newX > BoxSize / 2) {
                 this.x = newX - BoxSize;
-                collision_pressure_calc(timeStep);
+                Bounce += 1;
+                Bounce_Count.textContent = Bounce;
+                collision_pressure_calc(timeStep, this.x);
             } else {
                 this.x = newX;
             }
 
             if (newY < -BoxSize / 2) {
                 this.y = newY + BoxSize;
-                collision_pressure_calc(timeStep);
+                Bounce += 1;
+                Bounce_Count.textContent = Bounce;
+                collision_pressure_calc(timeStep, this.y);
             } else if (newY > BoxSize / 2) {
                 this.y = newY - BoxSize;
-                collision_pressure_calc(timeStep);
+                Bounce += 1;
+                Bounce_Count.textContent = Bounce;
+                collision_pressure_calc(timeStep, this.y);
             } else {
                 this.y = newY;
             }
@@ -75,14 +86,18 @@ class Atom {
 
                 // prevents particles from getting stuck in boundaries
                 this.x = Math.max(-BoxSize / 2 + radiusOffset, Math.min(BoxSize / 2 - radiusOffset, newX));
-                collision_pressure_calc(timeStep);
+                Bounce += 1;
+                Bounce_Count.textContent = Bounce;
+                collision_pressure_calc(timeStep, this.x);
             }
             if (newY - radiusOffset < -BoxSize / 2 || newY + radiusOffset > BoxSize / 2) {
                 this.vy *= -1; // Reverse velocity in Y
 
                 // prevents particles from getting stuck in boundaries
                 this.y = Math.max(-BoxSize / 2 + radiusOffset, Math.min(BoxSize / 2 - radiusOffset, newY));
-                collision_pressure_calc(timeStep);
+                Bounce += 1;
+                Bounce_Count.textContent = Bounce;
+                collision_pressure_calc(timeStep, this.y);
             }
             this.x = newX;
             this.y = newY;
@@ -195,10 +210,19 @@ class Atom {
 let animationId = null;
 document.getElementById('startSimulation').addEventListener('click', function () {
     // clean previous animation frame resource
+
+    userBoxSize = parseFloat(document.getElementById('boxSize').value);
+    temperature = parseFloat(document.getElementById('temperature').value);
+    numParticles = parseInt(document.getElementById('numParticles').value);
+    boundaryType = parseInt(document.getElementById('boundaryType').value);				// interaction with walls
+    interactionType = parseInt(document.getElementById('interactionType').value);
     Bounce = 0;
     Bounce_Count.textContent = Bounce;
+    userVelocity = Math.sqrt((k*temperature)/m);
+    console.log(userVelocity);
     pressure_calc = (numParticles*k*temperature) / userBoxSize;
-    Pressure_calc.textContent = pressure_calc;
+    total_pressure = 0;
+    Pressure_sim.textContent = 0;
     console.log(numParticles);
     numParticles = parseInt(document.getElementById('numParticles').value);
 
@@ -262,8 +286,8 @@ document.getElementById('startSimulation').addEventListener('click', function ()
         const angle = getRandomAngle();  // Random direction (angle)
 
         // Calculate the x and y components of the velocity based on the random angle
-        const vx = userVelocity * Math.cos(angle); // X velocity component
-        const vy = userVelocity * Math.sin(angle); // Y velocity component
+        const vx = userVelocity / numParticles * Math.cos(angle); // X velocity component
+        const vy = userVelocity / numParticles * Math.sin(angle); // Y velocity component
 
         // Try to find a valid non-overlapping position
         let x, y;
@@ -349,13 +373,16 @@ document.getElementById('startSimulation').addEventListener('click', function ()
     const maxTimeStep = 1.0 / 30.0;; // 30 FPS
 
     function animate(timestamp) {
-        if (!lastTimestamp) lastTimestamp = timestamp;
+        //if (!lastTimestamp) lastTimestamp = timestamp;
 
-        const deltaTime = timestamp - lastTimestamp;
+        //const deltaTime = timestamp - lastTimestamp;
 
         // limited 30 FPS
-        const timeStep = Math.min(deltaTime / 1000, maxTimeStep);
-
+        //const timeStep = Math.min(deltaTime / 1000, maxTimeStep);
+        //console.log(timeStep);
+        const timeStep = 1 / (1000);
+        sim_time += timeStep;
+        console.log(sim_time);
         handleCollisions();
 
         // update particles position
