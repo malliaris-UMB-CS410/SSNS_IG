@@ -286,8 +286,8 @@ document.getElementById('startSimulation').addEventListener('click', function ()
         const angle = getRandomAngle();  // Random direction (angle)
 
         // Calculate the x and y components of the velocity based on the random angle
-        const vx = userVelocity * Math.cos(angle); // X velocity component
-        const vy = userVelocity * Math.sin(angle); // Y velocity component
+        const vx = userVelocity / numParticles * Math.cos(angle); // X velocity component
+        const vy = userVelocity / numParticles * Math.sin(angle); // Y velocity component
 
         // Try to find a valid non-overlapping position
         let x, y;
