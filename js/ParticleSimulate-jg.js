@@ -181,6 +181,7 @@ document.getElementById('startSimulation').addEventListener('click', function ()
     
     
 
+
     // validate the input
     if (!validateInput(userBoxWidth) || !validateInput(userBoxHeight) || !validateInput(userVelocity)
         || !validateInput(numParticles)) {
@@ -191,11 +192,13 @@ document.getElementById('startSimulation').addEventListener('click', function ()
     // Initialize with random starting positions
     function getRandomPosition(range) {
         return Math.random() * range * 2 - range;
+
     }
 
     // Generate random angle (in radians) between 0 and 2 * PI (360)
     function getRandomAngle() {
         return Math.random() * Math.PI * 2; // Random angle between 0 and 2π (360 degrees)
+        return seed.nextFloat() * Math.PI * 2; // Random angle between 0 and 2π (360 degrees)
     }
 
     // Helper function to ensure particles don't overlap initially
@@ -217,6 +220,7 @@ document.getElementById('startSimulation').addEventListener('click', function ()
 
     const particles = [];
     const particleRadius = 5;
+
     const minDistance = (particleRadius * 2) / 100; // Converted to simulation units
 
     // create numParticles number of particles in a random starting position moving in a random direction
@@ -227,6 +231,7 @@ document.getElementById('startSimulation').addEventListener('click', function ()
         const vx = userVelocity * Math.cos(angle); // X velocity component
         const vy = userVelocity * Math.sin(angle); // Y velocity component
 
+
         // Try to find a valid non-overlapping position
         let x, y;
         let attempts = 0;
@@ -235,6 +240,7 @@ document.getElementById('startSimulation').addEventListener('click', function ()
         do {
             x = getRandomPosition(userBoxWidth / 2);
             y = getRandomPosition(userBoxHeight / 2);
+
             attempts++;
 
             // Break out after too many attempts to prevent infinite loop
@@ -249,6 +255,7 @@ document.getElementById('startSimulation').addEventListener('click', function ()
         );
         particles.push(atom);
     }
+
 
     // Canvas setup
     const canvas = document.createElement('canvas');
@@ -282,10 +289,12 @@ document.getElementById('startSimulation').addEventListener('click', function ()
 
             ctx.beginPath();
             ctx.arc(drawX, drawY, atom.radius, 0, Math.PI * 2);
+
             ctx.fillStyle = 'red';
             ctx.fill();
         });
     }
+
 
     // Check and resolve collisions between all particles
     function handleCollisions() {
@@ -334,6 +343,7 @@ document.getElementById('startSimulation').addEventListener('click', function ()
 });
 
         
+
 
         draw();
         lastTimestamp = timestamp;
