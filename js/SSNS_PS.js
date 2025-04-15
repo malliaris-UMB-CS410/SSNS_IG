@@ -41,8 +41,8 @@ class ParticleSimulate {
     }
 
     update(dt) {
-        const canvasWidth = document.getElementById('plot_HM_IG').width;
-        const canvasHeight = document.getElementById('plot_HM_IG').height;
+        const canvasWidth = this.canvas.width;
+        const canvasHeight = this.canvas.height;
         const normalizedRadius = this.radius / Math.min(canvasWidth, canvasHeight);
 
         // Update particle positions based on velocity
@@ -136,24 +136,39 @@ class ParticleSimulate {
         });
     }
 
-    draw(ctx) {
+    bindToCanvas(canvasId) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) {
+            console.error(`Canvas with ID ${canvasId} not found.`);
+            return;
+        }
+        this.ctx = canvas.getContext('2d');
+        this.canvas = canvas;
+    }
+
+    draw() {
+        if (!this.ctx || !this.canvas) {
+            console.error("Canvas context not initialized.");
+            return;
+        }
+
         // Set canvas background to white
-        ctx.fillStyle = "white";
-        ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        this.ctx.fillStyle = "white";
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
         // Draw container border
-        ctx.strokeStyle = "black"; // Border color
-        ctx.lineWidth = 2; // Border thickness
-        ctx.strokeRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        this.ctx.strokeStyle = "black"; // Border color
+        this.ctx.lineWidth = 2; // Border thickness
+        this.ctx.strokeRect(0, 0, this.canvas.width, this.canvas.height);
 
         // Draw particles in red
-        ctx.fillStyle = "red";
+        this.ctx.fillStyle = "red";
         this.particles.forEach(particle => {
-            const x = particle.x * ctx.canvas.width;
-            const y = particle.y * ctx.canvas.height;
-            ctx.beginPath();
-            ctx.arc(x, y, this.radius, 0, 2 * Math.PI);
-            ctx.fill();
+            const x = particle.x * this.canvas.width;
+            const y = particle.y * this.canvas.height;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, this.radius, 0, 2 * Math.PI);
+            this.ctx.fill();
         });
     }
 }
@@ -165,7 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const inputV = document.getElementById('UI_P_SM_IG_V');
     const inputCollision = document.getElementById('UI_P_SM_IG_COLLISION');
 
-    // update volume size of square
+    // Update volume size of square
     function updateVolumeSize(newV) {
         if (!isNaN(newV) && newV >= 100 && newV <= 400) {
             params.V = newV;
@@ -176,17 +191,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Default parameters
     let params = {
-        T: parseFloat(inputT?.value || 0),
-        N: parseInt(inputN?.value || 4),
+        T: parseFloat(inputT?.value || 300),
+        N: parseInt(inputN?.value || 100),
         isCollision: inputCollision?.checked || false,
         V: parseInt(inputV?.value || 200)
     };
 
     const particleSimulate = new ParticleSimulate(params);
-    const canvas = document.getElementById('plot_HM_IG');
+    const canvas = document.getElementById('plot_CV_IG'); // Bind to plot_CV_IG canvas
+    particleSimulate.bindToCanvas('plot_CV_IG');
 
     updateVolumeSize(params.V);
-    const ctx = canvas.getContext('2d');
 
     // Listen for changes in V
     inputV.addEventListener("input", () => {
@@ -218,9 +233,10 @@ document.addEventListener("DOMContentLoaded", () => {
         params.isCollision = inputCollision.checked;
     });
 
+    // Animation loop
     function animate() {
         particleSimulate.update(0.01 / Math.sqrt(particleSimulate.params.T || 1));
-        particleSimulate.draw(ctx);
+        particleSimulate.draw();
         requestAnimationFrame(animate);
     }
 
