@@ -86,8 +86,9 @@
 <div id="plot_y_axis_lbl"></div>
 
 <div id="plot_flot" class="plot_target"></div>
-<canvas id="plot_HM_IS" class="plot_target"></canvas>
-<canvas id="plot_HM_XY" class="plot_target"></canvas>
+<canvas id="plot_CV_IG" class="plot_target"></canvas>
+<canvas id="plot_CV_IS" class="plot_target"></canvas>
+<canvas id="plot_CV_XY" class="plot_target"></canvas>
 
 <div id="plot_x_axis_lbl"></div>
 
@@ -201,6 +202,54 @@
 
 <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SP_CH_x_0'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ x_0 $$ </span></div>
     <label for="UI_P_SP_CH_x_0"></label><input id="UI_P_SP_CH_x_0" class="form-control" type="number" min="0" max="10000" step="1" value="5" onchange="Coords_CH.x_0.try_update(this.value); "></div></div>
+
+</div><!-- CLOSES div class="row" -->
+
+
+<div class="row" id="UI_P_SM_IG">
+    <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1">
+        <div class="input-group input-group-lg">
+            <div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SM_IG_V'); ">
+                <span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_immed px-2 py-1"> $$ V $$ </span>
+            </div>
+            <label for="UI_P_SM_IG_V"></label>
+            <input id="UI_P_SM_IG_V" class="form-control" type="number" min="100" max="400" step="1" value="200">
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1">
+        <div class="input-group input-group-lg">
+            <div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SM_IG_T'); ">
+                <span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_immed px-2 py-1"> $$ T $$ </span>
+            </div>
+            <label for="UI_P_SM_IG_T"></label>
+            <input id="UI_P_SM_IG_T" class="form-control" type="number" min="0" max="1000" step="0.01" value="1" onchange="Params_IG.T.try_update(this.value); ">
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1">
+        <div class="input-group input-group-lg">
+            <div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SM_IG_N'); ">
+                <span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ N $$ </span>
+            </div>
+            <label for="UI_P_SM_IG_N"></label>
+            <input id="UI_P_SM_IG_N" class="form-control" type="number" min="1" max="1000" step="1" value="4" onchange="Coords_IG.N.try_update(this.value); ">
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1 UI_CTRL_STOCH">
+        <div class="input-group input-group-lg d-flex">
+            <div class="input-group-prepend flex-grow-1" onclick="window.sim.ui.hv.show_view('HV_C_RNG_RECR_TRAJ'); ">
+                <span class="input-group-text flex-grow-1 ctrl_eff_immed"> $$ \mathrm{Collision?} $$ </span>
+            </div>
+            <div class="input-group-append">
+                <div class="input-group-text lrg_bg_areas">
+                    <label for="UI_P_SM_IG_COLLISION"></label>
+                    <input type="checkbox" id="UI_P_SM_IG_COLLISION">
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div><!-- CLOSES div class="row" -->
 
@@ -324,7 +373,7 @@
 <div class="btn-group btn-group-lg d-flex">
 <button id="UI_PT_XT_btn" type="button" class="btn btn-ssns px-0 w-100"><span class="plot_icon_axes p-1"><i class="fas fa-fw fa-lg fa-arrow-trend-up"></i></span></button>
 <button id="UI_PT_HX_btn" type="button" class="btn btn-ssns px-0 w-100"><span class="plot_icon_axes p-1"><i class="fas fa-fw fa-lg fa-chart-simple"></i></span></button>
-<button id="UI_PT_HM_btn" type="button" class="btn btn-ssns px-0 w-100"><span class="plot_icon_axes p-1"><i class="fab fa-fw fa-lg fa-buromobelexperte"></i></span></button>
+<button id="UI_PT_CV_btn" type="button" class="btn btn-ssns px-0 w-100"><span class="plot_icon_axes p-1"><i class="fab fa-fw fa-lg fa-buromobelexperte"></i></span></button>
 <button id="UI_PT_PP_btn" type="button" class="btn btn-ssns px-0 w-100"><span class="plot_icon_axes p-1"><i class="fas fa-fw fa-lg fa-arrows-spin"></i></span></button>
 </div>
 </div><!-- CLOSES div class="col-12 ..." -->
@@ -470,7 +519,7 @@
 
 <div id="UI_ST_area_SM">
 <div id="UI_ST_SM_IG_form_check" class="form-check pl-4 py-1">
-<input class="form-check-input" type="radio" name="UI_ST" id="UI_ST_SM_IG" value="IG" onchange="window.sim.process_cmd('ST'); " disabled>
+<input class="form-check-input" type="radio" name="UI_ST" id="UI_ST_SM_IG" value="IG" onchange="window.sim.process_cmd('ST'); ">
 <label class="form-check-label w-100" for="UI_ST_SM_IG">2D ideal gas ($$ \texttt{IG} $$)</label>
 </div>
 <div id="UI_ST_SM_IS_form_check" class="form-check pl-4 py-1">
@@ -485,11 +534,11 @@
 
 <div id="UI_ST_area_ND">
 <div id="UI_ST_ND_LM_form_check" class="form-check pl-4 py-1">
-<input class="form-check-input" type="radio" name="UI_ST" id="UI_ST_ND_LM" value="LM" onchange="window.sim.process_cmd('ST'); " checked>
+<input class="form-check-input" type="radio" name="UI_ST" id="UI_ST_ND_LM" value="LM" onchange="window.sim.process_cmd('ST'); ">
 <label class="form-check-label w-100" for="UI_ST_ND_LM">logistic map ($$ \texttt{LM} $$)</label>
 </div>
 <div id="UI_ST_ND_GM_form_check" class="form-check pl-4 py-1">
-<input class="form-check-input" type="radio" name="UI_ST" id="UI_ST_ND_GM" value="GM" onchange="window.sim.process_cmd('ST'); ">
+<input class="form-check-input" type="radio" name="UI_ST" id="UI_ST_ND_GM" value="GM" onchange="window.sim.process_cmd('ST'); " checked>
 <label class="form-check-label w-100" for="UI_ST_ND_GM">gingerbread-man map ($$ \texttt{GM} $$)</label>
 </div>
 </div>
@@ -521,32 +570,6 @@
 <div id="copyright_text" class="py-1 px-3">&copy; 1937 Daffy Duck</div>
 </div>
 
-
-
-
-<!-- PLOTTING TEST AREA -- COMMENT OUT WHEN NOT IN USE -->
-<!--
-<canvas id="plot_canvas_TEMP" style="display: none; "></canvas>
-<div id="plot_flot_TEMP_1" style="display: none; margin-left: 2em; margin-bottom: -25px; "></div>
-<div id="plot_flot_TEMP_2" style="display: none; margin-left: 2em; margin-bottom: -25px; "></div>
-<div id="plot_flot_TEMP_3" style="display: none; margin-left: 2em; "></div>
-<div id="plot_flot_TEMP_4" style="display: none; height: 20px; "></div>
--->
-
-
-
-
-</div><!-- CLOSES div class="container-fluid" -->
-
-
-
-
-
-<!------------------------------------------------------------------------------------------------->
-<!------------------------------------------------------------------------------------------------->
-<!-----  MODAL WINDOW FOR HelpViewer CONTENT  ----------------------------------------------------->
-<!------------------------------------------------------------------------------------------------->
-<!------------------------------------------------------------------------------------------------->
 
 <div class="modal fade" id="md_container" tabindex="-1">
 <div class="modal-dialog modal-xl" style="">
@@ -884,12 +907,12 @@ The variable $$ x $$ represents the number of individuals that possess version $
 </div><!-- CLOSES div class="hv_view" -->
 
 <div id="HV_ST_IG" class="hv_view" data-ready="1" data-hvmh="2D Ideal Gas">
-<!--
-
- * mention that stochasticity enters thru random initial positions and velocities drawn from T-dependent distribution
-
-<a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/"></a>
--->
+    <p>2D Ideal Gas is a system of non-interacting particles moving in two dimensions.</p>
+    <p>Parameters:</p>
+    <ul>
+        <li><a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_P_SM_IG_T'); ">$$ T $$</a>: Temperature</li>
+        <li><a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_P_SM_IG_N'); ">$$ N $$</a>: Number of particles</li>
+    </ul>
 </div><!-- CLOSES div class="hv_view" -->
 
 <div id="HV_ST_IS" class="hv_view" data-ready="1" data-hvmh="Ising Model">
@@ -1231,6 +1254,7 @@ parameters are speed of upper, lower boundaries and of "observer", pressure grad
 <script src="js/system_types/RW.js"></script>
 <script src="js/system_types/MN.js"></script>
 <script src="js/system_types/CH.js"></script>
+<script src="js/system_types/IG.js"></script>
 <script src="js/system_types/IS.js"></script>
 <script src="js/system_types/XY.js"></script>
 <script src="js/system_types/LM.js"></script>
@@ -1238,13 +1262,14 @@ parameters are speed of upper, lower boundaries and of "observer", pressure grad
 <script src="js/PlotType.js"></script>
 <script src="js/PlotTypeXT.js"></script>
 <script src="js/PlotTypeHX.js"></script>
-<script src="js/PlotTypeHM.js"></script>
+<script src="js/PlotTypeCV.js"></script>
 <script src="js/PlotTypePP.js"></script>
 <script src="js/PlottingMachinery.js"></script>
 <script src="js/help_viewer.js"></script>
 <script src="js/RunState.js"></script>
 <script src="js/UserInterface.js"></script>
 <script src="js/Simulator.js"></script>
+<script src="js/SSNS_PS.js"></script>
 
 
 
@@ -1259,6 +1284,6 @@ parameters are speed of upper, lower boundaries and of "observer", pressure grad
   window.sim = new Simulator();  // done here at end of file so that everything it depends on is already loaded...
 </script>
 
-
+</div>
 </body>
 </html>

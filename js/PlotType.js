@@ -7,7 +7,7 @@
 //
 class PlotType {
 
-    static registered_PTs = ["XT", "HX", "HM", "PP"];
+    static registered_PTs = ["XT", "HX", "CV", "PP"];
     static square_plot_width;   // may eventually tweak method of assigning numbers, so keep width/height separate for "square" plots
     static square_plot_height;  // may eventually tweak method of assigning numbers, so keep width/height separate for "square" plots
     static non_square_plot_width;

@@ -176,6 +176,7 @@ document.getElementById('startSimulation').addEventListener('click', function ()
     const userVelocity = parseFloat(document.getElementById('velocityMagnitude').value) / 10;
     const numParticles = parseInt(document.getElementById('numParticles').value);
     const mode = parseInt(document.getElementById('mode').value);
+    const isCollision = parseInt(document.getElementById('isCollision').value);
 
     // validate the input
     if (!validateInput(userBoxWidth) || !validateInput(userBoxHeight) || !validateInput(userVelocity)
@@ -253,13 +254,13 @@ document.getElementById('startSimulation').addEventListener('click', function ()
     canvas.height = userBoxHeight * 100;
     canvas.style.border = "1px solid black";
 
-    const button = document.getElementById('startSimulation');
-    const buttonTop = button.getBoundingClientRect().top;
-    const buttonHeight = button.offsetHeight
+    const boxWidthObj = document.getElementById('boxWidth');
+    const boxWidthRect = boxWidthObj.getBoundingClientRect();
 
     const canvasContainer = document.getElementById('canvasContainer');
     canvasContainer.style.position = "absolute";
-    canvasContainer.style.top = `${buttonTop + buttonHeight}px`;
+    canvasContainer.style.top = `${boxWidthRect.top - 10}px`;
+    canvasContainer.style.left = `${boxWidthRect.right + 20}px`
     canvasContainer.innerHTML = '';
     canvasContainer.style.width = `${canvas.width * 1.5}px`;
     canvasContainer.style.height = `${canvas.height * 1.5}px`;
@@ -310,7 +311,7 @@ document.getElementById('startSimulation').addEventListener('click', function ()
         // limited 30 FPS
         const timeStep = Math.min(deltaTime / 1000, maxTimeStep);
 
-        handleCollisions();
+        if (isCollision) handleCollisions();
 
         // update particles position
         particles.forEach(atom => {
