@@ -38,9 +38,10 @@
                 <option value="1">Collision</option>
             </select>
 
+            <label for="initialSeed" style="grid-column: 1; grid-row: 7; text-align: right;">Seed (0 for random):</label>
+            <input type="initialSeed" id="initialSeed" min="0" value="1" style="grid-column: 2; grid-row: 7;">
             
-            <button id="startSimulation" style="grid-column: 1 / span 2; grid-row: 7;">Start Simulation</button>
-
+            <button id="startSimulation" style="grid-column: 1 / span 2; grid-row: 8;">Start Simulation</button>
         </div>
         <div id="canvasContainer"></div>
         <script src="js/ParticleSimulate-jg.js"></script>
