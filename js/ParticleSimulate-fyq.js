@@ -22,7 +22,7 @@ var sim_time = 0;
 
 
 function collision_pressure_calc(time,V){//mass, magnitude, bounce) {
-    instant_pressure = (2*m*Math.abs(V)) / (time*Math.sqrt(userBoxSize));
+    instant_pressure = (m*Math.abs(V)) / (time*Math.sqrt(userBoxSize));
     console.log(instant_pressure);
     total_pressure = total_pressure + instant_pressure;
     console.log("colide!");
