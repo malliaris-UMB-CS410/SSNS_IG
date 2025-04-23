@@ -67,8 +67,8 @@ class Coords_IS extends Coords_Spin {
 	    let move_accepted = this.mc.accept_move(Delta_E, this.p.T);
 	    this.spins = copy(this.c_prev.spins);
 	    if (move_accepted) {
-		this.flip_spin(this.spins, x, y);
-	    }
+			this.flip_spin(this.spins, x, y);
+	    	}
 	    let new_val = this.spins.get(x, y);
 	    let pts = new CoordTransition_Spin(x, y, old_val, new_val, move_accepted, Delta_E);
 	    this.c_prev.next_trans = pts;

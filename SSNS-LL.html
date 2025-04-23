@@ -9,7 +9,7 @@
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" rel="stylesheet">
-<link href="/static/css/SSNS.css" rel="stylesheet">
+<link href="SSNS.css" rel="stylesheet">
 
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload='renderMathInElement(document.body, {delimiters:
 	[{left: "$$", right: "$$", display: false},
@@ -58,13 +58,14 @@
 
 <nav class="navbar navbar-expand-lg w-100 py-0 px-1 px-md-2 px-lg-3">
 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar_collapse">&#x2630;</button>
-<a id="navbar_message" class="navbar-brand">Welcome to <strong>SSNS</strong>.  Click <button type="button" class="btn btn-sm emulated_help_btn"><img height="15" width="10" src="/static/images/SSNS/question_mark.svg"></button> for intro/help.</a>
+<a id="navbar_message" class="navbar-brand">Welcome to <strong>SSNS</strong>.  Click <button type="button" class="btn btn-sm emulated_help_btn"><img height="15" width="10" src="img/question_mark.svg" alt=""></button> for intro/help.</a>
 <div id="navbar_collapse" class="collapse navbar-collapse justify-content-end">
 <ul class="navbar-nav">
-<li class="nav-item"><a class="nav-link pl-2" href="#">link 1</a></li>
+<li class="nav-item"><a class="nav-link pl-2" href="ParticleSimulate.html">Particle Simulator</a></li>
 <li class="nav-item"><a class="nav-link pl-2" href="#">link 2</a></li>
 <li class="nav-item"><a class="nav-link pl-2" href="#">link 3</a></li>
 <li class="nav-item"><a class="nav-link pl-2" href="#">link 4</a></li>
+
 </ul>
 </div><!-- CLOSES div id="navbar_collapse" -->
 </nav>
@@ -85,8 +86,9 @@
 <div id="plot_y_axis_lbl"></div>
 
 <div id="plot_flot" class="plot_target"></div>
-<canvas id="plot_HM_IS" class="plot_target"></canvas>
-<canvas id="plot_HM_XY" class="plot_target"></canvas>
+<canvas id="plot_CV_IG" class="plot_target"></canvas>
+<canvas id="plot_CV_IS" class="plot_target"></canvas>
+<canvas id="plot_CV_XY" class="plot_target"></canvas>
 
 <div id="plot_x_axis_lbl"></div>
 
@@ -136,7 +138,7 @@
 </button>
 
 <button type="button" class="btn btn-ssns-emphasis px-0 flex-fill" onclick="window.sim.ui.hv.help_btn_pressed(); ">
-<img id="UI_help_btn_qm" height="30" width="20" src="/static/images/SSNS/question_mark.svg">
+<img id="UI_help_btn_qm" height="30" width="20" src="img/question_mark.svg" alt="">
 </button>
 
 </div>
@@ -159,14 +161,16 @@
 
 <div class="row" id="UI_P_SP_RW">
 <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SP_RW_l'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_immed px-2 py-1"> $$ \ell $$ </span></div>
-<input id="UI_P_SP_RW_l" class="form-control" type="number" min="0.0" max="1.0" step="0.01" value="0.4" onchange="window.sim.ui.handle_RW_l_update(this.value); "></div></div>
+    <label for="UI_P_SP_RW_l"></label><input id="UI_P_SP_RW_l" class="form-control" type="number" min="0.0" max="1.0" step="0.01" value="0.4" onchange="window.sim.ui.handle_RW_l_update(this.value); "></div></div>
 
 <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SP_RW_r'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_immed px-2 py-1"> $$ r $$ </span></div>
-<input id="UI_P_SP_RW_r" class="form-control" type="number" min="0.0" max="1.0" step="0.01" value="0.4" onchange="window.sim.ui.handle_RW_r_update(this.value); "></div></div>
+    <label for="UI_P_SP_RW_r"></label><input id="UI_P_SP_RW_r" class="form-control" type="number" min="0.0" max="1.0" step="0.01" value="0.4" onchange="window.sim.ui.handle_RW_r_update(this.value); "></div></div>
 
-<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SP_RW_N'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ N $$ </span></div><input id="UI_P_SP_RW_N" class="form-control" type="number" min="2" max="10000" step="1" value="10" onchange="Coords_RW.N.try_update(this.value); "></div></div>
+<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SP_RW_N'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ N $$ </span></div>
+    <label for="UI_P_SP_RW_N"></label><input id="UI_P_SP_RW_N" class="form-control" type="number" min="2" max="10000" step="1" value="10" onchange="Coords_RW.N.try_update(this.value); "></div></div>
 
-<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SP_RW_x_0'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ x_0 $$ </span></div><input id="UI_P_SP_RW_x_0" class="form-control" type="number" min="0" max="10000" step="1" value="5" onchange="Coords_RW.x_0.try_update(this.value); "></div></div>
+<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SP_RW_x_0'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ x_0 $$ </span></div>
+    <label for="UI_P_SP_RW_x_0"></label><input id="UI_P_SP_RW_x_0" class="form-control" type="number" min="0" max="10000" step="1" value="5" onchange="Coords_RW.x_0.try_update(this.value); "></div></div>
 
 </div><!-- CLOSES div class="row" -->
 
@@ -174,13 +178,16 @@
 <div class="row" id="UI_P_SP_MN">
 <!-- use mu,s,N,x_0,seed = 0.001,0.2,20,5,1 for your NI = 1 and t = 603 or NI = 10 and t = 421 "stochastic fingerprints" -->
 <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SP_MN_mu'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_immed px-2 py-1"> $$ \mu $$ </span></div>
-<input id="UI_P_SP_MN_mu" class="form-control" type="number" min="0.0" max="1.0" step="0.01" value="0.001" onchange="Params_MN.mu.try_update(this.value); "></div></div>
+    <label for="UI_P_SP_MN_mu"></label><input id="UI_P_SP_MN_mu" class="form-control" type="number" min="0.0" max="1.0" step="0.01" value="0.001" onchange="Params_MN.mu.try_update(this.value); "></div></div>
 
-<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SP_MN_s'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_immed px-2 py-1"> $$ s $$ </span></div><input id="UI_P_SP_MN_s" class="form-control" type="number" min="0.0" max="1.0" step="0.01" value="0.2" onchange="Params_MN.s.try_update(this.value); "></div></div>
+<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SP_MN_s'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_immed px-2 py-1"> $$ s $$ </span></div>
+    <label for="UI_P_SP_MN_s"></label><input id="UI_P_SP_MN_s" class="form-control" type="number" min="0.0" max="1.0" step="0.01" value="0.2" onchange="Params_MN.s.try_update(this.value); "></div></div>
 
-<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SP_MN_N'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ N $$ </span></div><input id="UI_P_SP_MN_N" class="form-control" type="number" min="2" max="10000" step="1" value="20" onchange="Coords_MN.N.try_update(this.value); "></div></div>
+<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SP_MN_N'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ N $$ </span></div>
+    <label for="UI_P_SP_MN_N"></label><input id="UI_P_SP_MN_N" class="form-control" type="number" min="2" max="10000" step="1" value="20" onchange="Coords_MN.N.try_update(this.value); "></div></div>
 
-<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SP_MN_x_0'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ x_0 $$ </span></div><input id="UI_P_SP_MN_x_0" class="form-control" type="number" min="0" max="10000" step="1" value="5" onchange="Coords_MN.x_0.try_update(this.value); "></div></div>
+<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SP_MN_x_0'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ x_0 $$ </span></div>
+    <label for="UI_P_SP_MN_x_0"></label><input id="UI_P_SP_MN_x_0" class="form-control" type="number" min="0" max="10000" step="1" value="5" onchange="Coords_MN.x_0.try_update(this.value); "></div></div>
 
 </div><!-- CLOSES div class="row" -->
 
@@ -188,52 +195,111 @@
 <div class="row" id="UI_P_SP_CH">
 
 <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SP_CH_alpha'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_immed px-2 py-1"> $$ \alpha $$ </span></div>
-<input id="UI_P_SP_CH_alpha" class="form-control" type="number" min="0" max="Infinity" step="0.001" value="0.01" onchange="Params_CH.alpha.try_update(this.value); "></div></div>
+    <label for="UI_P_SP_CH_alpha"></label><input id="UI_P_SP_CH_alpha" class="form-control" type="number" min="0" max="Infinity" step="0.001" value="0.01" onchange="Params_CH.alpha.try_update(this.value); "></div></div>
 
 <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SP_CH_beta'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_immed px-2 py-1"> $$ \beta $$ </span></div>
-<input id="UI_P_SP_CH_beta" class="form-control" type="number" min="0" max="Infinity" step="0.0001" value="0.0001" onchange="Params_CH.beta.try_update(this.value); "></div></div>
+    <label for="UI_P_SP_CH_beta"></label><input id="UI_P_SP_CH_beta" class="form-control" type="number" min="0" max="Infinity" step="0.0001" value="0.0001" onchange="Params_CH.beta.try_update(this.value); "></div></div>
 
-<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SP_CH_x_0'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ x_0 $$ </span></div><input id="UI_P_SP_CH_x_0" class="form-control" type="number" min="0" max="10000" step="1" value="5" onchange="Coords_CH.x_0.try_update(this.value); "></div></div>
+<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SP_CH_x_0'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ x_0 $$ </span></div>
+    <label for="UI_P_SP_CH_x_0"></label><input id="UI_P_SP_CH_x_0" class="form-control" type="number" min="0" max="10000" step="1" value="5" onchange="Coords_CH.x_0.try_update(this.value); "></div></div>
+
+</div><!-- CLOSES div class="row" -->
+
+
+<div class="row" id="UI_P_SM_IG">
+    <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1">
+        <div class="input-group input-group-lg">
+            <div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SM_IG_V'); ">
+                <span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_immed px-2 py-1"> $$ V $$ </span>
+            </div>
+            <label for="UI_P_SM_IG_V"></label>
+            <input id="UI_P_SM_IG_V" class="form-control" type="number" min="100" max="400" step="1" value="200">
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1">
+        <div class="input-group input-group-lg">
+            <div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SM_IG_T'); ">
+                <span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_immed px-2 py-1"> $$ T $$ </span>
+            </div>
+            <label for="UI_P_SM_IG_T"></label>
+            <input id="UI_P_SM_IG_T" class="form-control" type="number" min="0" max="1000" step="0.01" value="1" onchange="Params_IG.T.try_update(this.value); ">
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1">
+        <div class="input-group input-group-lg">
+            <div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SM_IG_N'); ">
+                <span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ N $$ </span>
+            </div>
+            <label for="UI_P_SM_IG_N"></label>
+            <input id="UI_P_SM_IG_N" class="form-control" type="number" min="1" max="1000" step="1" value="4" onchange="Coords_IG.N.try_update(this.value); ">
+        </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1 UI_CTRL_STOCH">
+        <div class="input-group input-group-lg d-flex">
+            <div class="input-group-prepend flex-grow-1" onclick="window.sim.ui.hv.show_view('HV_C_RNG_RECR_TRAJ'); ">
+                <span class="input-group-text flex-grow-1 ctrl_eff_immed"> $$ \mathrm{Collision?} $$ </span>
+            </div>
+            <div class="input-group-append">
+                <div class="input-group-text lrg_bg_areas">
+                    <label for="UI_P_SM_IG_COLLISION"></label>
+                    <input type="checkbox" id="UI_P_SM_IG_COLLISION">
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div><!-- CLOSES div class="row" -->
 
 
 <div class="row" id="UI_P_SM_IS">
 
-<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SM_IS_T'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_immed px-2 py-1"> $$ T $$ </span></div><input id="UI_P_SM_IS_T" class="form-control" type="number" min="0.0" max="1000000000" step="0.01" value="0.0" onchange="Params_IS.T.try_update(this.value); "></div></div>
+<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SM_IS_T'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_immed px-2 py-1"> $$ T $$ </span></div>
+    <label for="UI_P_SM_IS_T"></label><input id="UI_P_SM_IS_T" class="form-control" type="number" min="0.0" max="1000000000" step="0.01" value="0.0" onchange="Params_IS.T.try_update(this.value); "></div></div>
 
-<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SM_IS_h'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_immed px-2 py-1"> $$ h $$ </span></div><input id="UI_P_SM_IS_h" class="form-control" type="number" disabled></div></div>
+<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SM_IS_h'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_immed px-2 py-1"> $$ h $$ </span></div>
+    <label for="UI_P_SM_IS_h"></label><input id="UI_P_SM_IS_h" class="form-control" type="number" disabled></div></div>
 
-<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SM_IS_N'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ N $$ </span></div><input id="UI_P_SM_IS_N" class="form-control" type="number" min="2" max="10000" step="1" value="4" onchange="Coords_IS.N.try_update(this.value); "></div></div>
+<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SM_IS_N'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ N $$ </span></div>
+    <label for="UI_P_SM_IS_N"></label><input id="UI_P_SM_IS_N" class="form-control" type="number" min="2" max="10000" step="1" value="4" onchange="Coords_IS.N.try_update(this.value); "></div></div>
 
 </div><!-- CLOSES div class="row" -->
 
 
 <div class="row" id="UI_P_SM_XY">
 
-<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SM_XY_T'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_immed px-2 py-1"> $$ T $$ </span></div><input id="UI_P_SM_XY_T" class="form-control" type="number" min="0.0" max="1000000000" step="0.01" value="0.0" onchange="Params_XY.T.try_update(this.value); "></div></div>
+<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SM_XY_T'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_immed px-2 py-1"> $$ T $$ </span></div>
+    <label for="UI_P_SM_XY_T"></label><input id="UI_P_SM_XY_T" class="form-control" type="number" min="0.0" max="1000000000" step="0.01" value="0.0" onchange="Params_XY.T.try_update(this.value); "></div></div>
 
-<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SM_XY_h'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_immed px-2 py-1"> $$ h $$ </span></div><input id="UI_P_SM_XY_h" class="form-control" type="number" disabled></div></div>
+<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SM_XY_h'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_immed px-2 py-1"> $$ h $$ </span></div>
+    <label for="UI_P_SM_XY_h"></label><input id="UI_P_SM_XY_h" class="form-control" type="number" disabled></div></div>
 
-<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SM_XY_N'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ N $$ </span></div><input id="UI_P_SM_XY_N" class="form-control" type="number" min="2" max="10000" step="1" value="10" onchange="Coords_XY.N.try_update(this.value); "></div></div>
+<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SM_XY_N'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ N $$ </span></div>
+    <label for="UI_P_SM_XY_N"></label><input id="UI_P_SM_XY_N" class="form-control" type="number" min="2" max="10000" step="1" value="10" onchange="Coords_XY.N.try_update(this.value); "></div></div>
 
 </div><!-- CLOSES div class="row" -->
 
 
 <div class="row" id="UI_P_ND_LM">
 
-<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_ND_LM_r'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_immed px-2 py-1"> $$ r $$ </span></div><input id="UI_P_ND_LM_r" class="form-control" type="number" min="0.0" max="4.0" step="0.01" value="2.99" onchange="Params_LM.r.try_update(this.value); "></div></div>
+<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_ND_LM_r'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_immed px-2 py-1"> $$ r $$ </span></div>
+    <label for="UI_P_ND_LM_r"></label><input id="UI_P_ND_LM_r" class="form-control" type="number" min="0.0" max="4.0" step="0.01" value="2.99" onchange="Params_LM.r.try_update(this.value); "></div></div>
 
-<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_ND_LM_x_0'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ x_0 $$ </span></div><input id="UI_P_ND_LM_x_0" class="form-control" type="number" min="0.0" max="1.0" step="0.01" value="0.51" onchange="Coords_LM.x_0.try_update(this.value); "></div></div>
+<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_ND_LM_x_0'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ x_0 $$ </span></div>
+    <label for="UI_P_ND_LM_x_0"></label><input id="UI_P_ND_LM_x_0" class="form-control" type="number" min="0.0" max="1.0" step="0.01" value="0.51" onchange="Coords_LM.x_0.try_update(this.value); "></div></div>
 
 </div><!-- CLOSES div class="row" -->
 
 
 <div class="row" id="UI_P_ND_GM">
 
-<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_ND_GM_x_0'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ x_0 $$ </span></div><input id="UI_P_ND_GM_x_0" class="form-control" type="number" min="-0.0" max="5.0" step="0.1" value="1.1" onchange="Coords_GM.x_0.try_update(this.value); "></div></div>
+<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_ND_GM_x_0'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ x_0 $$ </span></div>
+    <label for="UI_P_ND_GM_x_0"></label><input id="UI_P_ND_GM_x_0" class="form-control" type="number" min="-0.0" max="5.0" step="0.1" value="1.1" onchange="Coords_GM.x_0.try_update(this.value); "></div></div>
 
-<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_ND_GM_y_0'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ y_0 $$ </span></div><input id="UI_P_ND_GM_y_0" class="form-control" type="number" min="-0.0" max="5.0" step="0.1" value="0" onchange="Coords_GM.y_0.try_update(this.value); "></div></div>
+<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_ND_GM_y_0'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ y_0 $$ </span></div>
+    <label for="UI_P_ND_GM_y_0"></label><input id="UI_P_ND_GM_y_0" class="form-control" type="number" min="-0.0" max="5.0" step="0.1" value="0" onchange="Coords_GM.y_0.try_update(this.value); "></div></div>
 
 </div><!-- CLOSES div class="row" -->
 
@@ -243,7 +309,37 @@
 <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend"><span class="input-group-text"> $$ TI $$ </span></div><input id="UI_TI" class="form-control" type="number" value="777" onchange="alert(window.sim.ui.yields_valid_int(this.value)); "></div></div>
 <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend"><span class="input-group-text"> $$ TF $$ </span></div><input id="UI_TF" type="number" class="form-control" min="-0.7" max="2.8" step="0.1" value="0.4" onchange="window.sim.TF.try_update(this.value); "></div></div>
 -->
-<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend"><span class="input-group-text"> $$ D $$ </span></div><input type="number" class="form-control"></div></div><div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend"><span class="input-group-text"> $$ D $$ </span></div><input type="number" class="form-control"></div></div><div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend"><span class="input-group-text"> $$ D $$ </span></div><input type="number" class="form-control"></div></div><div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend"><span class="input-group-text"> $$ D $$ </span></div><input type="number" class="form-control"></div></div><div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend"><span class="input-group-text"> $$ D $$ </span></div><input type="number" class="form-control"></div></div><div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend"><span class="input-group-text"> $$ D $$ </span></div><input type="number" class="form-control"></div></div><div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend"><span class="input-group-text"> $$ D $$ </span></div><input type="number" class="form-control"></div></div><div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend"><span class="input-group-text"> $$ D $$ </span></div><input type="number" class="form-control"></div></div><div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend"><span class="input-group-text"> $$ D $$ </span></div><input type="number" class="form-control"></div></div><div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend"><span class="input-group-text"> $$ D $$ </span></div><input type="number" class="form-control"></div></div>
+<div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend"><span class="input-group-text"> $$ D $$ </span></div>
+    <label>
+        <input type="number" class="form-control">
+    </label></div></div><div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend"><span class="input-group-text"> $$ D $$ </span></div>
+    <label>
+        <input type="number" class="form-control">
+    </label></div></div><div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend"><span class="input-group-text"> $$ D $$ </span></div>
+    <label>
+        <input type="number" class="form-control">
+    </label></div></div><div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend"><span class="input-group-text"> $$ D $$ </span></div>
+    <label>
+        <input type="number" class="form-control">
+    </label></div></div><div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend"><span class="input-group-text"> $$ D $$ </span></div>
+    <label>
+        <input type="number" class="form-control">
+    </label></div></div><div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend"><span class="input-group-text"> $$ D $$ </span></div>
+    <label>
+        <input type="number" class="form-control">
+    </label></div></div><div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend"><span class="input-group-text"> $$ D $$ </span></div>
+    <label>
+        <input type="number" class="form-control">
+    </label></div></div><div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend"><span class="input-group-text"> $$ D $$ </span></div>
+    <label>
+        <input type="number" class="form-control">
+    </label></div></div><div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend"><span class="input-group-text"> $$ D $$ </span></div>
+    <label>
+        <input type="number" class="form-control">
+    </label></div></div><div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1"><div class="input-group input-group-lg"><div class="input-group-prepend"><span class="input-group-text"> $$ D $$ </span></div>
+    <label>
+        <input type="number" class="form-control">
+    </label></div></div>
 </div><!-- CLOSES div class="row" -->
 
 
@@ -277,7 +373,7 @@
 <div class="btn-group btn-group-lg d-flex">
 <button id="UI_PT_XT_btn" type="button" class="btn btn-ssns px-0 w-100"><span class="plot_icon_axes p-1"><i class="fas fa-fw fa-lg fa-arrow-trend-up"></i></span></button>
 <button id="UI_PT_HX_btn" type="button" class="btn btn-ssns px-0 w-100"><span class="plot_icon_axes p-1"><i class="fas fa-fw fa-lg fa-chart-simple"></i></span></button>
-<button id="UI_PT_HM_btn" type="button" class="btn btn-ssns px-0 w-100"><span class="plot_icon_axes p-1"><i class="fab fa-fw fa-lg fa-buromobelexperte"></i></span></button>
+<button id="UI_PT_CV_btn" type="button" class="btn btn-ssns px-0 w-100"><span class="plot_icon_axes p-1"><i class="fab fa-fw fa-lg fa-buromobelexperte"></i></span></button>
 <button id="UI_PT_PP_btn" type="button" class="btn btn-ssns px-0 w-100"><span class="plot_icon_axes p-1"><i class="fas fa-fw fa-lg fa-arrows-spin"></i></span></button>
 </div>
 </div><!-- CLOSES div class="col-12 ..." -->
@@ -285,7 +381,7 @@
 <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1">
 <div class="input-group input-group-lg">
 <div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_C_T_DT_JUMP'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_immed px-2 py-1"> $$ t_{ \mathrm{jump} } $$ </span></div>
-<input type="number" class="form-control" id="UI_CTRL_JT" min="-Infinity" max="Infinity" step="1" value="421" onchange="window.sim.ui.t_jump.try_update(this.value); ">
+    <label for="UI_CTRL_JT"></label><input type="number" class="form-control" id="UI_CTRL_JT" min="-Infinity" max="Infinity" step="1" value="421" onchange="window.sim.ui.t_jump.try_update(this.value); ">
 <div class="input-group-append"><button type="button" class="btn btn-ssns btn-lg px-2" onclick="window.sim.process_cmd('JT'); "><a>
 <i class="fas fa-fw fa-lg fa-turn-down" data-fa-transform="rotate--90"></i>
 </a></button></div>
@@ -296,7 +392,7 @@
 <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1">
 <div class="input-group input-group-lg">
 <div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_C_T_DT_JUMP'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_immed px-2 py-1"> $$ \Delta t $$ </span></div>
-<input type="number" class="form-control" id="UI_CTRL_JD" min="-Infinity" max="Infinity" step="1" value="6" onchange="window.sim.ui.Delta_t.try_update(this.value); ">
+    <label for="UI_CTRL_JD"></label><input type="number" class="form-control" id="UI_CTRL_JD" min="-Infinity" max="Infinity" step="1" value="6" onchange="window.sim.ui.Delta_t.try_update(this.value); ">
 <div class="input-group-append"><button type="button" class="btn btn-ssns btn-lg px-2" onclick="window.sim.process_cmd('JD'); "><a>
 <i class="fas fa-fw fa-lg fa-turn-down" data-fa-transform="rotate--90"></i>
 </a></button></div>
@@ -306,48 +402,49 @@
 
 <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1">
 <div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_C_DELAY_WINDOW'); "><span class="input-group-text ctrl_eff_immed"> $$ \mathrm{delay} $$ </span></div>
-<input type="number" class="form-control" id="UI_CTRL_delay" min="0" max="10000" step="1" value="0" onchange="window.sim.ui.delay.try_update(this.value); "></div>
+    <label for="UI_CTRL_delay"></label><input type="number" class="form-control" id="UI_CTRL_delay" min="0" max="10000" step="1" value="0" onchange="window.sim.ui.delay.try_update(this.value); "></div>
 </div>
 
 <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1" id="UI_window_size_input_group">
 <div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_C_DELAY_WINDOW'); "><span class="input-group-text ctrl_eff_immed"> $$ \mathrm{window} $$ </span></div>
-<input type="number" class="form-control" id="UI_CTRL_window_size" min="10" max="50" step="1" value="30" onchange="window.sim.ui.handle_ws_update(this.value); "></div>
+    <label for="UI_CTRL_window_size"></label><input type="number" class="form-control" id="UI_CTRL_window_size" min="10" max="50" step="1" value="30" onchange="window.sim.ui.handle_ws_update(this.value); "></div>
 </div>
 
 <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1">
 <div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_C_T_0_MAX_STOP'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ t_0 $$ </span></div>
-<input type="number" class="form-control" id="UI_CTRL_t_0" min="-Infinity" max="Infinity" step="1" value="0" onchange="window.sim.ui.handle_t_0_update(this.value); "></div>
+    <label for="UI_CTRL_t_0"></label><input type="number" class="form-control" id="UI_CTRL_t_0" min="-Infinity" max="Infinity" step="1" value="0" onchange="window.sim.ui.handle_t_0_update(this.value); "></div>
 </div>
 
 <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1">
 <div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_C_T_0_MAX_STOP'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ t_{ \mathrm{max} } $$ </span></div>
-<input type="number" class="form-control" id="UI_CTRL_t_max" min="-Infinity" max="Infinity" step="1" value="10000" onchange="window.sim.ui.handle_t_max_update(this.value); "></div>
+    <label for="UI_CTRL_t_max"></label><input type="number" class="form-control" id="UI_CTRL_t_max" min="-Infinity" max="Infinity" step="1" value="10000" onchange="window.sim.ui.handle_t_max_update(this.value); "></div>
 </div>
 
 <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1">
 <div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_C_T_0_MAX_STOP'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_immed px-2 py-1"> $$ t_{ \mathrm{stop} } $$ </span></div>
-<input type="number" class="form-control" id="UI_CTRL_t_stop" min="-Infinity" max="Infinity" step="1" value="603" onchange="window.sim.ui.t_stop.try_update(this.value); ">
-<div class="input-group-append"><div class="input-group-text lrg_bg_areas"><input type="checkbox" id="UI_CTRL_use_t_stop"></div></div></div>
+    <label for="UI_CTRL_t_stop"></label><input type="number" class="form-control" id="UI_CTRL_t_stop" min="-Infinity" max="Infinity" step="1" value="603" onchange="window.sim.ui.t_stop.try_update(this.value); ">
+<div class="input-group-append"><div class="input-group-text lrg_bg_areas"><label for="UI_CTRL_use_t_stop"></label><input type="checkbox" id="UI_CTRL_use_t_stop"></div></div></div>
 </div>
 
 <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1 UI_CTRL_STOCH">
 <div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_C_RNG_RECR_TRAJ'); "><span class="input-group-text d-inline-flex justify-content-center ctrl_eff_reload"> $$ \mathrm{RNG \, seed} $$ </span></div>
-<input type="number" class="form-control" id="UI_CTRL_rng_seed" min="1" max="4294967295" step="1" value="1" onchange="ModelCalc_Stoch.rng_seed.try_update(this.value); "></div>
+    <label for="UI_CTRL_rng_seed"></label><input type="number" class="form-control" id="UI_CTRL_rng_seed" min="1" max="4294967295" step="1" value="1" onchange="ModelCalc_Stoch.rng_seed.try_update(this.value); "></div>
 </div>
 
 <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1 UI_CTRL_STOCH">
 <div class="input-group input-group-lg d-flex"><div class="input-group-prepend flex-grow-1" onclick="window.sim.ui.hv.show_view('HV_C_RNG_RECR_TRAJ'); "><span class="input-group-text flex-grow-1 ctrl_eff_immed"> $$ \mathrm{recreate \, trajectory} $$ </span></div>
-<div class="input-group-append"><div class="input-group-text lrg_bg_areas"><input type="checkbox" id="UI_CTRL_rng_recreate_traj" checked></div></div></div>
+<div class="input-group-append"><div class="input-group-text lrg_bg_areas"><label
+        for="UI_CTRL_rng_recreate_traj"></label><input type="checkbox" id="UI_CTRL_rng_recreate_traj" checked></div></div></div>
 </div>
 
 <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1 UI_CTRL_STOCH UI_CTRL_SP">
 <div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_C_SP_ENSEMBLE'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ N_i $$ </span></div>
-<input id="UI_CTRL_SP_NI" type="number" class="form-control" min="0" max="100" step="1" value="1" onchange="Coords_SP.num_IEM.try_update(this.value); "></div>
+    <label for="UI_CTRL_SP_NI"></label><input id="UI_CTRL_SP_NI" type="number" class="form-control" min="0" max="100" step="1" value="1" onchange="Coords_SP.num_IEM.try_update(this.value); "></div>
 </div>
 
 <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1 UI_CTRL_STOCH UI_CTRL_SP">
 <div class="input-group input-group-lg"><div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_C_SP_ENSEMBLE'); "><span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ N_g $$ </span></div>
-<input id="UI_CTRL_SP_NG" type="number" class="form-control" min="0" max="1000000" step="1000" value="1000000" onchange="Coords_SP.num_GEM.try_update(this.value); "></div>
+    <label for="UI_CTRL_SP_NG"></label><input id="UI_CTRL_SP_NG" type="number" class="form-control" min="0" max="1000000" step="1000" value="1000000" onchange="Coords_SP.num_GEM.try_update(this.value); "></div>
 </div>
 
 <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1">
@@ -390,7 +487,7 @@
 <label class="form-check-label w-100" for="UI_ST_SM">statistical mechanics</label>
 </div>
 <div id="UI_ST_ND_form_check" class="form-check pl-4 py-1">
-<input class="form-check-input" type="radio" name="UI_ST_area" id="UI_ST_ND" value="ND" onchange="window.sim.ui.update_ST_area_settings(); ">
+<input class="form-check-input" type="radio" name="UI_ST_area" id="UI_ST_ND" value="ND" onchange="window.sim.ui.update_ST_area_settings(); " >
 <label class="form-check-label w-100" for="UI_ST_ND">nonlinear dynamics</label>
 </div>
 <div id="UI_ST_FD_form_check" class="form-check pl-4 py-1">
@@ -441,7 +538,7 @@
 <label class="form-check-label w-100" for="UI_ST_ND_LM">logistic map ($$ \texttt{LM} $$)</label>
 </div>
 <div id="UI_ST_ND_GM_form_check" class="form-check pl-4 py-1">
-<input class="form-check-input" type="radio" name="UI_ST" id="UI_ST_ND_GM" value="GM" onchange="window.sim.process_cmd('ST'); ">
+<input class="form-check-input" type="radio" name="UI_ST" id="UI_ST_ND_GM" value="GM" onchange="window.sim.process_cmd('ST'); " >
 <label class="form-check-label w-100" for="UI_ST_ND_GM">gingerbread-man map ($$ \texttt{GM} $$)</label>
 </div>
 </div>
@@ -473,32 +570,6 @@
 <div id="copyright_text" class="py-1 px-3">&copy; 1937 Daffy Duck</div>
 </div>
 
-
-
-
-<!-- PLOTTING TEST AREA -- COMMENT OUT WHEN NOT IN USE -->
-<!--
-<canvas id="plot_canvas_TEMP" style="display: none; "></canvas>
-<div id="plot_flot_TEMP_1" style="display: none; margin-left: 2em; margin-bottom: -25px; "></div>
-<div id="plot_flot_TEMP_2" style="display: none; margin-left: 2em; margin-bottom: -25px; "></div>
-<div id="plot_flot_TEMP_3" style="display: none; margin-left: 2em; "></div>
-<div id="plot_flot_TEMP_4" style="display: none; height: 20px; "></div>
--->
-
-
-
-
-</div><!-- CLOSES div class="container-fluid" -->
-
-
-
-
-
-<!------------------------------------------------------------------------------------------------->
-<!------------------------------------------------------------------------------------------------->
-<!-----  MODAL WINDOW FOR HelpViewer CONTENT  ----------------------------------------------------->
-<!------------------------------------------------------------------------------------------------->
-<!------------------------------------------------------------------------------------------------->
 
 <div class="modal fade" id="md_container" tabindex="-1">
 <div class="modal-dialog modal-xl" style="">
@@ -542,8 +613,8 @@
 </div><!-- CLOSES div class="hv_view" -->
 
 <div id="HV_USING" class="hv_view" data-ready="1" data-hvmh="How to use">
-<img id="hv_ssns_screenshot" src="/static/images/SSNS/hv_interface_pics/using_-_LM_example.png">
-<p>At right is a screenshot of <strong>SSNS</strong> in action.  The <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_PLOT_AREA'); ">plot area</a> occupies the upper part of the screen.  Below that is the <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_MAIN_PANEL'); ">main panel</a> which contains one button bar with <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_C_CONTINUOUS_CMDS'); ">continuous-action navigation</a> commands and another with 3 toggle-able dropdown areas: <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_CTRL_DROPDOWN'); "><samp>CTRL</samp></a> <button type="button" class="btn btn-ssns-demo btn-sm px-1 py-0"><i class="fas fa-fw fa-lg fa-calculator"></i></button>, <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_PRMS_DROPDOWN'); "><samp>PRMS</samp></a> <button type="button" class="btn btn-ssns-demo btn-sm px-1 py-0"><i class="fas fa-fw fa-lg fa-sliders"></i></button>, and <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_SYS_DROPDOWN'); "><samp>SYS</samp></a> <button type="button" class="btn btn-ssns-demo btn-sm" style="padding: 0 0.35rem; ">$$ \texttt{AB} $$</i></button>.</p>
+<img id="hv_ssns_screenshot" src="img/hv_interface_pics/using_-_LM_example.png" alt="">
+<p>At right is a screenshot of <strong>SSNS</strong> in action.  The <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_PLOT_AREA'); ">plot area</a> occupies the upper part of the screen.  Below that is the <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_MAIN_PANEL'); ">main panel</a> which contains one button bar with <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_C_CONTINUOUS_CMDS'); ">continuous-action navigation</a> commands and another with 3 toggle-able dropdown areas: <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_CTRL_DROPDOWN'); "><samp>CTRL</samp></a> <button type="button" class="btn btn-ssns-demo btn-sm px-1 py-0"><i class="fas fa-fw fa-lg fa-calculator"></i></button>, <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_PRMS_DROPDOWN'); "><samp>PRMS</samp></a> <button type="button" class="btn btn-ssns-demo btn-sm px-1 py-0"><i class="fas fa-fw fa-lg fa-sliders"></i></button>, and <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_SYS_DROPDOWN'); "><samp>SYS</samp></a> <button type="button" class="btn btn-ssns-demo btn-sm" style="padding: 0 0.35rem; ">$$ \texttt{AB} $$</button>.</p>
 
 <p>The <strong>SSNS</strong> app is like an audio recorder in that <strong><em>playback can only occur after some data is recorded</em></strong>.  In the screenshot, the currently loaded <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_SYS_DROPDOWN'); ">system type</a> is <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_ST_LM'); ">$$ \texttt{LM} $$</a>, 12 time steps have been recorded, and the current time is $$t = 9$$.</p>
 
@@ -559,14 +630,14 @@ text-align: center; vertical-align: middle !important;
 
 <p><strong>SSNS</strong> has four different <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_C_PLOT_TYPES'); ">plot types</a>, each filling a different visualization "niche."  The <button type="button" class="btn btn-ssns-demo btn-sm px-1 py-0"><i class="fas fa-fw fa-lg fa-arrow-trend-up"></i></button> plot type (the app's "flagship") is great for exploring <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Dynamical_system">time-dependent</a> behavior like the approach to a <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Steady_state">steady</a> or <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/List_of_types_of_equilibrium">equilibrium</a> state.  Here it is in action:</p>
 
-<img class="hv_fw_img" src="/static/images/SSNS/hv_interface_pics/TrajSeg_illustrated.png">
+<img class="hv_fw_img" src="img/hv_interface_pics/TrajSeg_illustrated.png" alt="">
 
 <p>The black circle follows the current time ($$t = 57$$, here) and matches the <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_C_CONTINUOUS_CMDS'); ">main panel</a>'s time indicator.  The grey vertical band (at $$78$$, here) indicates $$ t_{\mathrm{edge}} $$, the end of the <em>recorded</em> trajectory ($$ t_{\mathrm{edge}} \le \; $$<a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_C_T_0_MAX_STOP'); ">$$ t_{\mathrm{max}} $$</a>).  <strong>SSNS</strong> trajectories are sequences of <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_CODE_ORGANIZATION'); ">$$\texttt{TrajSeg}$$ objects</a>.  A change of <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_PRMS_DROPDOWN'); ">parameter values</a> generates a new $$\texttt{TrajSeg}$$ segment and cycles the plot color.  The screenshot above shows 4 of them: red, green, blue, and red again.</p>
 
 </div><!-- CLOSES div class="hv_view" -->
 
 <div id="HV_MAIN_PANEL" class="hv_view" data-ready="1" data-hvmh="Main Panel">
-<p>The <strong>SSNS</strong> main panel contains two button bars.  The first contains the <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_C_CONTINUOUS_CMDS'); ">continuous-action commands</a> with the (non-clickable) time-step indicator on the right.  The second bar's buttons are, from left to right: <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_CTRL_DROPDOWN'); "><samp>CTRL</samp></a> <button type="button" class="btn btn-ssns-demo btn-sm px-1 py-0"><i class="fas fa-fw fa-lg fa-calculator"></i></button> for general inputs, <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_PRMS_DROPDOWN'); "><samp>PRMS</samp></a> <button type="button" class="btn btn-ssns-demo btn-sm px-1 py-0"><i class="fas fa-fw fa-lg fa-sliders"></i></button> for system-type-specific inputs, <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_SYS_DROPDOWN'); "><samp>SYS</samp></a> <button type="button" class="btn btn-ssns-demo btn-sm" style="padding: 0 0.35rem; ">$$ \texttt{AB} $$</i></button> for choosing the system type, and <button type="button" class="btn btn-sm emulated_help_btn"><img height="15" width="10" src="/static/images/SSNS/question_mark.svg"></button> for this <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_HELP_VIEWER'); ">help viewer</a>.</p>
+<p>The <strong>SSNS</strong> main panel contains two button bars.  The first contains the <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_C_CONTINUOUS_CMDS'); ">continuous-action commands</a> with the (non-clickable) time-step indicator on the right.  The second bar's buttons are, from left to right: <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_CTRL_DROPDOWN'); "><samp>CTRL</samp></a> <button type="button" class="btn btn-ssns-demo btn-sm px-1 py-0"><i class="fas fa-fw fa-lg fa-calculator"></i></button> for general inputs, <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_PRMS_DROPDOWN'); "><samp>PRMS</samp></a> <button type="button" class="btn btn-ssns-demo btn-sm px-1 py-0"><i class="fas fa-fw fa-lg fa-sliders"></i></button> for system-type-specific inputs, <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_SYS_DROPDOWN'); "><samp>SYS</samp></a> <button type="button" class="btn btn-ssns-demo btn-sm" style="padding: 0 0.35rem; ">$$ \texttt{AB} $$</button> for choosing the system type, and <button type="button" class="btn btn-sm emulated_help_btn"><img height="15" width="10" src="img/question_mark.svg" alt=""></button> for this <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_HELP_VIEWER'); ">help viewer</a>.</p>
 
 <p><strong>SSNS</strong> uses <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/JavaScript">JavaScript</a> and the Bootstrap <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_CODE_DEPENDENCIES'); ">library</a> to <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Responsive_web_design">adapt</a> the app interface to different screen widths across <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Mobile_device">devices</a>.  "Responsive" behaviors include:</p>
 
@@ -580,9 +651,9 @@ text-align: center; vertical-align: middle !important;
 
 <div id="HV_PRMS_DROPDOWN" class="hv_view" data-ready="1" data-hvmh="PRMS Dropdown">
 <p>When a <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_SYS_DROPDOWN'); ">system type</a> is selected, its <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Parameter_space">parameters</a> populate the <samp>PRMS</samp> <button type="button" class="btn btn-ssns-demo btn-sm px-1 py-0"><i class="fas fa-fw fa-lg fa-sliders"></i></button> dropdown area.  A parameter could be, say, a <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_P_SP_MN_mu'); ">mutation rate</a> in a biological model, or <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_P_SM_IS_T'); ">temperature</a> in a physical model, like so:</p>
-<img class="hv_fw_img" src="/static/images/SSNS/hv_interface_pics/PRMS_example_-_T_parameter.png">
+<img class="hv_fw_img" src="img/hv_interface_pics/PRMS_example_-_T_parameter.png" alt="">
 
-<p>The input field has the current value ($$1.2$$, here) and, on the left, the parameter's symbol ($$T$$) on a colored background.  The color indicates when a changed value takes effect &mdash; <span class="ctrl_eff_immed px-2 py-0 mr-1">blue</span><strong>:</strong> immediately, or at next recorded step; <span class="ctrl_eff_reload px-2 py-0 mr-1">green</span><strong>:</strong> a <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_C_RELOAD_CMDS'); ">reload</a> is needed.  <strong><em>Any of the colored symbol backgrounds in the</em></strong> <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_PRMS_DROPDOWN'); "><samp>PRMS</samp></a> <em><strong>and</em></strong> <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_CTRL_DROPDOWN'); "><samp>CTRL</samp></a> <em><strong>dropdown areas can be clicked to view the corresponding quantity's help page</em></strong>.</p>
+<p>The input field has the current value ($$1.2$$, here) and, on the left, the parameter's symbol ($$T$$) on a colored background.  The color indicates when a changed value takes effect &mdash; <span class="ctrl_eff_immed px-2 py-0 mr-1">blue</span><strong>:</strong> immediately, or at next recorded step; <span class="ctrl_eff_reload px-2 py-0 mr-1">green</span><strong>:</strong> a <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_C_RELOAD_CMDS'); ">reload</a> is needed.  <strong><em>Any of the colored symbol backgrounds in the</em></strong> <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_PRMS_DROPDOWN'); "><samp>PRMS</samp></a> <em><strong>and</strong></em> <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_CTRL_DROPDOWN'); "><samp>CTRL</samp></a> <em><strong>dropdown areas can be clicked to view the corresponding quantity's help page</strong></em>.</p>
 
 <p>On load, each input field in the app has a sensible default value.  Further, JavaScript $$\texttt{onChange}$$ <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Event_(computing)#Event_handler">listeners</a> and a layer of <strong>SSNS</strong> <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_CODE_IO'); ">$$\texttt{UINI}$$ objects</a> mean <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Data_validation">out-of-range values</a> will never reach the <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_CODE_ORGANIZATION'); ">$$\texttt{Trajectory}$$</a> machinery.</p>
 
@@ -591,7 +662,7 @@ text-align: center; vertical-align: middle !important;
 <div id="HV_SYS_DROPDOWN" class="hv_view" data-ready="1" data-hvmh="SYS Dropdown">
 <p>Use the <samp>SYS</samp> dropdown area to select an <strong>SSNS</strong> system type.  There are two sets of <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Radio_button">radio buttons</a>: one orange, one yellow.  Upon selecting a <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Science,_technology,_engineering,_and_mathematics">STEM</a> category in the orange one, the yellow one updates to show the system types from that category.  The four categories are described <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_CONCEPTS'); ">here</a>.</p>
 
-<p>Each yellow system type entry gives both the name (e.g., Logistic Map) and a two-letter abbreviation ($$ \texttt{LM} $$).  Since the <samp>SYS</samp> dropdown may be collapsed, its button always displays the abbreviation of the currently loaded system type for reference (<button type="button" class="btn btn-ssns-demo btn-sm" style="padding: 0 0.35rem; margin: 0 1px; ">$$ \texttt{LM} $$</i></button>).</p>
+<p>Each yellow system type entry gives both the name (e.g., Logistic Map) and a two-letter abbreviation ($$ \texttt{LM} $$).  Since the <samp>SYS</samp> dropdown may be collapsed, its button always displays the abbreviation of the currently loaded system type for reference (<button type="button" class="btn btn-ssns-demo btn-sm" style="padding: 0 0.35rem; margin: 0 1px; ">$$ \texttt{LM} $$</button>).</p>
 
 <p>When a system type selection is made, the <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_PLOT_AREA'); ">plot area</a> updates to show the corresponding trajectory.  Previously recorded trajectory data and choice of <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_C_PLOT_TYPES'); ">plot type</a> are "remembered" from previous exploration.  Such stored data can always be erased by <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_C_RELOAD_CMDS'); ">reloading</a>.</p>
 </div><!-- CLOSES div class="hv_view" -->
@@ -601,7 +672,8 @@ text-align: center; vertical-align: middle !important;
 
 <p>Navigation within the help viewer is done via <a class="hv_link" style="cursor: text; ">light blue links</a>.  They are present in page text, the breadcrumbs, and a rudimentary back button <a class="hv_link" style="cursor: text; "><i class="fas fa-fw fa-arrow-left"></i></a>.  External links (usually to Wikipedia) are in <a class="hv_ext_link">this shade of blue</a>.</p>
 
-Launching the help viewer with <button type="button" class="btn btn-sm emulated_help_btn"><img height="15" width="10" src="/static/images/SSNS/question_mark.svg"></button> shows the last displayed page.  Alternatively, clicking a colored symbol background in the <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_CTRL_DROPDOWN'); "><samp>CTRL</samp></a> or <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_PRMS_DROPDOWN'); "><samp>PRMS</samp></a> dropdown areas opens the corresponding quantity's page.  The viewer can always be closed with <i class="fas fa-xl fa-xmark hv_close_btn"></i>.  Also, if viewing the page for a system type, click the <a class="hv_link" style="cursor: text; "><i class="fa-solid fa-up-right-from-square"></i></a> next to its name to close the viewer and load it in the main interface.</p>
+Launching the help viewer with <button type="button" class="btn btn-sm emulated_help_btn"><img height="15" width="10" src="img/question_mark.svg" alt=""></button> shows the last displayed page.  Alternatively, clicking a colored symbol background in the <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_CTRL_DROPDOWN'); "><samp>CTRL</samp></a> or <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_PRMS_DROPDOWN'); "><samp>PRMS</samp></a> dropdown areas opens the corresponding quantity's page.  The viewer can always be closed with <i class="fas fa-xl fa-xmark hv_close_btn"></i>.  Also, if viewing the page for a system type, click the <a class="hv_link" style="cursor: text; "><i class="fa-solid fa-up-right-from-square"></i></a>
+    next to its name to close the viewer and load it in the main interface.
 </div><!-- CLOSES div class="hv_view" -->
 
 <div id="HV_COMPUTATION" class="hv_view" data-ready="1" data-hvmh="Computation">
@@ -629,13 +701,13 @@ Launching the help viewer with <button type="button" class="btn btn-sm emulated_
 <div id="HV_CODE_ORGANIZATION" class="hv_view" data-ready="1" data-hvmh="Code Organization">
 <p>The collection of all <strong>SSNS</strong> <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_SYS_DROPDOWN'); ">system types</a> can be grouped in many different ways &mdash; think of <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Venn_diagram">Venn diagrams</a>.  This suggests the use of <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Object-oriented_programming">classes</a> and <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Inheritance_(object-oriented_programming)">inheritance</a> in structuring the <strong>SSNS</strong> code.  Here is the inheritance <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Tree_structure">hierarchy</a> for the $$\texttt{Trajectory}$$ class:</p>
 
-<a target="_blank" href="//tedm.us/static/images/SSNS/Trajectory_inheritance.svg"><img class="hv_fw_img" src="/static/images/SSNS/Trajectory_inheritance_-_no_section_label.svg"></a>
+<a target="_blank" href="//tedm.usimg/Trajectory_inheritance.svg"><img class="hv_fw_img" src="class_diagrams/Trajectory_inheritance_-_no_section_label.svg" alt=""></a>
 
 <p>Similar hierarchies exist for the $$\texttt{Params}$$, $$\texttt{Coords}$$, $$\texttt{ModelCalc}$$, and $$\texttt{PlotType}$$ classes.</p>
 
 <p>We can also consider class <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Composition_over_inheritance">composition</a>.  Each $$\texttt{Trajectory}$$ is composed of a $$\texttt{ModelCalc}$$ object (to perform all system-type-specific calculations) and one or more $$\texttt{TrajSeg}$$ objects.  A $$\texttt{TrajSeg}$$ represents the segment of a trajectory evolved with a specific set of <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Parameter_space">parameters values</a>.  It contains a single $$\texttt{Params}$$ and one or more $$\texttt{Coords}$$ objects, as shown here:</p>
 
-<a target="_blank" href="//tedm.us/static/images/SSNS/TrajSeg_composition.svg"><img class="hv_fw_img" src="/static/images/SSNS/TrajSeg_composition_-_no_section_label.svg"></a>
+<a target="_blank" href="class_diagrams/TrajSeg_composition.svg"><img class="hv_fw_img" src="class_diagrams/TrajSeg_composition_-_no_section_label.svg" alt=""></a>
 
 <p>Finally, each $$\texttt{Coords}$$ object holds all <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Dependent_and_independent_variables">dependent variable</a> data for a single time step &mdash; it could be, e.g., a single scalar value, or a large 2D matrix of values.  See GitHub <i class="fa-brands fa-github" style="color: black; "></i> for more <a target="_blank" class="hv_ext_link" href="//github.com/malliaris/SSNS/tree/main/class_diagrams">class diagrams</a>, <a target="_blank" class="hv_ext_link" href="//github.com/malliaris/SSNS/blob/main/README.md#abbreviations-labels-etc">abbreviation info</a>, etc.</p>
 </div><!-- CLOSES div class="hv_view" -->
@@ -662,7 +734,7 @@ Launching the help viewer with <button type="button" class="btn btn-sm emulated_
 <li>plot output, discussed, e.g., <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_PLOT_AREA'); ">here</a></li>
 <li>indicator output, e.g., of <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_C_CONTINUOUS_CMDS'); ">$$t$$ value</a></li>
 <li>button input, discussed e.g., <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_C_ONE_STEP_CMDS'); ">here</a></li>
-<li>numerical input, via <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_PRMS_DROPDOWN'); ">input fields</a>; each is managed by a $$\texttt{UINI}$$ object which stores an "official" value; input from the UI is <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Data_validation">validated</a>, and sometimes <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Autocorrection">auto-corrected</a>; during "playback," <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_CODE_ORGANIZATION'); "><samp>TrajSeg</samp></a> values flow <strong><em>to the UI</em></strong>; see <a target="_blank" href="//github.com/malliaris/SSNS/blob/main/README.md#inputoutput">GitHub <i class="fa-brands fa-github" style="color: black; "></i></a> for details</li>
+<li>numerical input, via <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_PRMS_DROPDOWN'); ">input fields</a>; each is managed by a $$\texttt{UINI}$$ object which stores an "official" value; input from the UI is <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Data_validation">validated</a>, and sometimes <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Autocorrection">autocorrected</a>; during "playback," <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_CODE_ORGANIZATION'); "><samp>TrajSeg</samp></a> values flow <strong><em>to the UI</em></strong>; see <a target="_blank" href="//github.com/malliaris/SSNS/blob/main/README.md#inputoutput">GitHub <i class="fa-brands fa-github" style="color: black; "></i></a> for details</li>
 <li>handling of <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Exception_handling">error conditions</a>; good <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_CODE_DESIGN'); ">design</a> hopefully prevents most; <samp>INFO</samp> messages are sent to the <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Web_development_tools#JavaScript_debugging">JavaScript console</a>; limitless recording, however, is <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Out_of_memory">not possible</a>, so we <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_E_T_MAX_REACHED'); ">intervene</a></li></ul>
 
 <p><a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Hard_disk_drive">Saving</a> of $$\texttt{Trajectory}$$ data is not implemented.  However, the project is <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Open-source_software">open</a>, so someone might add it!  Screenshots are always allowed, of course &#x1F603;.</p>
@@ -728,9 +800,10 @@ Launching the help viewer with <button type="button" class="btn btn-sm emulated_
 
 <div id="HV_SPIN_SYSTEMS" class="hv_view" data-ready="1" data-hvmh="Spin Systems">
 
-<a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Spin_(physics)">Spin</a> systems involve ordered arrays of spins, each a little "arrow" that can rotate but not <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Translation_(geometry)">translate</a>.  Spin models are relevant to the study of <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Magnetism">magnetism</a> in <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Solid-state_physics">solids</a>.  They come in many varieties, but generally involve the system changing over time from the combined influence of:</p>
+<a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Spin_(physics)">Spin</a> systems involve ordered arrays of spins, each a little "arrow" that can rotate but not <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Translation_(geometry)">translate</a>.  Spin models are relevant to the study of <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Magnetism">magnetism</a> in <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Solid-state_physics">solids</a>.
+    They come in many varieties, but generally involve the system changing over time from the combined influence of:
 
-<ul><li> an aligning <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Fundamental_interaction">interaction</a> of each spin with its nearest neighbors</li>
+    <ul><li> an aligning <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Fundamental_interaction">interaction</a> of each spin with its nearest neighbors</li>
 <li> an aligning <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Fundamental_interaction">interaction</a> of each spin with an <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Magnetic_field">external field</a> $$ \vec{h} $$</li>
 <li> randomizing <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Thermal_fluctuations">thermal kicks</a> with strength determined by the temperature $$ T $$</ul>
   
@@ -780,7 +853,7 @@ Launching the help viewer with <button type="button" class="btn btn-sm emulated_
 <li>the <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_ST_XY'); ">XY model</a></li>
 <li><a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_E_NOT_IMPLEMENTED'); ">2D ideal gas</a></li></ul>
 
-<p>The first two are examples of spin systems, which are described more generally <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_SPIN_SYSTEMS'); ">here</a>.  Also relevant are these brief comments on <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_ENSEMBLES'); ">statistical ensembles</a> and <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_PHASE_TRANSITIONS'); ">phase transitions</a>.</p>
+<p>The first two are examples of spin systems, which are described more generally <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_SPIN_SYSTEMS'); ">here</a>.  Also, relevant are these brief comments on <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_ENSEMBLES'); ">statistical ensembles</a> and <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_PHASE_TRANSITIONS'); ">phase transitions</a>.</p>
 </div><!-- CLOSES div class="hv_view" -->
 
 <div id="HV_SA_ND" class="hv_view" data-ready="1" data-hvmh="Nonlinear Dynamics">
@@ -834,12 +907,12 @@ The variable $$ x $$ represents the number of individuals that possess version $
 </div><!-- CLOSES div class="hv_view" -->
 
 <div id="HV_ST_IG" class="hv_view" data-ready="1" data-hvmh="2D Ideal Gas">
-<!--
-
- * mention that stochasticity enters thru random initial positions and velocities drawn from T-dependent distribution
-
-<a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/"></a>
--->
+    <p>2D Ideal Gas is a system of non-interacting particles moving in two dimensions.</p>
+    <p>Parameters:</p>
+    <ul>
+        <li><a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_P_SM_IG_T'); ">$$ T $$</a>: Temperature</li>
+        <li><a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_P_SM_IG_N'); ">$$ N $$</a>: Number of particles</li>
+    </ul>
 </div><!-- CLOSES div class="hv_view" -->
 
 <div id="HV_ST_IS" class="hv_view" data-ready="1" data-hvmh="Ising Model">
@@ -1016,7 +1089,7 @@ parameters are speed of upper, lower boundaries and of "observer", pressure grad
 
 <div id="HV_C_CONTINUOUS_CMDS" class="hv_view" data-ready="1" data-hvmh="Continuous Action Commands">
 <p>At the top of the <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_MAIN_PANEL'); ">main panel</a>, always in view, is this button bar:</p>
-<img class="hv_fw_img" src="/static/images/SSNS/hv_interface_pics/continuous_cmd_bar.png">
+<img class="hv_fw_img" src="img/hv_interface_pics/continuous_cmd_bar.png" alt="">
 <p>It offers four commands for continuous trajectory navigation.  In the spot of the fifth "button" is the current time step indicator.  Specifically:</p>
 
 <table class="table table-bordered table-sm">
@@ -1034,12 +1107,12 @@ parameters are speed of upper, lower boundaries and of "observer", pressure grad
 </tbody>
 </table>
 
-<p>These <em>continuous</em> commands should not be confused with their <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_C_ONE_STEP_CMDS'); ">one step counterparts</a>.</p>
+<p>These <em>continuous</em> commands should not be confused with their <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_C_ONE_STEP_CMDS'); ">one-step counterparts</a>.</p>
 </div><!-- CLOSES div class="hv_view" -->
 
 <div id="HV_C_ONE_STEP_CMDS" class="hv_view" data-ready="1" data-hvmh="One Step Commands">
 <p>Unlike their <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_C_CONTINUOUS_CMDS'); ">continuous-action counterparts</a> (which put <strong>SSNS</strong> in "run mode"), these one-step commands:</p>
-<img class="hv_fw_img" src="/static/images/SSNS/hv_interface_pics/one_step_cmd_bar.png">
+<img class="hv_fw_img" src="img/hv_interface_pics/one_step_cmd_bar.png" alt="">
 <p>offer trajectory navigation in single steps or jumps.  Their button bar is in the toggle-able <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_CTRL_DROPDOWN'); "><samp>CTRL</samp> dropdown area</a>.  Commands include:</p>
 
 <table class="table table-bordered table-sm">
@@ -1062,7 +1135,7 @@ parameters are speed of upper, lower boundaries and of "observer", pressure grad
 
 <div id="HV_C_PLOT_TYPES" class="hv_view" data-ready="1" data-hvmh="Plot Type Bar">
 <p>For each <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_SYS_DROPDOWN'); ">system type</a>, output is visualized with one or more plot types, selectable via this bar in the <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_CTRL_DROPDOWN'); "><samp>CTRL</samp> dropdown area</a>:</p>
-<img class="hv_fw_img" src="/static/images/SSNS/hv_interface_pics/plot_type_bar.png">
+<img class="hv_fw_img" src="img/hv_interface_pics/plot_type_bar.png" alt="">
 
 <table class="table table-bordered table-sm">
 <tbody>
@@ -1072,7 +1145,7 @@ parameters are speed of upper, lower boundaries and of "observer", pressure grad
 <td class="hv_emulated_btn_td"><span class="hv_emulated_btn_span px-2 py-1"><i class="fas fa-fw fa-lg fa-chart-simple"></i></span></td></tr>
 <tr><td><a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Heat_map">heat map</a> array of tiles; array refreshes each $$ t $$; color of tile indicates variable value</td>
 <td class="hv_emulated_btn_td"><span class="hv_emulated_btn_span px-2 py-1"><i class="fab fa-fw fa-lg fa-buromobelexperte"></i></span></td></tr>
-<tr><td>phase plane plot with one data point, e.g., $$ [ x(t), y(t) ] $$, for each of a fixed number of past time steps</td>
+<tr><td>phase plane plot with one data point, e.g., $$ [ x(t), y(t) ] $$, for each of a fixed number of pastime steps</td>
 <td class="hv_emulated_btn_td"><span class="hv_emulated_btn_span px-2 py-1"><i class="fas fa-fw fa-lg fa-arrows-spin"></i></span></td></tr>
 </tbody>
 </table>
@@ -1082,7 +1155,7 @@ parameters are speed of upper, lower boundaries and of "observer", pressure grad
 
 <div id="HV_C_T_DT_JUMP" class="hv_view" data-ready="1" data-hvmh="Trajectory Jumps">
 <p>The following two controls allow the user to make jumps in a recorded trajectory.</p>
-<img class="hv_fw_img" src="/static/images/SSNS/hv_interface_pics/t_delta_t_jumps.png">
+<img class="hv_fw_img" src="img/hv_interface_pics/t_delta_t_jumps.png" alt="">
 
 <p>To jump to an arbitrary new time, enter it in the $$ t_{\mathrm{jump}} $$ field and press <button type="button" class="btn btn-ssns-demo btn-sm px-1 py-0"><i class="fas fa-fw fa-lg fa-turn-down" data-fa-transform="rotate--90"></i></button>.  To change the current time by a <em>jump of a given size</em>, enter it in the $$ \Delta t $$ field and press <button type="button" class="btn btn-ssns-demo btn-sm px-1 py-0"><i class="fas fa-fw fa-lg fa-turn-down" data-fa-transform="rotate--90"></i></button>.  $$ \Delta t $$ can have any <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Sign_(mathematics)">sign</a>.</p>
 
@@ -1094,17 +1167,18 @@ parameters are speed of upper, lower boundaries and of "observer", pressure grad
 
 <p>The following two controls adjust the visual behavior of the app.  As their <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_PRMS_DROPDOWN'); ">blue background indicates</a>, updated values are used immediately.</p>
 
-<img class="hv_fw_img" src="/static/images/SSNS/hv_interface_pics/delay_window.png">
+<img class="hv_fw_img" src="img/hv_interface_pics/delay_window.png" alt="">
 
 <p><span class="ctrl_eff_immed p-1">$$ \mathrm{delay} $$</span> sets the number of milliseconds between steps during <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_C_CONTINUOUS_CMDS'); ">continuous recording/playback</a>.  Its value roughly determines the speed of trajectory motion (with $$ 0 \, \mathrm{ms} $$ of delay being the fastest).</p>
 
-</p><span class="ctrl_eff_immed p-1">$$ \mathrm{window} $$</span> sets the maximum width of trajectory viewable at one time.  It is only visible/applicable for the <button type="button" class="btn btn-ssns-demo btn-sm px-1 py-0"><i class="fas fa-fw fa-lg fa-arrow-trend-up"></i></button> <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_C_PLOT_TYPES'); ">plot type</a>.  At the start of recording, the width grows along with the trajectory.  When it reaches its max value, it "slides" to keep the current $$t$$ centered.  <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_PLOT_AREA'); ">This screenshot</a> shows a window size of $$30$$.</p>
+    <span class="ctrl_eff_immed p-1">$$ \mathrm{window} $$</span> sets the maximum width of trajectory viewable at one time.  It is only visible/applicable for the <button type="button" class="btn btn-ssns-demo btn-sm px-1 py-0"><i class="fas fa-fw fa-lg fa-arrow-trend-up"></i></button> <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_C_PLOT_TYPES'); ">plot type</a>.  At the start of recording, the width grows along with the trajectory.  When it reaches its max value, it "slides" to keep the current $$t$$ centered.  <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_PLOT_AREA'); ">This screenshot</a>
+    shows a window size of $$30$$.
 
 </div><!-- CLOSES div class="hv_view" -->
 
 <div id="HV_C_T_0_MAX_STOP" class="hv_view" data-ready="1" data-hvmh="Trajectory Start/Stop">
 <p>The following three controls have to do with trajectory start/stop times.  The symbol background colors are discussed <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_PRMS_DROPDOWN'); ">here</a>.</p>
-<img class="hv_fw_img" src="/static/images/SSNS/hv_interface_pics/t_0_max_stop.png">
+<img class="hv_fw_img" src="img/hv_interface_pics/t_0_max_stop.png" alt="">
 <p>Trajectory recording starts at $$ t_0 $$ and <em>cannot exceed</em> $$ t_{\mathrm{max}} $$.  Both $$ t_0 $$ and $$ t_{\mathrm{max}} $$ can have any <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Sign_(mathematics)">sign</a>, as long as $$ t_0 < t_{\mathrm{max}} $$.  $$ \; t_0 $$ defaults to $$ 0 $$ and its value <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_E_T_MAX_REACHED'); ">affects</a> $$ t_{\mathrm{max}} $$'s possible values.  $$ \; t_{\mathrm{max}} $$ should not to be confused with <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_PLOT_AREA'); ">$$ t_{\mathrm{edge}} $$</a>.</p>
 
 <p>If $$ t_{\mathrm{stop}} $$ is enabled with its checkbox, the app will exit <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_C_CONTINUOUS_CMDS'); ">continuous play/recording mode</a> when $$ t = t_{\mathrm{stop}} $$.  When coordinated with <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_PRMS_DROPDOWN'); ">parameter values</a> and <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_C_RNG_RECR_TRAJ'); ">random seed</a>, this feature can be used to, say, revisit a particular feature in a <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_SA_SP'); ">stochastic trajectory</a>.</p>
@@ -1112,10 +1186,10 @@ parameters are speed of upper, lower boundaries and of "observer", pressure grad
 
 <div id="HV_C_RNG_RECR_TRAJ" class="hv_view" data-ready="1" data-hvmh="RNG/Trajectory">
 <p>The following two controls affect the handling of random numbers and are only visible/applicable for <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_SA_SP'); ">stochastic</a> system types.  The control name background colors are discussed <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_PRMS_DROPDOWN'); ">here</a>.</p>
-<img class="hv_fw_img" src="/static/images/SSNS/hv_interface_pics/rng_recreate_traj.png">
+<img class="hv_fw_img" src="img/hv_interface_pics/rng_recreate_traj.png" alt="">
 <p><span class="ctrl_eff_reload p-1">$$ \mathrm{RNG \, seed} $$</span> is simply the value passed to the <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Pseudorandom_number_generator">pseudorandom number generator</a> to initialize its <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/State_(computer_science)">state</a>.  The <span class="ctrl_eff_immed p-1">$$ \mathrm{recreate \, trajectory} $$</span> control is more subtle, and we illustrate with the following scenario:</p>
 
-<img class="hv_fw_img" src="/static/images/SSNS/hv_interface_pics/recreate_traj_illustrated.png">
+<img class="hv_fw_img" src="img/hv_interface_pics/recreate_traj_illustrated.png" alt="">
 
 <p>In the top trace, the stochastic process is recorded out to $$ t = 22 $$.  In the middle trace, we've rewound to $$ t = 10 $$.  If we then re-record to $$ t = 22 $$ with <span class="ctrl_eff_immed p-1">$$ \mathrm{recreate \, trajectory} $$</span> <strong><em>enabled</em></strong>, the top trace is reproduced.  If, on the other hand, we re-record with it <strong><em>disabled</em></strong>, we will get new output, e.g., the bottom trace.</p>
 
@@ -1126,7 +1200,7 @@ parameters are speed of upper, lower boundaries and of "observer", pressure grad
 <div id="HV_C_SP_ENSEMBLE" class="hv_view" data-ready="1" data-hvmh="Ensemble Members">
 
 <p>When learning a <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_SA_SP'); ">stochastic process</a> like the <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_ST_MN'); ">Moran model</a>, it's best to examine both individual trajectories (e.g., with <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_C_PLOT_TYPES'); ">plot type</a> <button type="button" class="btn btn-ssns-demo btn-sm px-1 py-0" style="margin-right: 1px; "><i class="fas fa-fw fa-lg fa-arrow-trend-up"></i></button>) <em>and</em> aggregate <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_ENSEMBLES'); ">ensemble</a> behavior (e.g., with <button type="button" class="btn btn-ssns-demo btn-sm px-1 py-0" style="margin-right: 1px; "><i class="fas fa-fw fa-lg fa-chart-simple"></i></button>).  In these <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_CTRL_DROPDOWN'); "><samp>CTRL</samp></a> dropdown settings:</p>
-<img class="hv_fw_img" src="/static/images/SSNS/hv_interface_pics/NI_NG_ensemble.png">
+<img class="hv_fw_img" src="img/hv_interface_pics/NI_NG_ensemble.png" alt="">
 
 <p>$$N_i$$ sets the number of $$i$$ndividuals for the former plot type, while $$N_g$$ sets the number of $$g$$roup members for the latter.  As the <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_PRMS_DROPDOWN'); ">green background</a> indicates, a <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_C_RELOAD_CMDS'); ">reload</a> is necessary for new values to take effect.</p>
 
@@ -1136,7 +1210,7 @@ parameters are speed of upper, lower boundaries and of "observer", pressure grad
 
 <div id="HV_C_RELOAD_CMDS" class="hv_view" data-ready="1" data-hvmh="Reload Commands">
 <p>A trajectory can always be "rewound" and re-recorded.  A more controlled reset, however, is provided by these commands:</p>
-<img class="hv_fw_img" src="/static/images/SSNS/hv_interface_pics/reload_cmd_bar.png">
+<img class="hv_fw_img" src="img/hv_interface_pics/reload_cmd_bar.png" alt="">
 
 <p>The <strong>SSNS</strong> code is <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_CODE_ORGANIZATION'); ">organized</a> into <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Class_(computer_programming)">classes</a>.  Recording and storage of trajectory data is handled by the $$\texttt{Trajectory}$$ class.  Since each <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_SYS_DROPDOWN'); ">system type</a> has its own version of this class, its data will still be there if the user explores another and then returns.  Certain <a class="hv_link" onclick="window.sim.ui.hv.show_view('HV_PRMS_DROPDOWN'); ">parameter changes</a> require <a target="_blank" class="hv_ext_link" href="//en.wikipedia.org/wiki/Class_(computer_programming)">re-instantiation</a> of the $$\texttt{Trajectory}$$ to take effect.  The user can choose to:</p>
 
@@ -1172,29 +1246,32 @@ parameters are speed of upper, lower boundaries and of "observer", pressure grad
 <!------------------------------------------------------------------------------------------------->
 <!------------------------------------------------------------------------------------------------->
 
-<script src="/static/js/SSNS_dependencies.js"></script>
-<script src="/static/js/SSNS/CU.js"></script>
-<script src="/static/js/SSNS/UINI.js"></script>
-<script src="/static/js/SSNS/traj_base.js"></script>
-<script src="/static/js/SSNS/traj_intermed.js"></script>
-<script src="/static/js/SSNS/system_types/RW.js"></script>
-<script src="/static/js/SSNS/system_types/MN.js"></script>
-<script src="/static/js/SSNS/system_types/CH.js"></script>
-<script src="/static/js/SSNS/system_types/IS.js"></script>
-<script src="/static/js/SSNS/system_types/XY.js"></script>
-<script src="/static/js/SSNS/system_types/LM.js"></script>
-<script src="/static/js/SSNS/system_types/GM.js"></script>
-<script src="/static/js/SSNS/PlotType.js"></script>
-<script src="/static/js/SSNS/PlotTypeXT.js"></script>
-<script src="/static/js/SSNS/PlotTypeHX.js"></script>
-<script src="/static/js/SSNS/PlotTypeHM.js"></script>
-<script src="/static/js/SSNS/PlotTypePP.js"></script>
-<script src="/static/js/SSNS/PlottingMachinery.js"></script>
-<script src="/static/js/SSNS/help_viewer.js"></script>
-<script src="/static/js/SSNS/RunState.js"></script>
-<script src="/static/js/SSNS/UserInterface.js"></script>
-<script src="/static/js/SSNS/Simulator.js"></script>
+<script src="dependencies/SSNS_dependencies.js"></script>
+<script src="js/CU.js"></script>
+<script src="js/UINI.js"></script>
+<script src="js/traj_base.js"></script>
+<script src="js/traj_intermed.js"></script>
+<script src="js/system_types/RW.js"></script>
+<script src="js/system_types/MN.js"></script>
+<script src="js/system_types/CH.js"></script>
+<script src="js/system_types/IG.js"></script>
+<script src="js/system_types/IS.js"></script>
+<script src="js/system_types/XY.js"></script>
+<script src="js/system_types/LM.js"></script>
+<script src="js/system_types/GM.js"></script>
+<script src="js/PlotType.js"></script>
+<script src="js/PlotTypeXT.js"></script>
+<script src="js/PlotTypeHX.js"></script>
+<script src="js/PlotTypeCV.js"></script>
+<script src="js/PlotTypePP.js"></script>
+<script src="js/PlottingMachinery.js"></script>
+<script src="js/help_viewer.js"></script>
+<script src="js/RunState.js"></script>
+<script src="js/UserInterface.js"></script>
+<script src="js/Simulator.js"></script>
 
+
+<!--  <script src="js/SSNS_PS.js"></script> -->
 
 
 
@@ -1208,6 +1285,8 @@ parameters are speed of upper, lower boundaries and of "observer", pressure grad
   window.sim = new Simulator();  // done here at end of file so that everything it depends on is already loaded...
 </script>
 
+</div>
 
 </body>
+
 </html>

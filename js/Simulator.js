@@ -164,9 +164,13 @@ class Simulator {
             this.update_plot_and_UI();
             break;
         case "CK":
+            console.log("something else"); // 4th button next to this all page
             //this.trjs[this.ST].check_integrity();
             //this.trjs[this.ST].output_curr_vals();
+            let dummy = new Atom(1, 2, 3, 4, 5, 1);
+            console.log(dummy.x);
             break;
+
         default:
             console.log("ERROR 912352: bad code");
         }

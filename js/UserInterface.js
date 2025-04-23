@@ -19,7 +19,7 @@ class UserInterface {
         this.bsvs = this.get_bsvs(); // bsvs = Bootstrap viewport size
         console.log("INFO:\tBootstrap viewport size =", this.bsvs);
 
-        // UI controls
+        // UI controls // User Interface Numerical Input 
         this.t_jump = new UINI_int(this, "UI_CTRL_JT", false);
         this.Delta_t = new UINI_int(this, "UI_CTRL_JD", false);
         this.delay = new UINI_int(this, "UI_CTRL_delay", false);
@@ -31,26 +31,34 @@ class UserInterface {
         Coords_SP.num_IEM = new UINI_int(this, "UI_CTRL_SP_NI", false);
         Coords_SP.num_GEM = new UINI_int(this, "UI_CTRL_SP_NG", false);
 
-        // system-type parameters
+        // system-type parameters // T/F associated with trajectory. false means unupdatable
+        // Random walk
         Params_RW.l = new UINI_float(this, "UI_P_SP_RW_l", true);
         Params_RW.r = new UINI_float(this, "UI_P_SP_RW_r", true);
         Coords_RW.N = new UINI_int(this, "UI_P_SP_RW_N", false);
         Coords_RW.x_0 = new UINI_int(this, "UI_P_SP_RW_x_0", false);
+        // Moran Model
         Params_MN.mu = new UINI_float(this, "UI_P_SP_MN_mu", true);
         Params_MN.s = new UINI_float(this, "UI_P_SP_MN_s", true);
         Coords_MN.N = new UINI_int(this, "UI_P_SP_MN_N", false);
         Coords_MN.x_0 = new UINI_int(this, "UI_P_SP_MN_x_0", false);
+        // Chemical System
         Params_CH.alpha = new UINI_float(this, "UI_P_SP_CH_alpha", true);
         Params_CH.beta = new UINI_float(this, "UI_P_SP_CH_beta", true);
         Coords_CH.x_0 = new UINI_int(this, "UI_P_SP_CH_x_0", false);
-        Params_IG.T = new UINI_float(this, "UI_P_SM_IG_T", true);
-        Coords_IG.N = new UINI_int(this, "UI_P_SM_IG_N", false);
+        // Ideal Gas
+        Params_IG.T = new UINI_float(this, "UI_P_SM_IG_T", true);       
+        Coords_IG.N = new UINI_int(this, "UI_P_SM_IG_N", false);        
+        // Ising
         Params_IS.T = new UINI_float(this, "UI_P_SM_IS_T", true);
         Coords_IS.N = new UINI_int(this, "UI_P_SM_IS_N", false);
+        // XY Model
         Params_XY.T = new UINI_float(this, "UI_P_SM_XY_T", true);
         Coords_XY.N = new UINI_int(this, "UI_P_SM_XY_N", false);
+        // Logistic Map
         Params_LM.r = new UINI_float(this, "UI_P_ND_LM_r", true);
         Coords_LM.x_0 = new UINI_float(this, "UI_P_ND_LM_x_0", false);
+        // Gingerbread Man Map
         Coords_GM.x_0 = new UINI_float(this, "UI_P_ND_GM_x_0", false);
         Coords_GM.y_0 = new UINI_float(this, "UI_P_ND_GM_y_0", false);
 

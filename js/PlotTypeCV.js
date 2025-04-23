@@ -53,11 +53,31 @@ class PlotTypeCV_IG extends PlotTypeCV {
 
     constructor(trj) {
 
+		
 	super();
 
 	this.trj = trj;
 	this.canv_dim = PlotType.square_plot_width;
 	this.setup_canvas();
+	this.cc.beginPath();
+	
+    // this.cc.arc(10, this.fyc(10), 5, 0, Math.PI * 2);
+	// this.cc.fillStyle = 'red';
+    // this.cc.fill();
+	this.cc.stroke;
+	 // Draw each atom
+	particles.forEach(atom => {
+		const drawX = (100 / 2) + atom.x * 100;
+		const drawY = this.fyc((500 / 2)) - atom.y * 100;
+
+		this.cc.beginPath();
+		this.cc.arc(drawX, drawY, atom.radius, 0, Math.PI * 2);
+		//console.log(atom.radius);
+
+		this.cc.fillStyle = 'red';
+		this.cc.fill();
+		this.cc.stroke;
+	});
     }
 
     get_ext_x_axis_lbl_str() {

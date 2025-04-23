@@ -304,23 +304,23 @@ document.getElementById('startSimulation').addEventListener('click', function ()
     canvasContainer.style.height = `${canvas.height * 1.5}px`;
     canvasContainer.appendChild(canvas);
 
-    const ctx = canvas.getContext("2d");
+    const cc = canvas.getContext("2d");
 
     function draw() {
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        cc.fillStyle = 'rgba(255, 255, 255, 0.3)';
+        cc.fillRect(0, 0, canvas.width, canvas.height);
 
         // Draw each atom
         particles.forEach(atom => {
             const drawX = (canvas.width / 2) + atom.x * 100;
             const drawY = (canvas.height / 2) - atom.y * 100;
 
-            ctx.beginPath();
-            ctx.arc(drawX, drawY, atom.radius, 0, Math.PI * 2);
+            cc.beginPath();
+            cc.arc(drawX, drawY, atom.radius, 0, Math.PI * 2);
             //console.log(atom.radius);
 
-            ctx.fillStyle = 'red';
-            ctx.fill();
+            cc.fillStyle = 'red';
+            cc.fill();
         });
     }
 
