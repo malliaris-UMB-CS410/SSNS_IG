@@ -7,10 +7,9 @@ var numParticles = parseInt(document.getElementById('numParticles').value);
 var boundaryType = parseInt(document.getElementById('boundaryType').value);				// interaction with walls
 var interactionType = parseInt(document.getElementById('interactionType').value); // interaction with particles
 const air_mass = 5.32 * Math.pow(10, -26);
-console.log(air_mass);
 const m = air_mass;
 const k = 1.38 * Math.pow(10, -23);;
-var userVelocity = Math.sqrt((2*k*temperature)/m);
+var userVelocity = Math.sqrt((2*k*temperature/1000)/m);
 var pressure_calc = 0;
 var pressure_sim = 0;
 var instant_pressure = 0;
@@ -22,10 +21,9 @@ var sim_time = 0;
 
 
 function collision_pressure_calc(time,V){//mass, magnitude, bounce) {
-    instant_pressure = (m*Math.abs(V)) / (time*Math.sqrt(userBoxSize));
-    console.log(instant_pressure);
-    total_pressure = total_pressure + instant_pressure;
-    console.log("colide!");
+    instant_pressure = (2*m*Math.abs(V));
+    total_pressure += instant_pressure;
+    console.log(sim_time);
 }
 
 class Atom {
@@ -50,52 +48,52 @@ class Atom {
             // Wrap mode
             if (newX < -BoxSize / 2) {
                 this.x = newX + BoxSize;
-                Bounce += 1;
-                Bounce_Count.textContent = Bounce;
-                collision_pressure_calc(timeStep, this.vx);
             } else if (newX > BoxSize / 2) {
                 this.x = newX - BoxSize;
-                Bounce += 1;
-                Bounce_Count.textContent = Bounce;
-                collision_pressure_calc(timeStep, this.vx);
             } else {
                 this.x = newX;
             }
 
             if (newY < -BoxSize / 2) {
                 this.y = newY + BoxSize;
-                Bounce += 1;
-                Bounce_Count.textContent = Bounce;
-                collision_pressure_calc(timeStep, this.vy);
             } else if (newY > BoxSize / 2) {
                 this.y = newY - BoxSize;
-                Bounce += 1;
-                Bounce_Count.textContent = Bounce;
-                collision_pressure_calc(timeStep, this.vy);
             } else {
                 this.y = newY;
             }
         } else {
             // Bounce mode
-            const radiusOffset = this.radius / 100;
-
-            if (newX - radiusOffset < -BoxSize / 2 || newX + radiusOffset > BoxSize / 2) {
-                this.vx *= -1; // Reverse velocity in X
-
-                // prevents particles from getting stuck in boundaries
-                this.x = Math.max(-BoxSize / 2 + radiusOffset, Math.min(BoxSize / 2 - radiusOffset, newX));
+            //const radiusOffset = this.radius / 100;
+            if (newX < -BoxSize / 2) {
+                this.x = -BoxSize - newX;
+                this.vx *= -1;
                 Bounce += 1;
                 Bounce_Count.textContent = Bounce;
                 collision_pressure_calc(timeStep, this.vx);
+            } else if (newX > BoxSize / 2) {
+                this.x = BoxSize - newX;
+                this.vx *= -1;
+                Bounce += 1;
+                Bounce_Count.textContent = Bounce;
+                collision_pressure_calc(timeStep, this.vx);
+            } else {
+                this.x = newX;
             }
-            if (newY - radiusOffset < -BoxSize / 2 || newY + radiusOffset > BoxSize / 2) {
-                this.vy *= -1; // Reverse velocity in Y
-
-                // prevents particles from getting stuck in boundaries
-                this.y = Math.max(-BoxSize / 2 + radiusOffset, Math.min(BoxSize / 2 - radiusOffset, newY));
+    
+            if (newY < -BoxSize / 2) {
+                this.y = -BoxSize - newY;
+                this.vy *= -1;
                 Bounce += 1;
                 Bounce_Count.textContent = Bounce;
                 collision_pressure_calc(timeStep, this.vy);
+            } else if (newY > BoxSize / 2) {
+                this.y = BoxSize - newY;
+                this.vy *= -1;
+                Bounce += 1;
+                Bounce_Count.textContent = Bounce;
+                collision_pressure_calc(timeStep, this.vy);
+            } else {
+                this.y = newY;
             }
             this.x = newX;
             this.y = newY;
@@ -216,13 +214,12 @@ document.getElementById('startSimulation').addEventListener('click', function ()
     interactionType = parseInt(document.getElementById('interactionType').value);
     Bounce = 0;
     Bounce_Count.textContent = Bounce;
-    userVelocity = Math.sqrt((2*k*temperature)/m);
+    userVelocity = Math.sqrt((2*k*temperature/1000)/m);
     console.log(userVelocity);
-    pressure_calc = (numParticles*k*temperature) / userBoxSize;
+    pressure_calc = (numParticles*k*temperature/1000) / (userBoxSize*userBoxSize);
     Pressure_calc.textContent = pressure_calc;
     total_pressure = 0;
     Pressure_sim.textContent = 0;
-    console.log(numParticles);
     numParticles = parseInt(document.getElementById('numParticles').value);
 
     sim_time = 0;
@@ -381,7 +378,7 @@ document.getElementById('startSimulation').addEventListener('click', function ()
         //console.log(timeStep);
         const timeStep = 1 / (100);
         sim_time += timeStep;
-        pressure_sim = total_pressure / (Math.sqrt(userBoxSize)*sim_time);
+        pressure_sim = total_pressure / (sim_time * userBoxSize * userBoxSize);;
         Pressure_sim.textContent = pressure_sim;
         //console.log(sim_time);
         handleCollisions();
