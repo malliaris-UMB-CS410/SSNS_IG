@@ -10,25 +10,25 @@
 class ModelCalc_IG extends ModelCalc {
 
     constructor() {
-	super();
-	}
-    model_is_stoch(){
-		return false;
-	}
+        super();
+    }
+    model_is_stoch() {
+        return false;
+    }
 }
 
 class Atom {
-		constructor(x, y, vx, vy, radius=5, mass=1) {
-			this.x = x;
-			this.y = y;
-			this.vx = vx;
-			this.vy = vy;
-			this.radius = radius;
-			this.mass = mass;
-			this.m = mass;
-	}
+    constructor(x, y, vx, vy, radius = 5, mass = 1) {
+        this.x = x;
+        this.y = y;
+        this.vx = vx;
+        this.vy = vy;
+        this.radius = radius;
+        this.mass = mass;
+        this.m = mass;
+    }
 
-	updatePosition(timeStep, boxWidth, boxHeight, boundaryType) {
+    updatePosition(timeStep, boxWidth, boxHeight, boundaryType) {
         let newX = this.x + this.vx * timeStep;
         let newY = this.y + this.vy * timeStep;
 
@@ -172,7 +172,6 @@ class Atom {
     }
 }
 
-
 // values
 let seed = SeededRNG(1);
 //const userBoxWidth = parseFloat(document.getElementById('boxWidth').value);
@@ -183,181 +182,181 @@ const boundaryType = 0; //parseInt(document.getElementById('boundaryType').value
 const interactionType = 0; //parseInt(document.getElementById('interactionType').value); // interaction with particles
 //const initialSeed = parseInt(document.getElementById('initialSeed').value);
 const particles = [];
-const particleRadius = 6;       // set size of particle 
+const particleRadius = 6; // set size of particle
 const minDistance = (particleRadius * 2) / 100; // Converted to simulation units
 const userBoxHeight = 4;
 const userBoxWidth = 4;
-	
+
 function createParticles(n) {
-		// create numParticles number of particles in a random starting position moving in a random direction
-		//const particles = [];
+    // create numParticles number of particles in a random starting position moving in a random direction
+    //const particles = [];
 
-		// temp values
-		const userVelocity = 4;
-		const userBoxHeight = 4;
-		const userBoxWidth = 4;
+    // temp values
+    const userVelocity = 4;
+    const userBoxHeight = 4;
+    const userBoxWidth = 4;
 
-		for (let i = 0; i < n; i++) {
-			const angle = Math.random * Math.PI * 2; //getRandomAngle();  // Random direction (angle)
-		
-			// Calculate the x and y components of the velocity based on the random angle
-			const vx = userVelocity * Math.cos(angle); // X velocity component
-			const vy = userVelocity * Math.sin(angle); // Y velocity component
-		
-		
-			// Try to find a valid non-overlapping position
-			let x, y;
-			let attempts = 0;
-			const maxAttempts = 1000;
-		
-			do {
-				x = getRandomPosition(userBoxWidth / 2);
-				y = getRandomPosition(userBoxHeight /2);
-		
-				attempts++;
-		
-				// Break out after too many attempts to prevent infinite loop
-				if (attempts > maxAttempts) {
-					console.warn('Could not find non-overlapping position after', maxAttempts, 'attempts');
-					break;
-				}
-			} while (!isPositionValid(x, y, particles, minDistance, userBoxWidth, userBoxHeight));
-		
-			const atom = new Atom(
-				x, y, vx, vy, 5, 1 // x, y, vx, vy, radius, mass
-			);
-			particles.push(atom);
-			//console.log(particles);
-		}
-		//return particles;
-	}
+    for (let i = 0; i < n; i++) {
+        const angle = Math.random * Math.PI * 2; //getRandomAngle();  // Random direction (angle)
 
-	// TEMP seeded random function
-    function SeededRNG(seed) {
-        // LCG constants
-        const m = 0x80000000;   // mod 2^31
-        const a = 1103515245;   // multiplier 
-        const c = 12345;        // increment, coprime with m
+        // Calculate the x and y components of the velocity based on the random angle
+        const vx = userVelocity * Math.cos(angle); // X velocity component
+        const vy = userVelocity * Math.sin(angle); // Y velocity component
 
-        // IF (0/null/NaN): random | ELSE: prandom
-        let state = seed ? seed >>> 0 : Math.floor(Math.random() * m);
 
-        return {
-          nextInt: function() {
+        // Try to find a valid non-overlapping position
+        let x,
+        y;
+        let attempts = 0;
+        const maxAttempts = 1000;
+
+        do {
+            x = getRandomPosition(userBoxWidth / 2);
+            y = getRandomPosition(userBoxHeight / 2);
+
+            attempts++;
+
+            // Break out after too many attempts to prevent infinite loop
+            if (attempts > maxAttempts) {
+                console.warn('Could not find non-overlapping position after', maxAttempts, 'attempts');
+                break;
+            }
+        } while (!isPositionValid(x, y, particles, minDistance, userBoxWidth, userBoxHeight));
+
+        const atom = new Atom(
+                x, y, vx, vy, 5, 1 // x, y, vx, vy, radius, mass
+            );
+        particles.push(atom);
+        //console.log(particles);
+    }
+    //return particles;
+}
+
+// TEMP seeded random function
+function SeededRNG(seed) {
+    // LCG constants
+    const m = 0x80000000; // mod 2^31
+    const a = 1103515245; // multiplier
+    const c = 12345; // increment, coprime with m
+
+    // IF (0/null/NaN): random | ELSE: prandom
+    let state = seed ? seed >>> 0 : Math.floor(Math.random() * m);
+
+    return {
+        nextInt: function () {
             // returns a prandom int
             state = (a * state + c) % m;
             return state;
-          },
-          nextFloat: function() {
+        },
+        nextFloat: function () {
             // returns a prandom float in [0, 1)
             return this.nextInt() / m;
-          },
-          nextRange: function(min, max) {
+        },
+        nextRange: function (min, max) {
             // returns a prandom number between a given range
             return Math.floor(this.nextFloat() * (max - min)) + min;
-          },
-          setSeed: function(newSeed) {
+        },
+        setSeed: function (newSeed) {
             // restart the prandom sequence
             state = newSeed >>> 0;
-          }
-        };
-    }
+        }
+    };
+}
 
-	// Initialize with random starting positions
-	function getRandomPosition(range) {
-        return seed.nextFloat() * range * 2 - range;
-    }
+// Initialize with random starting positions
+function getRandomPosition(range) {
+    return seed.nextFloat() * range * 2 - range;
+}
 
-    // Generate random angle (in radians) between 0 and 2 * PI (360)
-    function getRandomAngle() {
-        return seed.nextFloat() * Math.PI * 2; // Random angle between 0 and 2π (360 degrees)
-    }
+// Generate random angle (in radians) between 0 and 2 * PI (360)
+function getRandomAngle() {
+    return seed.nextFloat() * Math.PI * 2; // Random angle between 0 and 2π (360 degrees)
+}
 
 // Helper function to ensure particles don't overlap initially
 function isPositionValid(x, y, particles, minDistance, boxWidth, boxHeight) {
-	if(Math.abs(x) > boxWidth / 2 - minDistance || Math.abs(y) > boxHeight / 2 - minDistance) {
-		return false;
-	}
+    if (Math.abs(x) > boxWidth / 2 - minDistance || Math.abs(y) > boxHeight / 2 - minDistance) {
+        return false;
+    }
 
-	for (const particle of particles) {
-		const dx = x - particle.x;
-		const dy = y - particle.y;
-		const distance = Math.sqrt(dx * dx + dy * dy);
-		if (distance < minDistance) {
-			return false;
-		}
-	}
-	return true;
+    for (const particle of particles) {
+        const dx = x - particle.x;
+        const dy = y - particle.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance < minDistance) {
+            return false;
+        }
+    }
+    return true;
 }
 class Params_IG extends Params {
 
-    static T = undefined;  // = new UINI_float(this, "UI_P_SM_IG_T", true);  assignment occurs in UserInterface(); see discussion there
+    static T = undefined; // = new UINI_float(this, "UI_P_SM_IG_T", true);  assignment occurs in UserInterface(); see discussion there
 
     push_vals_to_UI() {
-		Params_IG.T.push_to_UI(this.T);
+        Params_IG.T.push_to_UI(this.T);
     }
 
-	get_info_str() {
-		return "T = " + this.T;
-	}
+    get_info_str() {
+        return "T = " + this.T;
+    }
 }
-
 
 class Coords_IG extends Coords {
 
-    static N = undefined;  // = new UINI_Int(this, "UI_P_SM_IG_N", true);  assignment occurs in UserInterface(); see discussion there
+    static N = undefined; // = new UINI_Int(this, "UI_P_SM_IG_N", true);  assignment occurs in UserInterface(); see discussion there
 
-    constructor(...args) {  // see discussion of # args at definition of abstract Coords()
+    constructor(...args) { // see discussion of # args at definition of abstract Coords()
 
-	super(...args);
-	
-	/// TEMMP CODE ///
-	//const computedVelocity = 5; // !!!!!!!!!!!!! This is TEMP code until max boltz is implemented !!!!!!!!!!!!!!!!
-	//const boxSize = 4;			// !!!!!!!!!!!!! TEMP code until we have a uniform size
-	n = 10;
-	console.log("NNN:", Coords_IG.N.v); //.push_to_UI(this.N);
-	 
+        super(...args);
 
-	if (this.constructing_init_cond) {
-		console.log("n:", n);
-		//const particles = [];
-		createParticles(n);
-		console.log(particles);
+        /// TEMMP CODE ///
+        //const computedVelocity = 5; // !!!!!!!!!!!!! This is TEMP code until max boltz is implemented !!!!!!!!!!!!!!!!
+        //const boxSize = 4;			// !!!!!!!!!!!!! TEMP code until we have a uniform size
+        n = 10;
+        console.log("NNN:", Coords_IG.N.v); //.push_to_UI(this.N);
 
-	} else {
-		console.log("else");
-	    // this.x = this.mc.get_x_new(this.p, this.c_prev.x);
-		}
+
+        if (this.constructing_init_cond) {
+            console.log("n:", n);
+            //const particles = [];
+            createParticles(n);
+            console.log(particles);
+
+        } else {
+            console.log("else");
+            // this.x = this.mc.get_x_new(this.p, this.c_prev.x);
+        }
     }
 
     //output() {
-	//console.log("x =", this.x);
+    //console.log("x =", this.x);
     //}
 }
 
 class Trajectory_IG extends Trajectory {
 
     constructor(sim) {
-	super(sim);
+        super(sim);
     }
 
-    gmc() {  // gmc = get ModelCalc object
-	return new ModelCalc_IG();
+    gmc() { // gmc = get ModelCalc object
+        return new ModelCalc_IG();
     }
 
-    gp() {  // gp = get Params object
-	return new Params_IG(Params_IG.T.v); // T is uini object .v is the value
+    gp() { // gp = get Params object
+        return new Params_IG(Params_IG.T.v); // T is uini object .v is the value
     }
 
-    gc_ic(mc) {  // gc_ic = get Coords, initial condition
-	return new Coords_IG(mc, [ Coords_IG.N.v ]);
+    gc_ic(mc) { // gc_ic = get Coords, initial condition
+        return new Coords_IG(mc, [Coords_IG.N.v]);
     }
 
-    gc_nv(mc, p, c_prev) {  // gc_nv = get Coords, new value
-	return new Coords_IG(mc, p, c_prev, []);
+    gc_nv(mc, p, c_prev) { // gc_nv = get Coords, new value
+        return new Coords_IG(mc, p, c_prev, []);
     }
 
     get_max_num_t_steps() {
-	return Trajectory.DEFAULT_MAX_NUM_T_STEPS
+        return Trajectory.DEFAULT_MAX_NUM_T_STEPS
     }
 }

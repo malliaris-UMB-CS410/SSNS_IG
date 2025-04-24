@@ -19,7 +19,7 @@ class UserInterface {
         this.bsvs = this.get_bsvs(); // bsvs = Bootstrap viewport size
         console.log("INFO:\tBootstrap viewport size =", this.bsvs);
 
-        // UI controls // User Interface Numerical Input 
+        // UI controls // User Interface Numerical Input
         this.t_jump = new UINI_int(this, "UI_CTRL_JT", false);
         this.Delta_t = new UINI_int(this, "UI_CTRL_JD", false);
         this.delay = new UINI_int(this, "UI_CTRL_delay", false);
@@ -47,8 +47,8 @@ class UserInterface {
         Params_CH.beta = new UINI_float(this, "UI_P_SP_CH_beta", true);
         Coords_CH.x_0 = new UINI_int(this, "UI_P_SP_CH_x_0", false);
         // Ideal Gas
-        Params_IG.T = new UINI_float(this, "UI_P_SM_IG_T", true);       
-        Coords_IG.N = new UINI_int(this, "UI_P_SM_IG_N", false);        
+        Params_IG.T = new UINI_float(this, "UI_P_SM_IG_T", true);
+        Coords_IG.N = new UINI_int(this, "UI_P_SM_IG_N", false);
         // Ising
         Params_IS.T = new UINI_float(this, "UI_P_SM_IS_T", true);
         Coords_IS.N = new UINI_int(this, "UI_P_SM_IS_N", false);
