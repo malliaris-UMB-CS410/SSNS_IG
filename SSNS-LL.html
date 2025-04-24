@@ -237,19 +237,12 @@
         </div>
     </div>
 
-    <!-- Don't known where to change to make it work -->
-    <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1 UI_CTRL_STOCH">
-        <div class="input-group input-group-lg d-flex">
-            <div class="input-group-prepend flex-grow-1" onclick="window.sim.ui.hv.show_view('HV_C_RNG_RECR_TRAJ'); ">
-                <span class="input-group-text flex-grow-1 ctrl_eff_immed"> $$ \mathrm{Collision?} $$ </span>
-            </div>
-            <div class="input-group-append">
-                <div class="input-group-text lrg_bg_areas">
-                    <label for="UI_P_SM_IG_COLLISION"></label>
-                    <input type="checkbox" id="UI_P_SM_IG_COLLISION" checked>
-                </div>
-            </div>
-        </div>
+    <!-- Add very simple is collision check box -->
+    <div>
+        <label>
+            <input type="checkbox" id="UI_P_SM_IG_COLLISION">
+            Collision?
+        </label>
     </div>
 
 </div><!-- CLOSES div class="row" -->
