@@ -19,7 +19,7 @@ class UserInterface {
         this.bsvs = this.get_bsvs(); // bsvs = Bootstrap viewport size
         console.log("INFO:\tBootstrap viewport size =", this.bsvs);
 
-        // UI controls // User Interface Numerical Input 
+        // UI controls // User Interface Numerical Input
         this.t_jump = new UINI_int(this, "UI_CTRL_JT", false);
         this.Delta_t = new UINI_int(this, "UI_CTRL_JD", false);
         this.delay = new UINI_int(this, "UI_CTRL_delay", false);
