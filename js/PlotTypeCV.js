@@ -66,7 +66,7 @@ class PlotTypeCV_IG extends PlotTypeCV {
         this.cc.stroke;
         // Draw each atom
         particles.forEach(atom => {
-            const drawX = (100 / 2) + atom.x * 100;
+            const drawX = (200 / 2) + atom.x * 100;
             const drawY = this.fyc((500 / 2)) - atom.y * 100;
 
             this.cc.beginPath();
@@ -91,7 +91,8 @@ class PlotTypeCV_IG extends PlotTypeCV {
         return "plot_CV_IG";
     }
 
-    plot(t) {}
+    plot(t) {        
+    }
 }
 
 // NOTE: heatmaps are rendered on an html canvas and maintain state, so their get_html_targ_id_str() must be ST-dependent... explain this a bit more
