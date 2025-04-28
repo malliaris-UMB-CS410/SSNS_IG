@@ -304,9 +304,7 @@ function SeededRNG(seed) {
         }
     };
 }
-        }
-    };
-}
+
 
 // Initialize with random starting positions
 function getRandomPosition(range) {
