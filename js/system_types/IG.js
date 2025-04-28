@@ -306,6 +306,7 @@ function SeededRNG(seed) {
     };
 }
 
+
 // Initialize with random starting positions
 function getRandomPosition(range) {
 	console.log('getRandomPosition range:', userBoxWidth / 2, userBoxHeight / 2);

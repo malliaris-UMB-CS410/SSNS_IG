@@ -51,7 +51,10 @@ class Atom {
             }
         } else {
             // Bounce mode
-            const radiusOffset = this.radius / 100;
+            var radiusOffset = this.radius / 100;
+            if (interactionType == 0) {
+                radiusOffset = 0;
+            }
 
             if (newX - radiusOffset < -boxWidth / 2 || newX + radiusOffset > boxWidth / 2) {
                 this.vx *= -1; // Reverse velocity in X
