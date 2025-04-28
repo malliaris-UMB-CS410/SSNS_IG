@@ -65,8 +65,10 @@ class PlotTypeCV_IG extends PlotTypeCV {
 	// this.cc.fillStyle = 'red';
     // this.cc.fill();
 	this.cc.stroke;
-	 // Draw each atom
+	// Draw each atom
+	let i = 0;
 	particles.forEach(atom => {
+		console.log("PlotTypeCV.js", i, particles[i]);
 		const drawX = (100 / 2) + atom.x * 100;
 		const drawY = this.fyc((500 / 2)) - atom.y * 100;
 
@@ -76,8 +78,15 @@ class PlotTypeCV_IG extends PlotTypeCV {
 
 		this.cc.fillStyle = 'red';
 		this.cc.fill();
-		this.cc.stroke;
+		//this.cc.stroke;
+		i++;
 	});
+
+
+
+
+
+	
     }
 
     get_ext_x_axis_lbl_str() {

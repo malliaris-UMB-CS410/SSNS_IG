@@ -52,7 +52,7 @@ class Atom {
         } else {
             // Bounce mode
             const radiusOffset = this.radius / 100;
-
+			/*
             if (newX - radiusOffset < -boxWidth / 2 || newX + radiusOffset > boxWidth / 2) {
                 this.vx *= -1; // Reverse velocity in X
 
@@ -64,10 +64,23 @@ class Atom {
 
                 // prevents particles from getting stuck in boundaries
                 this.y = Math.max(-boxHeight / 2 + radiusOffset, Math.min(boxHeight / 2 - radiusOffset, newY));
-            }
+            }*/
+			// Check X bounce
+			if (newX - radiusOffset < -boxWidth / 2 || newX + radiusOffset > boxWidth / 2) {
+				this.vx *= -1;
+				newX = Math.max(-boxWidth / 2 + radiusOffset, Math.min(boxWidth / 2 - radiusOffset, newX));
+			}
+		
+			// Check Y bounce
+			if (newY - radiusOffset < -boxHeight / 2 || newY + radiusOffset > boxHeight / 2) {
+				this.vy *= -1;
+				newY = Math.max(-boxHeight / 2 + radiusOffset, Math.min(boxHeight / 2 - radiusOffset, newY));
+			}
+
             this.x = newX;
             this.y = newY;
         }
+		//console.log("update position: x:", this.x)
     }
 
     // Calculate distance between two atoms
@@ -170,6 +183,7 @@ class Atom {
             particle2.y += unitY * overlap;
         }
     }
+	
 }
 
 
@@ -178,7 +192,7 @@ let seed = SeededRNG(1);
 //const userBoxWidth = parseFloat(document.getElementById('boxWidth').value);
 //const userBoxHeight = parseFloat(document.getElementById('boxHeight').value);
 const userVelocity = 4; //parseFloat(document.getElementById('velocityMagnitude').value) / 10;
-const numParticles = 5; //parseInt(document.getElementById('numParticles').value);
+//let numParticles = Coords_IG.N.v;//  5; //parseInt(document.getElementById('numParticles').value);
 const boundaryType = 0; //parseInt(document.getElementById('boundaryType').value);		// interaction with walls
 const interactionType = 0; //parseInt(document.getElementById('interactionType').value); // interaction with particles
 //const initialSeed = parseInt(document.getElementById('initialSeed').value);
@@ -187,22 +201,49 @@ const particleRadius = 6;       // set size of particle
 const minDistance = (particleRadius * 2) / 100; // Converted to simulation units
 const userBoxHeight = 4;
 const userBoxWidth = 4;
-	
+let animationId = null;
+// replace with RAF optimize the animate playing
+let lastTimestamp = 0;
+const maxTimeStep = 1.0 / 30.0;; // 30 FPS
+
+
+
+
+// Check and resolve collisions between all particles
+function handleCollisions() {
+	// if interaction type is set to collision, collide. else ideal gas
+	if (interactionType){
+		// Check each pair of particles exactly once
+		for (let i = 0; i < particles.length; i++) {
+			for (let j = i + 1; j < particles.length; j++) {
+				const particle1 = particles[i];
+				const particle2 = particles[j];
+
+				if (particle1.checkCollision(particle2)) {
+					particle1.resolveCollision(particle2);
+				}
+			}
+		}
+	}
+	//else do nothing (ideal gas)
+}
+
 function createParticles(n) {
 		// create numParticles number of particles in a random starting position moving in a random direction
 		//const particles = [];
 
 		// temp values
-		const userVelocity = 4;
-		const userBoxHeight = 4;
-		const userBoxWidth = 4;
+		//const userVelocity = 4;
+		//const userBoxHeight = 4;
+		//const userBoxWidth = 4;
 
 		for (let i = 0; i < n; i++) {
-			const angle = Math.random * Math.PI * 2; //getRandomAngle();  // Random direction (angle)
+			const angle = Math.random() * Math.PI * 2; //getRandomAngle();  // Random direction (angle)
 		
 			// Calculate the x and y components of the velocity based on the random angle
 			const vx = userVelocity * Math.cos(angle); // X velocity component
 			const vy = userVelocity * Math.sin(angle); // Y velocity component
+
 		
 		
 			// Try to find a valid non-overlapping position
@@ -223,6 +264,8 @@ function createParticles(n) {
 				}
 			} while (!isPositionValid(x, y, particles, minDistance, userBoxWidth, userBoxHeight));
 		
+			console.log(`Creating particle: x=${x}, y=${y}, vx=${vx}, vy=${vy}`);
+
 			const atom = new Atom(
 				x, y, vx, vy, 5, 1 // x, y, vx, vy, radius, mass
 			);
@@ -230,48 +273,49 @@ function createParticles(n) {
 			//console.log(particles);
 		}
 		//return particles;
-	}
+}
 
-	// TEMP seeded random function
-    function SeededRNG(seed) {
-        // LCG constants
-        const m = 0x80000000;   // mod 2^31
-        const a = 1103515245;   // multiplier 
-        const c = 12345;        // increment, coprime with m
+// TEMP seeded random function
+function SeededRNG(seed) {
+    // LCG constants
+    const m = 0x80000000;   // mod 2^31
+    const a = 1103515245;   // multiplier 
+    const c = 12345;        // increment, coprime with m
 
-        // IF (0/null/NaN): random | ELSE: prandom
-        let state = seed ? seed >>> 0 : Math.floor(Math.random() * m);
+    // IF (0/null/NaN): random | ELSE: prandom
+    let state = seed ? seed >>> 0 : Math.floor(Math.random() * m);
 
-        return {
-          nextInt: function() {
-            // returns a prandom int
-            state = (a * state + c) % m;
-            return state;
-          },
-          nextFloat: function() {
+    return {
+        nextInt: function() {
+        	// returns a prandom int
+        	state = (a * state + c) % m;
+			return state;
+        },
+        nextFloat: function() {
             // returns a prandom float in [0, 1)
             return this.nextInt() / m;
-          },
-          nextRange: function(min, max) {
+        },
+        nextRange: function(min, max) {
             // returns a prandom number between a given range
             return Math.floor(this.nextFloat() * (max - min)) + min;
-          },
-          setSeed: function(newSeed) {
+        },
+        setSeed: function(newSeed) {
             // restart the prandom sequence
             state = newSeed >>> 0;
-          }
-        };
-    }
+        }
+    };
+}
 
-	// Initialize with random starting positions
-	function getRandomPosition(range) {
-        return seed.nextFloat() * range * 2 - range;
-    }
+// Initialize with random starting positions
+function getRandomPosition(range) {
+	console.log('getRandomPosition range:', userBoxWidth / 2, userBoxHeight / 2);
+    return seed.nextFloat() * range * 2 - range;
+}
 
-    // Generate random angle (in radians) between 0 and 2 * PI (360)
-    function getRandomAngle() {
-        return seed.nextFloat() * Math.PI * 2; // Random angle between 0 and 2π (360 degrees)
-    }
+// Generate random angle (in radians) between 0 and 2 * PI (360)
+function getRandomAngle() {
+    return seed.nextFloat() * Math.PI * 2; // Random angle between 0 and 2π (360 degrees)
+}
 
 // Helper function to ensure particles don't overlap initially
 function isPositionValid(x, y, particles, minDistance, boxWidth, boxHeight) {
@@ -292,6 +336,8 @@ function isPositionValid(x, y, particles, minDistance, boxWidth, boxHeight) {
 class Params_IG extends Params {
 
     static T = undefined;  // = new UINI_float(this, "UI_P_SM_IG_T", true);  assignment occurs in UserInterface(); see discussion there
+	static V = undefined;  // = new UINI_Int(this, "UI_P_SM_IG_V", true);  assignment occurs in UserInterface(); see discussion there			!!!! not sure this is right -jg !!!!
+
 
     push_vals_to_UI() {
 		Params_IG.T.push_to_UI(this.T);
@@ -302,32 +348,88 @@ class Params_IG extends Params {
 	}
 }
 
+function animate(timestamp) {
+	if (!lastTimestamp) lastTimestamp = timestamp;
 
+	const deltaTime = timestamp - lastTimestamp;
+	
+
+	// limited 30 FPS
+	const timeStep = Math.min(deltaTime / 1000, maxTimeStep);
+
+	handleCollisions();
+
+	//console.log("animate: deltatime:", deltaTime);
+	//console.log("animate: timestep:", timeStep);
+	//console.log("animate: timestamp:", timestamp);
+	//console.log("animate: maxtimestep:", maxTimeStep);
+
+	// update particles position
+
+	
+	particles.forEach(atom => {
+atom.updatePosition(timeStep, userBoxWidth, userBoxHeight, boundaryType);
+
+if (!boundaryType) {
+	const radiusOffset = atom.radius / 100;
+	atom.x = Math.max(-userBoxWidth / 2 + radiusOffset, Math.min(userBoxWidth / 2 - radiusOffset, atom.x));
+	atom.y = Math.max(-userBoxHeight / 2 + radiusOffset, Math.min(userBoxHeight / 2 - radiusOffset, atom.y));
+}
+});    
+
+	//draw();
+	lastTimestamp = timestamp;
+	animationId = requestAnimationFrame(animate);
+}
+
+//let timeStep = 0;
 class Coords_IG extends Coords {
 
-    static N = undefined;  // = new UINI_Int(this, "UI_P_SM_IG_N", true);  assignment occurs in UserInterface(); see discussion there
+    static N = undefined;  // = new UINI_Int(this, "UI_P_SM_IG_N", false);  assignment occurs in UserInterface(); see discussion there
+	
 
     constructor(...args) {  // see discussion of # args at definition of abstract Coords()
 
 	super(...args);
 	
-	/// TEMMP CODE ///
+	/// TEMP CODE ///
 	//const computedVelocity = 5; // !!!!!!!!!!!!! This is TEMP code until max boltz is implemented !!!!!!!!!!!!!!!!
 	//const boxSize = 4;			// !!!!!!!!!!!!! TEMP code until we have a uniform size
-	n = 10;
-	console.log("NNN:", Coords_IG.N.v); //.push_to_UI(this.N);
+
+	let numParticles = Coords_IG.N.v;
+	let tempK = Params_IG.T.v;
+	console.log("IG.js coords_IG: numParticles", numParticles);
+	console.log("IG.js coords_IG: temp", tempK); 
+	//console.log(timestamp);
+	console.log("Coords_IG");
+		console.log(particles);
 	 
 
 	if (this.constructing_init_cond) {
-		console.log("n:", n);
-		//const particles = [];
-		createParticles(n);
+		console.log("Coords_IG if");
+		console.log("numParticles:", numParticles);
+
+		createParticles(numParticles);
 		console.log(particles);
 
 	} else {
-		console.log("else");
+		console.log("Coords_IG else");
+		console.log(particles);
+		for (let i = 0; i < numParticles; i++) {
+			if (particles[i] == undefined) {		// If N is increased by the user create a new particle
+				createParticles(1);
+			}
+			
+			console.log(i, particles[i]);
+			//particles[i].updatePosition(timeStep, 1, 1, false);
+			//animate();
+			
+			}
+		//timeStep++;
 	    // this.x = this.mc.get_x_new(this.p, this.c_prev.x);
+		
 		}
+		animate();
     }
 
     //output() {
@@ -361,3 +463,5 @@ class Trajectory_IG extends Trajectory {
 	return Trajectory.DEFAULT_MAX_NUM_T_STEPS
     }
 }
+
+

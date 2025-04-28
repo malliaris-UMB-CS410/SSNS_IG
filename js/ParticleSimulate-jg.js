@@ -12,6 +12,7 @@ class Atom {
     updatePosition(timeStep, boxWidth, boxHeight, boundaryType) {
         let newX = this.x + this.vx * timeStep;
         let newY = this.y + this.vy * timeStep;
+        console.log("x:", this.x, "y:", this.y, "timestep:", timeStep);
 
         if (boundaryType) {
             // Wrap mode
@@ -317,7 +318,7 @@ document.getElementById('startSimulation').addEventListener('click', function ()
 
             cc.beginPath();
             cc.arc(drawX, drawY, atom.radius, 0, Math.PI * 2);
-            //console.log(atom.radius);
+            console.log(atom);
 
             cc.fillStyle = 'red';
             cc.fill();
@@ -352,9 +353,14 @@ document.getElementById('startSimulation').addEventListener('click', function ()
         if (!lastTimestamp) lastTimestamp = timestamp;
 
         const deltaTime = timestamp - lastTimestamp;
+        
 
         // limited 30 FPS
         const timeStep = Math.min(deltaTime / 1000, maxTimeStep);
+        
+        console.log("animate: deltatime:", deltaTime);
+	    console.log("animate: timestep:", timeStep);
+        console.log("animate: timestamp:", timestamp);
 
         handleCollisions();
 

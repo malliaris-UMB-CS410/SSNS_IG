@@ -47,6 +47,7 @@ class UserInterface {
         Params_CH.beta = new UINI_float(this, "UI_P_SP_CH_beta", true);
         Coords_CH.x_0 = new UINI_int(this, "UI_P_SP_CH_x_0", false);
         // Ideal Gas
+        Params_IG.V = new UINI_int(this, "UI_P_SM_IG_V", true);     // Not sure this is params or coords and true or false - jg
         Params_IG.T = new UINI_float(this, "UI_P_SM_IG_T", true);       
         Coords_IG.N = new UINI_int(this, "UI_P_SM_IG_N", false);        
         // Ising
