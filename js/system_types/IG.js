@@ -269,8 +269,12 @@ function createParticles(n) {
 			const atom = new Atom(
 				x, y, vx, vy, 5, 1 // x, y, vx, vy, radius, mass
 			);
-			particles.push(atom);
-			//console.log(particles);
+			//particles.push(atom);
+			//console.log("create particles end:", atom);
+
+            console.log("Before push: atom.x =", atom.x, "atom.y =", atom.y);
+            particles.push(atom);
+            console.log("After push: particles[n].x =", particles[particles.length - 1].x, "particles[n].y =", particles[particles.length - 1].y);
 		}
 		//return particles;
 }
@@ -309,7 +313,8 @@ function SeededRNG(seed) {
 
 // Initialize with random starting positions
 function getRandomPosition(range) {
-	console.log('getRandomPosition range:', userBoxWidth / 2, userBoxHeight / 2);
+	//console.log('getRandomPosition range:', userBoxWidth / 2, userBoxHeight / 2);
+    console.log("Random X seed result:", seed.nextFloat());
     return seed.nextFloat() * range * 2 - range;
 }
 
@@ -403,7 +408,9 @@ class Coords_IG extends Coords {
 	console.log("IG.js coords_IG: temp", tempK); 
 	//console.log(timestamp);
 	console.log("Coords_IG");
-		console.log(particles);
+	console.log(particles);
+
+
 	 
 
 	if (this.constructing_init_cond) {
@@ -411,7 +418,8 @@ class Coords_IG extends Coords {
 		console.log("numParticles:", numParticles);
 
 		createParticles(numParticles);
-		console.log(particles);
+		console.log("particles created:", particles);
+        console.log("After created: particles[n].x =", particles[particles.length - 1].x, "particles[n].y =", particles[particles.length - 1].y);
 
 	} else {
 		console.log("Coords_IG else");
@@ -422,6 +430,7 @@ class Coords_IG extends Coords {
 			}
 			
 			console.log(i, particles[i]);
+            console.log(i, particles[i].x, particles[i].y, particles[i].vx, particles[i].vy);
 			//particles[i].updatePosition(timeStep, 1, 1, false);
 			//animate();
 			
