@@ -247,7 +247,7 @@ function createParticles(n) {
 		
 		
 			// Try to find a valid non-overlapping position
-			let x, y;
+			let x = 0, y = 0;
 			let attempts = 0;
 			const maxAttempts = 1000;
 		
@@ -260,6 +260,8 @@ function createParticles(n) {
 				// Break out after too many attempts to prevent infinite loop
 				if (attempts > maxAttempts) {
 					console.warn('Could not find non-overlapping position after', maxAttempts, 'attempts');
+					x = 0;
+					y = 0;
 					break;
 				}
 			} while (!isPositionValid(x, y, particles, minDistance, userBoxWidth, userBoxHeight));
@@ -271,8 +273,6 @@ function createParticles(n) {
 			);
 			//particles.push(atom);
 			//console.log("create particles end:", atom);
-
-            console.log("Before push: atom.x =", atom.x, "atom.y =", atom.y);
             particles.push(atom);
             console.log("After push: particles[n].x =", particles[particles.length - 1].x, "particles[n].y =", particles[particles.length - 1].y);
 		}
@@ -314,8 +314,9 @@ function SeededRNG(seed) {
 // Initialize with random starting positions
 function getRandomPosition(range) {
 	//console.log('getRandomPosition range:', userBoxWidth / 2, userBoxHeight / 2);
-    console.log("Random X seed result:", seed.nextFloat());
-    return seed.nextFloat() * range * 2 - range;
+    const randomVar = seed.nextFloat() * range * 2 - range;
+    console.log('randomVar:', randomVar);
+    return randomVar;
 }
 
 // Generate random angle (in radians) between 0 and 2 * PI (360)
@@ -418,7 +419,7 @@ class Coords_IG extends Coords {
 		console.log("numParticles:", numParticles);
 
 		createParticles(numParticles);
-		console.log("particles created:", particles);
+		console.log("particles created:", JSON.stringify(particles, null, 2));
         console.log("After created: particles[n].x =", particles[particles.length - 1].x, "particles[n].y =", particles[particles.length - 1].y);
 
 	} else {
