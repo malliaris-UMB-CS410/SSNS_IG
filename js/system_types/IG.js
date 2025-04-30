@@ -25,8 +25,8 @@ class Atom {
 			this.vy = vy;
 			this.radius = radius;
 			this.mass = mass;
-            this.xenergy = 2*this.m*abs(vx);
-            this.yenergy = 2*this.m*abs(vy);
+            this.xenergy = 2*this.m*Math.abs(vx);
+            this.yenergy = 2*this.m*Math.abs(vy);
 	}
 
 	updatePosition(timeStep, boxWidth, boxHeight, boundaryType) {
@@ -66,7 +66,7 @@ class Atom {
 			if (newX - radiusOffset < -boxWidth / 2 || newX + radiusOffset > boxWidth / 2) {
 				this.vx *= -1;
 				newX = Math.max(-boxWidth / 2 + radiusOffset, Math.min(boxWidth / 2 - radiusOffset, newX));
-                
+
 			}
 		
 			// Check Y bounce
