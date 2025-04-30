@@ -2,7 +2,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ////////  IS = Ising Model (from SM = Statistical Mechanics)  /////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
-
+const air_mass = 5.32 * Math.pow(10, -26);
 // NOTE: we represent the two Ising spin values as 0,1 "under the hood" -- it's more computationally convenient to think of as binary
 // and, in creating debugging output, etc., 0 and 1 have the same width; only in ModelCalc_IG.get_E_spin_pair() where we switch to energy
 // quantities do we have to translate 0, 1 the to the more physically appropriate -1, 1 via as1n1(); all other methods dealing with energies
@@ -18,7 +18,7 @@ class ModelCalc_IG extends ModelCalc {
 }
 
 class Atom {
-    constructor(x, y, vx, vy, radius = 5, mass = 1) {
+    constructor(x, y, vx, vy, radius = 0, mass = air_mass) {
         this.x = x;
         this.y = y;
         this.vx = vx;
@@ -26,6 +26,8 @@ class Atom {
         this.radius = radius;
         this.mass = mass;
         this.m = mass;
+        this.xenergy = 2*this.m*abs(vx);
+        this.yenergy = 2*this.m*abs(vy);
     }
 
     updatePosition(timeStep, boxWidth, boxHeight, boundaryType) {

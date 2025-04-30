@@ -2,7 +2,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ////////  IS = Ising Model (from SM = Statistical Mechanics)  /////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
-
+const air_mass = 5.32 * Math.pow(10, -26);
 // NOTE: we represent the two Ising spin values as 0,1 "under the hood" -- it's more computationally convenient to think of as binary
 // and, in creating debugging output, etc., 0 and 1 have the same width; only in ModelCalc_IG.get_E_spin_pair() where we switch to energy
 // quantities do we have to translate 0, 1 the to the more physically appropriate -1, 1 via as1n1(); all other methods dealing with energies
@@ -18,14 +18,15 @@ class ModelCalc_IG extends ModelCalc {
 }
 
 class Atom {
-		constructor(x, y, vx, vy, radius=5, mass=1) {
+		constructor(x, y, vx, vy, radius=0, mass=air_mass) {
 			this.x = x;
 			this.y = y;
 			this.vx = vx;
 			this.vy = vy;
 			this.radius = radius;
 			this.mass = mass;
-			this.m = mass;
+            this.xenergy = 2*this.m*abs(vx);
+            this.yenergy = 2*this.m*abs(vy);
 	}
 
 	updatePosition(timeStep, boxWidth, boxHeight, boundaryType) {
@@ -35,19 +36,15 @@ class Atom {
         if (boundaryType) {
             // Wrap mode
             if (newX < -boxWidth / 2) {
-                this.x = newX + boxWidth;
+                newX = newX + boxWidth;
             } else if (newX > boxWidth / 2) {
-                this.x = newX - boxWidth;
-            } else {
-                this.x = newX;
+                newX = newX - boxWidth;
             }
 
             if (newY < -boxHeight / 2) {
-                this.y = newY + boxHeight;
+                newY = newY + boxHeight;
             } else if (newY > boxHeight / 2) {
-                this.y = newY - boxHeight;
-            } else {
-                this.y = newY;
+                newY = newY - boxHeight;
             }
         } else {
             // Bounce mode
@@ -69,6 +66,7 @@ class Atom {
 			if (newX - radiusOffset < -boxWidth / 2 || newX + radiusOffset > boxWidth / 2) {
 				this.vx *= -1;
 				newX = Math.max(-boxWidth / 2 + radiusOffset, Math.min(boxWidth / 2 - radiusOffset, newX));
+                
 			}
 		
 			// Check Y bounce
