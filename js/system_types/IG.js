@@ -7,6 +7,33 @@
 // and, in creating debugging output, etc., 0 and 1 have the same width; only in ModelCalc_IG.get_E_spin_pair() where we switch to energy
 // quantities do we have to translate 0, 1 the to the more physically appropriate -1, 1 via as1n1(); all other methods dealing with energies
 // take output from get_E_spin_pair(), and all methods that take spin values as inputs always expect 0, 1
+
+// values
+let seed = SeededRNG(2);
+//const userBoxWidth = parseFloat(document.getElementById('boxWidth').value);
+//const userBoxHeight = parseFloat(document.getElementById('boxHeight').value);
+const userVelocity = 4; //parseFloat(document.getElementById('velocityMagnitude').value) / 10;
+//let numParticles = Coords_IG.N.v;//  5; //parseInt(document.getElementById('numParticles').value);
+const boundaryType = 0; //parseInt(document.getElementById('boundaryType').value);		// interaction with walls
+const interactionType = 0; //parseInt(document.getElementById('interactionType').value); // interaction with particles
+//const initialSeed = parseInt(document.getElementById('initialSeed').value);
+const particles = [];
+//particles[0] = new Atom(1, 2, 3, 4, 5, 1);
+//particles[0] = 0;
+//console.log("THIS SHOULD BE EMPTY", particles, particles.length);
+const particleRadius = 6;       // set size of particle 
+const minDistance = (particleRadius * 2) / 100; // Converted to simulation units
+const userBoxHeight = 4;
+const userBoxWidth = 4;
+let animationId = null;
+// replace with RAF optimize the animate playing
+let lastTimestamp = 0;
+const maxTimeStep = 1.0 / 30.0;; // 30 FPS
+//console.log("order 1");
+//console.log(typeof particles);
+
+
+
 class ModelCalc_IG extends ModelCalc {
 
     constructor() {
@@ -15,6 +42,12 @@ class ModelCalc_IG extends ModelCalc {
     model_is_stoch(){
 		return false;
 	}
+}
+
+class Atoms {
+    constructor(atom) {
+        this.particles = []
+    }
 }
 
 class Atom {
@@ -52,7 +85,7 @@ class Atom {
         } else {
             // Bounce mode
             const radiusOffset = this.radius / 100;
-/*
+
             if (newX - radiusOffset < -boxWidth / 2 || newX + radiusOffset > boxWidth / 2) {
                 this.vx *= -1; // Reverse velocity in X
 
@@ -64,8 +97,9 @@ class Atom {
 
                 // prevents particles from getting stuck in boundaries
                 this.y = Math.max(-boxHeight / 2 + radiusOffset, Math.min(boxHeight / 2 - radiusOffset, newY));
-            }*/
+            }
 			// Check X bounce
+            /*
 			if (newX - radiusOffset < -boxWidth / 2 || newX + radiusOffset > boxWidth / 2) {
 				this.vx *= -1;
 				newX = Math.max(-boxWidth / 2 + radiusOffset, Math.min(boxWidth / 2 - radiusOffset, newX));
@@ -75,7 +109,7 @@ class Atom {
 			if (newY - radiusOffset < -boxHeight / 2 || newY + radiusOffset > boxHeight / 2) {
 				this.vy *= -1;
 				newY = Math.max(-boxHeight / 2 + radiusOffset, Math.min(boxHeight / 2 - radiusOffset, newY));
-			}
+			}*/
 
             this.x = newX;
             this.y = newY;
@@ -187,28 +221,6 @@ class Atom {
 }
 
 
-// values
-let seed = SeededRNG(1);
-//const userBoxWidth = parseFloat(document.getElementById('boxWidth').value);
-//const userBoxHeight = parseFloat(document.getElementById('boxHeight').value);
-const userVelocity = 4; //parseFloat(document.getElementById('velocityMagnitude').value) / 10;
-//let numParticles = Coords_IG.N.v;//  5; //parseInt(document.getElementById('numParticles').value);
-const boundaryType = 0; //parseInt(document.getElementById('boundaryType').value);		// interaction with walls
-const interactionType = 0; //parseInt(document.getElementById('interactionType').value); // interaction with particles
-//const initialSeed = parseInt(document.getElementById('initialSeed').value);
-const particles = [];
-const particleRadius = 6;       // set size of particle 
-const minDistance = (particleRadius * 2) / 100; // Converted to simulation units
-const userBoxHeight = 4;
-const userBoxWidth = 4;
-let animationId = null;
-// replace with RAF optimize the animate playing
-let lastTimestamp = 0;
-const maxTimeStep = 1.0 / 30.0;; // 30 FPS
-
-
-
-
 // Check and resolve collisions between all particles
 function handleCollisions() {
 	// if interaction type is set to collision, collide. else ideal gas
@@ -230,13 +242,6 @@ function handleCollisions() {
 
 function createParticles(n) {
 		// create numParticles number of particles in a random starting position moving in a random direction
-		//const particles = [];
-
-		// temp values
-		//const userVelocity = 4;
-		//const userBoxHeight = 4;
-		//const userBoxWidth = 4;
-
 		for (let i = 0; i < n; i++) {
 			const angle = Math.random() * Math.PI * 2; //getRandomAngle();  // Random direction (angle)
 		
@@ -250,11 +255,11 @@ function createParticles(n) {
 			let x, y;
 			let attempts = 0;
 			const maxAttempts = 1000;
-		
+            console.log("atoms:", i);
 			do {
 				x = getRandomPosition(userBoxWidth / 2);
 				y = getRandomPosition(userBoxHeight /2);
-		
+
 				attempts++;
 		
 				// Break out after too many attempts to prevent infinite loop
@@ -269,14 +274,15 @@ function createParticles(n) {
 			const atom = new Atom(
 				x, y, vx, vy, 5, 1 // x, y, vx, vy, radius, mass
 			);
-			//particles.push(atom);
-			//console.log("create particles end:", atom);
+            console.log(typeof atom, typeof atom.x);
 
             console.log("Before push: atom.x =", atom.x, "atom.y =", atom.y);
-            particles.push(atom);
+            //particles.push(atom);
+            particles[i] = atom;
+            console.log("this is the new thing", particles);
             console.log("After push: particles[n].x =", particles[particles.length - 1].x, "particles[n].y =", particles[particles.length - 1].y);
 		}
-		//return particles;
+
 }
 
 // TEMP seeded random function
@@ -315,7 +321,7 @@ function SeededRNG(seed) {
 function getRandomPosition(range) {
 	//console.log('getRandomPosition range:', userBoxWidth / 2, userBoxHeight / 2);
     console.log("Random X seed result:", seed.nextFloat());
-    return seed.nextFloat() * range * 2 - range;
+    return (seed.nextFloat()) * range * 2 - range;
 }
 
 // Generate random angle (in radians) between 0 and 2 * PI (360)
@@ -402,6 +408,10 @@ class Coords_IG extends Coords {
 	//const computedVelocity = 5; // !!!!!!!!!!!!! This is TEMP code until max boltz is implemented !!!!!!!!!!!!!!!!
 	//const boxSize = 4;			// !!!!!!!!!!!!! TEMP code until we have a uniform size
 
+    //const particles = [];
+
+    let particles = new Atoms();
+
 	let numParticles = Coords_IG.N.v;
 	let tempK = Params_IG.T.v;
 	console.log("IG.js coords_IG: numParticles", numParticles);
@@ -410,32 +420,37 @@ class Coords_IG extends Coords {
 	console.log("Coords_IG");
 	console.log(particles);
 
-
+    console.log("order 2");
+    console.log(typeof particles);
 	 
 
 	if (this.constructing_init_cond) {
 		console.log("Coords_IG if");
 		console.log("numParticles:", numParticles);
+        //particles.splice(0,1);
+        //console.log("spliced!!", particles);
 
 		createParticles(numParticles);
 		console.log("particles created:", particles);
-        console.log("After created: particles[n].x =", particles[particles.length - 1].x, "particles[n].y =", particles[particles.length - 1].y);
+        //console.log("After created: particles[n].x =", particles[particles.length - 1].x, "particles[n].y =", particles[particles.length - 1].y);
+        //console.log("After created: particles[0].x =", particles[0].x, "particles[0].y =", particles[0].y);
+        //console.log(typeof particles, typeof particles[0].x);
 
 	} else {
 		console.log("Coords_IG else");
-		console.log(particles);
+		//console.log(particles);
 		for (let i = 0; i < numParticles; i++) {
 			if (particles[i] == undefined) {		// If N is increased by the user create a new particle
 				createParticles(1);
 			}
 			
-			console.log(i, particles[i]);
-            console.log(i, particles[i].x, particles[i].y, particles[i].vx, particles[i].vy);
+			//console.log(i, particles[i]);
+            //console.log(i, particles[i].x, particles[i].y, particles[i].vx, particles[i].vy);
+            //console.log(typeof particles, typeof particles[0].x);
 			//particles[i].updatePosition(timeStep, 1, 1, false);
 			//animate();
 			
 			}
-		//timeStep++;
 	    // this.x = this.mc.get_x_new(this.p, this.c_prev.x);
 		
 		}
