@@ -49,26 +49,12 @@ class Atom {
         } else {
             // Bounce mode
             const radiusOffset = this.radius / 100;
-            /*
-            if (newX - radiusOffset < -boxWidth / 2 || newX + radiusOffset > boxWidth / 2) {
-            this.vx *= -1; // Reverse velocity in X
-
-            // prevents particles from getting stuck in boundaries
-            this.x = Math.max(-boxWidth / 2 + radiusOffset, Math.min(boxWidth / 2 - radiusOffset, newX));
-            }
-            if (newY - radiusOffset < -boxHeight / 2 || newY + radiusOffset > boxHeight / 2) {
-            this.vy *= -1; // Reverse velocity in Y
-
-            // prevents particles from getting stuck in boundaries
-            this.y = Math.max(-boxHeight / 2 + radiusOffset, Math.min(boxHeight / 2 - radiusOffset, newY));
-            }*/
             // Check X bounce
             if (newX - radiusOffset < -boxWidth / 2 || newX + radiusOffset > boxWidth / 2) {
                 this.vx *= -1;
                 newX = Math.max(-boxWidth / 2 + radiusOffset, Math.min(boxWidth / 2 - radiusOffset, newX));
 
             }
-
             // Check Y bounce
             if (newY - radiusOffset < -boxHeight / 2 || newY + radiusOffset > boxHeight / 2) {
                 this.vy *= -1;
@@ -241,8 +227,7 @@ function createParticles(n) {
 
 
         // Try to find a valid non-overlapping position
-        let x = 0,
-        y = 0;
+        let x,y;
         let attempts = 0;
         const maxAttempts = 1000;
 
@@ -255,8 +240,6 @@ function createParticles(n) {
             // Break out after too many attempts to prevent infinite loop
             if (attempts > maxAttempts) {
                 console.warn('Could not find non-overlapping position after', maxAttempts, 'attempts');
-                x = 0;
-                y = 0;
                 break;
             }
         } while (!isPositionValid(x, y, minDistance, userBoxWidth, userBoxHeight));
@@ -264,7 +247,7 @@ function createParticles(n) {
         console.log(`Creating particle: x=${x}, y=${y}, vx=${vx}, vy=${vy}`);
 
         const atom = new Atom(
-                x, y, vx, vy, 5, 1 // x, y, vx, vy, radius, mass
+                x, y, vx, vy, particleRadius, 1 // x, y, vx, vy, radius, mass
             );
         //particles.push(atom);
         //console.log("create particles end:", atom);
@@ -350,39 +333,24 @@ class Params_IG extends Params {
 }
 
 function animate(timestamp) {
-    if (!lastTimestamp)
-        lastTimestamp = timestamp;
-    if (animationId) {
-        cancelAnimationFrame(animationId);
-        animationId = null;
-    }
+    if (!lastTimestamp) lastTimestamp = timestamp;
 
     const deltaTime = timestamp - lastTimestamp;
 
     // limited 30 FPS
     const timeStep = Math.min(deltaTime / 1000, maxTimeStep);
 
-    handleCollisions();
-
-    //console.log("animate: deltatime:", deltaTime);
-    //console.log("animate: timestep:", timeStep);
-    //console.log("animate: timestamp:", timestamp);
-    //console.log("animate: maxtimestep:", maxTimeStep);
+//    if (isCollision) handleCollisions();
 
     // update particles position
-
-
     particles.forEach(atom => {
-        atom.updatePosition(timeStep, userBoxWidth, userBoxHeight, boundaryType);
-
-        if (!boundaryType) {
-            const radiusOffset = atom.radius / 100;
-            atom.x = Math.max(-userBoxWidth / 2 + radiusOffset, Math.min(userBoxWidth / 2 - radiusOffset, atom.x));
-            atom.y = Math.max(-userBoxHeight / 2 + radiusOffset, Math.min(userBoxHeight / 2 - radiusOffset, atom.y));
-        }
+        atom.updatePosition(timeStep, userBoxWidth, userBoxHeight, 1);  // bounce mode for now
+        const radiusOffset = atom.radius / 100;
+        atom.x = Math.max(-userBoxWidth / 2 + radiusOffset, Math.min(userBoxWidth / 2 - radiusOffset, atom.x));
+        atom.y = Math.max(-userBoxHeight / 2 + radiusOffset, Math.min(userBoxHeight / 2 - radiusOffset, atom.y));
     });
 
-    //draw();
+//    draw();
     lastTimestamp = timestamp;
     animationId = requestAnimationFrame(animate);
 }
@@ -419,28 +387,17 @@ class Coords_IG extends Coords {
 
         } else {
             console.log("Coords_IG else");
-            console.log(particles);
             for (let i = 0; i < numParticles; i++) {
-                if (particles[i] == undefined) { // If N is increased by the user create a new particle
+                if (particles[i] == undefined) {
                     createParticles(1);
                 }
 
                 console.log(i, particles[i]);
                 console.log(i, particles[i].x, particles[i].y, particles[i].vx, particles[i].vy);
-                //particles[i].updatePosition(timeStep, 1, 1, false);
-                //animate();
-
             }
-            //timeStep++;
-            // this.x = this.mc.get_x_new(this.p, this.c_prev.x);
-
         }
         animationId = requestAnimationFrame(animate);
     }
-
-    //output() {
-    //console.log("x =", this.x);
-    //}
 }
 
 class Trajectory_IG extends Trajectory {
