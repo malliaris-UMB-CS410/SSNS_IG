@@ -25,8 +25,8 @@ class Atom {
         this.vy = vy;
         this.radius = radius;
         this.mass = mass;
-        this.xenergy = 2 * this.m * Math.abs(vx);
-        this.yenergy = 2 * this.m * Math.abs(vy);
+        this.xenergy = 2 * this.mass * Math.abs(vx);
+        this.yenergy = 2 * this.mass * Math.abs(vy);
     }
 
     updatePosition(timeStep, boxWidth, boxHeight, boundaryType) {
