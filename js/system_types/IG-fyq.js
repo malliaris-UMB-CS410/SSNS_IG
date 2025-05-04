@@ -33,8 +33,8 @@ class Atom {
         this.radius = radius;
         this.mass = mass;
         this.m = mass;
-        this.xenergy = 2*this.m*abs(vx);
-        this.yenergy = 2*this.m*abs(vy);
+        this.xenergy = 2*this.m*Math.abs(vx);
+        this.yenergy = 2*this.m*Math.abs(vy);
     }
     updatePosition(timeStep, boxWidth, boxHeight, boundaryType) {
         let newX = this.x + this.vx * timeStep;
