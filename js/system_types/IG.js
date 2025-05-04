@@ -2,7 +2,12 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ////////  IS = Ising Model (from SM = Statistical Mechanics)  /////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
-const air_mass = 5.32 * Math.pow(10, -26);
+const MassType = {
+    air: 4.8e-26,
+    helium: 6.6e-27,
+    oxygen: 5.32e-23,
+    nitrogen: 4.7e-26
+};
 // NOTE: we represent the two Ising spin values as 0,1 "under the hood" -- it's more computationally convenient to think of as binary
 // and, in creating debugging output, etc., 0 and 1 have the same width; only in ModelCalc_IG.get_E_spin_pair() where we switch to energy
 // quantities do we have to translate 0, 1 the to the more physically appropriate -1, 1 via as1n1(); all other methods dealing with energies
@@ -18,7 +23,7 @@ class ModelCalc_IG extends ModelCalc {
 }
 
 class Atom {
-    constructor(x, y, vx, vy, radius = 0, mass = air_mass) {
+    constructor(x, y, vx, vy, radius = 0, mass = MassType.oxygen) {
         this.x = x;
         this.y = y;
         this.vx = vx;
@@ -65,6 +70,8 @@ class Atom {
             this.y = newY;
         }
         //console.log("update position: x:", this.x)
+
+    
     }
 
     // Calculate distance between two atoms

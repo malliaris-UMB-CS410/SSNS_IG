@@ -2,7 +2,14 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ////////  IS = Ising Model (from SM = Statistical Mechanics)  /////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
-const air_mass = 5.32 * Math.pow(10, -26);
+const MassType = {
+    air: 4.8e-26,
+    helium: 6.6e-27,
+    oxygen: 5.32e-23,
+    nitrogen: 4.7e-26
+};
+var total_pressure = 0;
+var pressure_sim = 0;
 // NOTE: we represent the two Ising spin values as 0,1 "under the hood" -- it's more computationally convenient to think of as binary
 // and, in creating debugging output, etc., 0 and 1 have the same width; only in ModelCalc_IG.get_E_spin_pair() where we switch to energy
 // quantities do we have to translate 0, 1 the to the more physically appropriate -1, 1 via as1n1(); all other methods dealing with energies
@@ -18,7 +25,7 @@ class ModelCalc_IG extends ModelCalc {
 }
 
 class Atom {
-    constructor(x, y, vx, vy, radius = 0, mass = air_mass) {
+    constructor(x, y, vx, vy, radius = 0, mass = MassType.oxygen) {
         this.x = x;
         this.y = y;
         this.vx = vx;
@@ -29,7 +36,6 @@ class Atom {
         this.xenergy = 2*this.m*abs(vx);
         this.yenergy = 2*this.m*abs(vy);
     }
-
     updatePosition(timeStep, boxWidth, boxHeight, boundaryType) {
         let newX = this.x + this.vx * timeStep;
         let newY = this.y + this.vy * timeStep;
@@ -60,13 +66,13 @@ class Atom {
 
             if (newX - radiusOffset < -boxWidth / 2 || newX + radiusOffset > boxWidth / 2) {
                 this.vx *= -1; // Reverse velocity in X
-
+                total_pressure += this.xenergy;
                 // prevents particles from getting stuck in boundaries
                 this.x = Math.max(-boxWidth / 2 + radiusOffset, Math.min(boxWidth / 2 - radiusOffset, newX));
             }
             if (newY - radiusOffset < -boxHeight / 2 || newY + radiusOffset > boxHeight / 2) {
                 this.vy *= -1; // Reverse velocity in Y
-
+                total_pressure += this.yenergy;
                 // prevents particles from getting stuck in boundaries
                 this.y = Math.max(-boxHeight / 2 + radiusOffset, Math.min(boxHeight / 2 - radiusOffset, newY));
             }
