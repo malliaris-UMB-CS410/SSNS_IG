@@ -62,6 +62,8 @@ class Atom {
                 // prevents particles from getting stuck in boundaries
                 this.y = Math.max(-boxHeight / 2 + radiusOffset, Math.min(boxHeight / 2 - radiusOffset, newY));
             }
+            
+            /* REDUNDANT
 			// Check X bounce
 			if (newX - radiusOffset < -boxWidth / 2 || newX + radiusOffset > boxWidth / 2) {
 				this.vx *= -1;
@@ -73,7 +75,7 @@ class Atom {
 			if (newY - radiusOffset < -boxHeight / 2 || newY + radiusOffset > boxHeight / 2) {
 				this.vy *= -1;
 				newY = Math.max(-boxHeight / 2 + radiusOffset, Math.min(boxHeight / 2 - radiusOffset, newY));
-			}
+			}*/
 
             this.x = newX;
             this.y = newY;
