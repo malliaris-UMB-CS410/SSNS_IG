@@ -178,7 +178,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const inputN = document.getElementById('UI_P_SM_IG_N');
     const inputT = document.getElementById('UI_P_SM_IG_T');
     const inputV = document.getElementById('UI_P_SM_IG_V');
-    const inputCollision = document.getElementById('UI_P_SM_IG_COLLISION');
+    const inputCollision = document.getElementById('UI_P_SM_IG_C');
 
     // Update volume size of square
     function updateVolumeSize(newV) {
@@ -194,7 +194,7 @@ document.addEventListener("DOMContentLoaded", () => {
         T: parseFloat(inputT?.value || 300),
         N: parseInt(inputN?.value || 100),
         isCollision: inputCollision?.checked || false,
-        V: parseInt(inputV?.value || 200)
+        V: parseInt(Math.sqrt(inputV?.value) * 100 || 200)
     };
 
     const particleSimulate = new ParticleSimulate(params);
@@ -205,7 +205,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Listen for changes in V
     inputV.addEventListener("input", () => {
-        const newV = parseInt(inputV.value);
+        const newV = parseInt(Math.sqrt(inputV?.value) * 100);
         updateVolumeSize(newV);
     });
 

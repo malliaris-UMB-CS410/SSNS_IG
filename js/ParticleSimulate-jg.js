@@ -12,6 +12,7 @@ class Atom {
     updatePosition(timeStep, boxWidth, boxHeight, boundaryType) {
         let newX = this.x + this.vx * timeStep;
         let newY = this.y + this.vy * timeStep;
+        console.log("x:", this.x, "y:", this.y, "timestep:", timeStep);
 
         if (boundaryType) {
             // Wrap mode
@@ -176,11 +177,10 @@ document.getElementById('startSimulation').addEventListener('click', function ()
     const userBoxHeight = parseFloat(document.getElementById('boxHeight').value);
     const userVelocity = parseFloat(document.getElementById('velocityMagnitude').value) / 10;
     const numParticles = parseInt(document.getElementById('numParticles').value);
-    const boundaryType = parseInt(document.getElementById('boundaryType').value);				// interaction with walls
+    const boundaryType = parseInt(document.getElementById('boundaryType').value);		// interaction with walls
     const interactionType = parseInt(document.getElementById('interactionType').value); // interaction with particles
-    
-    
-
+    const initialSeed = parseInt(document.getElementById('initialSeed').value);         // takes user input to use for seed for psuedorandom number
+    let seed = SeededRNG(initialSeed);                                                  // keeps the initial seed just in case
 
     // validate the input
     if (!validateInput(userBoxWidth) || !validateInput(userBoxHeight) || !validateInput(userVelocity)
@@ -189,15 +189,45 @@ document.getElementById('startSimulation').addEventListener('click', function ()
         return;
     }
 
+    function SeededRNG(seed) {
+        // LCG constants
+        const m = 0x80000000;   // mod 2^31
+        const a = 1103515245;   // multiplier 
+        const c = 12345;        // increment, coprime with m
+
+        // IF (0/null/NaN): random | ELSE: prandom
+        let state = seed ? seed >>> 0 : Math.floor(Math.random() * m);
+
+        return {
+          nextInt: function() {
+            // returns a prandom int
+            state = (a * state + c) % m;
+            return state;
+          },
+          nextFloat: function() {
+            // returns a prandom float in [0, 1)
+            return this.nextInt() / m;
+          },
+          nextRange: function(min, max) {
+            // returns a prandom number between a given range
+            return Math.floor(this.nextFloat() * (max - min)) + min;
+          },
+          setSeed: function(newSeed) {
+            // restart the prandom sequence
+            state = newSeed >>> 0;
+          }
+        };
+      }
+
+    
     // Initialize with random starting positions
     function getRandomPosition(range) {
-        return Math.random() * range * 2 - range;
-
+        //SeededRNG(seed)
+        return seed.nextFloat() * range * 2 - range;
     }
 
     // Generate random angle (in radians) between 0 and 2 * PI (360)
     function getRandomAngle() {
-        return Math.random() * Math.PI * 2; // Random angle between 0 and 2π (360 degrees)
         return seed.nextFloat() * Math.PI * 2; // Random angle between 0 and 2π (360 degrees)
     }
 
@@ -217,10 +247,9 @@ document.getElementById('startSimulation').addEventListener('click', function ()
         }
         return true;
     }
-
+    
     const particles = [];
-    const particleRadius = 5;
-
+    const particleRadius = 6;       // set size of particle 
     const minDistance = (particleRadius * 2) / 100; // Converted to simulation units
 
     // create numParticles number of particles in a random starting position moving in a random direction
@@ -239,7 +268,7 @@ document.getElementById('startSimulation').addEventListener('click', function ()
 
         do {
             x = getRandomPosition(userBoxWidth / 2);
-            y = getRandomPosition(userBoxHeight / 2);
+            y = getRandomPosition(userBoxHeight /2);
 
             attempts++;
 
@@ -255,7 +284,7 @@ document.getElementById('startSimulation').addEventListener('click', function ()
         );
         particles.push(atom);
     }
-
+    
 
     // Canvas setup
     const canvas = document.createElement('canvas');
@@ -276,22 +305,23 @@ document.getElementById('startSimulation').addEventListener('click', function ()
     canvasContainer.style.height = `${canvas.height * 1.5}px`;
     canvasContainer.appendChild(canvas);
 
-    const ctx = canvas.getContext("2d");
+    const cc = canvas.getContext("2d");
 
     function draw() {
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        cc.fillStyle = 'rgba(255, 255, 255, 0.3)';
+        cc.fillRect(0, 0, canvas.width, canvas.height);
 
         // Draw each atom
         particles.forEach(atom => {
             const drawX = (canvas.width / 2) + atom.x * 100;
             const drawY = (canvas.height / 2) - atom.y * 100;
 
-            ctx.beginPath();
-            ctx.arc(drawX, drawY, atom.radius, 0, Math.PI * 2);
+            cc.beginPath();
+            cc.arc(drawX, drawY, atom.radius, 0, Math.PI * 2);
+            console.log(atom);
 
-            ctx.fillStyle = 'red';
-            ctx.fill();
+            cc.fillStyle = 'red';
+            cc.fill();
         });
     }
 
@@ -323,9 +353,14 @@ document.getElementById('startSimulation').addEventListener('click', function ()
         if (!lastTimestamp) lastTimestamp = timestamp;
 
         const deltaTime = timestamp - lastTimestamp;
+        
 
         // limited 30 FPS
         const timeStep = Math.min(deltaTime / 1000, maxTimeStep);
+        
+        console.log("animate: deltatime:", deltaTime);
+	    console.log("animate: timestep:", timeStep);
+        console.log("animate: timestamp:", timestamp);
 
         handleCollisions();
 
@@ -340,10 +375,7 @@ document.getElementById('startSimulation').addEventListener('click', function ()
         atom.x = Math.max(-userBoxWidth / 2 + radiusOffset, Math.min(userBoxWidth / 2 - radiusOffset, atom.x));
         atom.y = Math.max(-userBoxHeight / 2 + radiusOffset, Math.min(userBoxHeight / 2 - radiusOffset, atom.y));
     }
-});
-
-        
-
+});    
 
         draw();
         lastTimestamp = timestamp;
