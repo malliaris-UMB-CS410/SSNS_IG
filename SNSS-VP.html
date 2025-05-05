@@ -362,17 +362,15 @@
                             </div>
                         </div>
 
-                        <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1 UI_CTRL_use_t_stop">
-                            <div class="input-group input-group-lg">
-                                <div class="input-group-prepend" onclick="window.sim.ui.hv.show_view('HV_P_SM_IG_C'); ">
-                                    <span class="input-group-text d-inline-flex justify-content-center katex_symb ctrl_eff_reload px-2 py-1"> $$ C $$ </span>
+                        <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1">
+                            <div class="input-group input-group-lg d-flex">
+                                <div class="input-group-prepend flex-grow-1" onclick="window.sim.ui.hv.show_view('HV_C_RNG_RECR_TRAJ'); ">
+                                     <span class="input-group-text flex-grow-1 ctrl_eff_immed"> $$ \mathrm{Collision?} $$ </span>
                                 </div>
-                                <label for="UI_P_SM_IG_C"></label>
                                 <div class="input-group-append">
                                     <div class="input-group-text lrg_bg_areas">
-                                        <label for="UI_CTRL_use_t_stop"></label>
-                                        <input id="UI_P_SM_IG_C" class="form-control" type="checkbox">
-                                        <!--onchange="Coords_IG.C.try_update(this.value); "-->
+                                        <label for="UI_P_SM_IG_C"> </label>
+                                        <input type="checkbox" id="UI_P_SM_IG_C">
                                     </div>
                                 </div>
                             </div>
