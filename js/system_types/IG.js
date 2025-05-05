@@ -28,9 +28,9 @@ class Atom {
             this.xenergy = 2*this.m*Math.abs(vx);
             this.yenergy = 2*this.m*Math.abs(vy);
 	}
-} /*
 
 	updatePosition(timeStep, boxWidth, boxHeight, boundaryType) {
+        console.log(this.x, this.y, this.vx, this.vy, Math.random());
         let newX = this.x + this.vx * timeStep;
         let newY = this.y + this.vy * timeStep;
 
@@ -80,6 +80,8 @@ class Atom {
         }
 		//console.log("update position: x:", this.x)
     }
+}
+    /*
 
     // Calculate distance between two atoms
     static distance(atom1, atom2) {
@@ -344,6 +346,7 @@ class Params_IG extends Params {
     static T = undefined;  // = new UINI_float(this, "UI_P_SM_IG_T", false);  assignment occurs in UserInterface(); see discussion there
 	static V = undefined;  // = new UINI_float(this, "UI_P_SM_IG_V", false);  assignment occurs in UserInterface(); see discussion there			!!!! not sure this is right -jg !!!!
     static N = undefined;  // = new UINI_int(this, "UI_P_SM_IG_N", false);  assignment occurs in UserInterface(); see discussion there
+    static timeStep = 1.0 / 30.0;
 
 
     push_vals_to_UI() {
@@ -428,19 +431,20 @@ class Coords_IG extends Coords {
         //console.log("After created: particles[n].x =", particles[particles.length - 1].x, "particles[n].y =", particles[particles.length - 1].y);
 
 	} else {
-		console.log("Coords_IG else");
+		//console.log("Coords_IG else", this.c_prev.particles[0].x);
+        this.particles = copy(this.c_prev.particles);
 		//console.log(particles);
 		for (let i = 0; i < numParticles; i++) {
-			if (particles[i] == undefined) {		// If N is increased by the user create a new particle
+			if (this.particles[i] == undefined) {		// If N is increased by the user create a new particle
 				//createParticles(1);
-			}
+			} 
 			
-			console.log(i, particles[i]);
-            console.log(i, particles[i].x, particles[i].y, particles[i].vx, particles[i].vy);
-			//particles[i].updatePosition(timeStep, 1, 1, false);
+			//console.log(i, this.particles[i]);
+            //console.log(i, this.particles[i].x, this.particles[i].y, this.particles[i].vx, this.particles[i].vy);
+			this.particles[i].updatePosition(Params_IG.timeStep, 1, 1, false);
 			//animate();
 			
-			}
+		}
 		//timeStep++;
 	    // this.x = this.mc.get_x_new(this.p, this.c_prev.x);
 		
