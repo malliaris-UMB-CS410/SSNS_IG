@@ -43,12 +43,3 @@ class SeededRandom {
         return Math.floor(this.getRandom(min, max + 1)); 
     }
 }
-
-/*
-const rng = new SeededRandom();
-
-console.log(rng.getRandomInt(0, 100));  
-console.log(rng.getRandomInt(0, 100));  
-console.log(rng.getRandomInt(0, 100));  
-console.log(rng.getRandomInt(0, 100));  
-*/
