@@ -57,32 +57,21 @@ class Atom {
         } else {
             // Bounce mode
             const radiusOffset = this.radius / 100;
+            // Check X bounce
             if (newX - radiusOffset < -boxWidth / 2 || newX + radiusOffset > boxWidth / 2) {
                 this.vx *= -1; // Reverse velocity in X
 
                 // prevents particles from getting stuck in boundaries
                 this.x = Math.max(-boxWidth / 2 + radiusOffset, Math.min(boxWidth / 2 - radiusOffset, newX));
             }
+
+            // Check Y bounce
             if (newY - radiusOffset < -boxHeight / 2 || newY + radiusOffset > boxHeight / 2) {
                 this.vy *= -1; // Reverse velocity in Y
 
                 // prevents particles from getting stuck in boundaries
                 this.y = Math.max(-boxHeight / 2 + radiusOffset, Math.min(boxHeight / 2 - radiusOffset, newY));
             }
-            
-            /* REDUNDANT
-			// Check X bounce
-			if (newX - radiusOffset < -boxWidth / 2 || newX + radiusOffset > boxWidth / 2) {
-				this.vx *= -1;
-				newX = Math.max(-boxWidth / 2 + radiusOffset, Math.min(boxWidth / 2 - radiusOffset, newX));
-
-			}
-		
-			// Check Y bounce
-			if (newY - radiusOffset < -boxHeight / 2 || newY + radiusOffset > boxHeight / 2) {
-				this.vy *= -1;
-				newY = Math.max(-boxHeight / 2 + radiusOffset, Math.min(boxHeight / 2 - radiusOffset, newY));
-			}*/
 
             this.x = newX;
             this.y = newY;
