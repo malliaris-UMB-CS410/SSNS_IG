@@ -326,6 +326,7 @@ class UserInterface {
             }
         } else {
             $(".UI_CTRL_STOCH").hide();
+	    $(".UI_CTRL_Gas_IC").show();  // some ST (e.g., IG) use random numbers to generate IC, but are not "stoch", i.e., time evolution is deterministic
         }
         if (this.sim.PT == "XT") { // window size input only applies to PlotTypeXT
             $("#UI_window_size_input_group").show();

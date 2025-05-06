@@ -11,6 +11,13 @@ class ModelCalc_IG extends ModelCalc {
 
     constructor() {
 	super();
+
+	this.unif01_rng = randu.factory({'seed': ModelCalc_Stoch.rng_seed.v });
+	this.normal_rng = normal.factory({'seed': ModelCalc_Stoch.rng_seed.v });
+	console.log("INFO:\tusing PRNG algorithm Mersenne Twister 19937 (the default) on all:", this.unif01_rng.PRNG.NAME, this.normal_rng.PRNG.NAME);
+	console.log("INFO:\tusing seed value = " + ModelCalc_Stoch.rng_seed.v);
+	console.log("INFO:\tNOTE: ModelCalc_IG **does not** extend ModelCalc_Stoch!  While PRNGs are used for initial condition, all time evolution is deterministic!");
+
 	}
     model_is_stoch(){
 		return false;
@@ -424,8 +431,8 @@ class Coords_IG extends Coords {
 		console.log("Coords_IG if");
 		console.log("numParticles:", numParticles);
         this.particles = [];
-        for (let i = 0; i < numParticles; i++) {
-            this.particles.push(new Atom(0.1 + i * 0.1, 0.1 + i * 0.1, 0.3, 0.4, 0.05, 1));
+            for (let i = 0; i < numParticles; i++) {
+		this.particles.push(new Atom(0.1 + i * 0.1 + 0.1*this.mc.unif01_rng(), 0.1 + i * 0.1, 0.3, 0.4, 0.05, 1));
         }
 
 		//createParticles(numParticles);
