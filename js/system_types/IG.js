@@ -275,7 +275,7 @@ function createParticles(n, particles, particleSize = .005, particleMass = 1) {
 		console.log(`Creating particle: x=${x}, y=${y}, vx=${vx}, vy=${vy}`);
 
 			const atom = new Atom(
-				x, y, vx, vy, .005, MassType.air // x, y, vx, vy, radius, mass
+				x, y, vx, vy, particleSize, MassType.air // x, y, vx, vy, radius, mass
 			);
 			//particles.push(atom);
 			//console.log("create particles end:", atom);
