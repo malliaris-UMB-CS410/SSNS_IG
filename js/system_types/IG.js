@@ -236,13 +236,20 @@ function handleCollisions() {
 	//else do nothing (ideal gas)
 }
 
-function createParticles(n, particles, particleSize = .005, particleMass = 1) {
+function createParticles(n, particles, func, particleSize = .005, particleMass = 1) {
 	// create numParticles number of particles in a random starting position moving in a random direction
     const minDistance = particleSize / 2;
 
 	for (let i = 0; i < n; i++) {
-		const angle = Math.random() * Math.PI * 2; //getRandomAngle();  // Random direction (angle)
+		const temp = func();
+        console.log("temp", temp);
+        const angle = temp * Math.PI * 2; //getRandomAngle();  // Random direction (angle)
 		
+        //const angle = this.mc.unif01_rng() * Math.PI * 2; 
+
+        console.log("angle ", angle);
+        
+
 			// Calculate the x and y components of the velocity based on the random angle
 			const vx = Math.sqrt(2*1.380649*Math.pow(10,-23)*Params_IG.T.v/ MassType.air) * Math.cos(angle); // X velocity component
 			const vy = Math.sqrt(2*1.380649*Math.pow(10,-23)*Params_IG.T.v/ MassType.air) * Math.sin(angle); // Y velocity component
@@ -256,11 +263,11 @@ function createParticles(n, particles, particleSize = .005, particleMass = 1) {
 			//x = getRandomPosition(Params_IG.boxWidth / 2);
 			//y = getRandomPosition(Params_IG.boxHeight /2);
 		        
-            x = Math.random() * Params_IG.boxWidth - (Params_IG.boxWidth / 2);
-            y = Math.random() * Params_IG.boxHeight - (Params_IG.boxHeight / 2);
+            x = func() * Params_IG.boxWidth - (Params_IG.boxWidth / 2);
+            y = func() * Params_IG.boxHeight - (Params_IG.boxHeight / 2);
 
-                x = Math.random() * (Params_IG.boxSize / 2);
-				y = Math.random() * (Params_IG.boxSize /2)
+                x = func() * (Params_IG.boxSize / 2);
+				y = func() * (Params_IG.boxSize /2)
 				attempts++;
 		
 				// Break out after too many attempts to prevent infinite loop
@@ -426,17 +433,24 @@ class Coords_IG extends Coords {
 	    //console.log(particles);
 
 
-	 
+	
 
     	if (this.constructing_init_cond) {
 	    	//console.log("Coords_IG if");
 		    //console.log("numParticles:", numParticles);
             this.particles = [];
-            /*for (let i = 0; i < numParticles; i++) {
-		        this.particles.push(new Atom(0.1 + i * 0.1 + 0.1*this.mc.unif01_rng(), 0.1 + i * 0.1, 0.3, 0.4, 0.005, 1));
-            }*/
+            /*
+            for (let i = 0; i < numParticles; i++) {
+		        const temp = this.mc.unif01_rng();
+                this.particles.push(new Atom(0.1 + i * 0.1 + 0.1*temp, 0.1 + i * 0.1, 0.3, 0.4, 0.005, 1));
+                console.log("temp: ", temp);
+            }
+            console.log(this.particles);
+            */
             //console.log("CIG:", this.particles);
-		    createParticles(numParticles, this.particles);
+
+		    createParticles(numParticles, this.particles, this.mc.unif01_rng);
+
     		//console.log("particles created:", JSON.stringify(particles, null, 2));
             //console.log("After created: particles[n].x =", particles[particles.length - 1].x, "particles[n].y =", particles[particles.length - 1].y);
             Params_IG.total_pressure = 0;
@@ -447,7 +461,7 @@ class Coords_IG extends Coords {
 	    	//console.log(particles);
 		    for (let i = 0; i < numParticles; i++) {
 			    if (this.particles[i] == undefined) {		// If N is increased by the user create a new particle
-				    createParticles(1, this.particles);
+				    createParticles(1, this.particles, this.mc.unif01_rng);
     			} 
 			
     			//console.log(i, this.particles[i]);
