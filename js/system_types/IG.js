@@ -2,7 +2,12 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ////////  IS = Ising Model (from SM = Statistical Mechanics)  /////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
-const air_mass = 5.32 * Math.pow(10, -26);
+const MassType = {
+    air: 4.8*Math.pow(10,-26),
+    helium: 6.6e-27,
+    oxygen: 5.32e-23,
+    nitrogen: 4.7e-26
+};
 // NOTE: we represent the two Ising spin values as 0,1 "under the hood" -- it's more computationally convenient to think of as binary
 // and, in creating debugging output, etc., 0 and 1 have the same width; only in ModelCalc_IG.get_E_spin_pair() where we switch to energy
 // quantities do we have to translate 0, 1 the to the more physically appropriate -1, 1 via as1n1(); all other methods dealing with energies
@@ -25,54 +30,54 @@ class ModelCalc_IG extends ModelCalc {
 }
 
 class Atom {
-		constructor(x, y, vx, vy, radius=0, mass=air_mass) {
+		constructor(x, y, vx, vy, radius=0, mass=MassType.air) {
 			this.x = x;
 			this.y = y;
 			this.vx = vx;
 			this.vy = vy;
 			this.radius = radius;
 			this.mass = mass;
-            this.xenergy = 2*this.m*Math.abs(vx);
-            this.yenergy = 2*this.m*Math.abs(vy);
+            this.xenergy = 0;
+            this.yenergy = 0;
 	}
 
-	updatePosition(timeStep, boxWidth, boxHeight, boundaryType) {
-        console.log(this.x, this.y, this.vx, this.vy, Math.random());
+	updatePosition(timeStep, boxSize, boundaryType) {
+        //console.log(this.x, this.y, this.vx, this.vy, Math.random());
         let newX = this.x + this.vx * timeStep;
         let newY = this.y + this.vy * timeStep;
 
         if (boundaryType) {
             // Wrap mode
-            if (newX < -boxWidth / 2) {
-                newX = newX + boxWidth;
-            } else if (newX > boxWidth / 2) {
-                newX = newX - boxWidth;
+            if (newX < -boxSize / 2) {
+                newX = newX + boxSize;
+            } else if (newX > boxSize / 2) {
+                newX = newX - boxSize;
             }
 
-            if (newY < -boxHeight / 2) {
-                newY = newY + boxHeight;
-            } else if (newY > boxHeight / 2) {
-                newY = newY - boxHeight;
+            if (newY < -boxSize / 2) {
+                newY = newY + boxSize;
+            } else if (newY > boxSize / 2) {
+                newY = newY - boxSize;
             }
         } else {
             // Bounce mode
             const radiusOffset = this.radius / 100;
             // Check X bounce
-            if (newX - radiusOffset < -boxWidth / 2 || newX + radiusOffset > boxWidth / 2) {
+            if (newX - radiusOffset < -boxSize / 2 || newX + radiusOffset > boxSize / 2) {
                 this.vx *= -1; // Reverse velocity in X
-
+                Params_IG.total_pressure += 2 * this.mass * Math.abs(this.vx);
                 // prevents particles from getting stuck in boundaries
-                this.x = Math.max(-boxWidth / 2 + radiusOffset, Math.min(boxWidth / 2 - radiusOffset, newX));
+                this.x = Math.max(-boxSize / 2 + radiusOffset, Math.min(boxSize / 2 - radiusOffset, newX));
             }
 
             // Check Y bounce
-            if (newY - radiusOffset < -boxHeight / 2 || newY + radiusOffset > boxHeight / 2) {
+            if (newY - radiusOffset < -boxSize / 2 || newY + radiusOffset > boxSize / 2) {
                 this.vy *= -1; // Reverse velocity in Y
-
+                Params_IG.total_pressure += 2 * this.mass * Math.abs(this.vy);
                 // prevents particles from getting stuck in boundaries
-                this.y = Math.max(-boxHeight / 2 + radiusOffset, Math.min(boxHeight / 2 - radiusOffset, newY));
+                this.y = Math.max(-boxSize / 2 + radiusOffset, Math.min(boxSize / 2 - radiusOffset, newY));
             }
-
+            //console.log(Params_IG.total_pressure);
             this.x = newX;
             this.y = newY;
         }
@@ -238,9 +243,9 @@ function createParticles(n, particles, particleSize = .005, particleMass = 1) {
 	for (let i = 0; i < n; i++) {
 		const angle = Math.random() * Math.PI * 2; //getRandomAngle();  // Random direction (angle)
 		
-		// Calculate the x and y components of the velocity based on the random angle
-		const vx = Params_IG.T.v * Math.cos(angle); // X velocity component
-		const vy = Params_IG.T.v * Math.sin(angle); // Y velocity component
+			// Calculate the x and y components of the velocity based on the random angle
+			const vx = Math.sqrt(2*1.380649*Math.pow(10,-23)*Params_IG.T.v/ MassType.air) * Math.cos(angle); // X velocity component
+			const vy = Math.sqrt(2*1.380649*Math.pow(10,-23)*Params_IG.T.v/ MassType.air) * Math.sin(angle); // Y velocity component
 
 		// Try to find a valid non-overlapping position
 		let x = 0, y = 0;
@@ -254,25 +259,29 @@ function createParticles(n, particles, particleSize = .005, particleMass = 1) {
             x = Math.random() * Params_IG.boxWidth - (Params_IG.boxWidth / 2);
             y = Math.random() * Params_IG.boxHeight - (Params_IG.boxHeight / 2);
 
-			attempts++;
+                x = Math.random() * (Params_IG.boxSize / 2);
+				y = Math.random() * (Params_IG.boxSize /2)
+				attempts++;
 		
-			// Break out after too many attempts to prevent infinite loop
-			if (attempts > maxAttempts) {
-				console.warn('Could not find non-overlapping position after', maxAttempts, 'attempts');
-				x = 0;
-				y = 0;
-				break;
-			}
-		} while (!isPositionValid(x, y, particles, minDistance, Params_IG.boxWidth, Params_IG.boxHeight));
+				// Break out after too many attempts to prevent infinite loop
+				if (attempts > maxAttempts) {
+					console.warn('Could not find non-overlapping position after', maxAttempts, 'attempts');
+					x = 0;
+					y = 0;
+					break;
+				}
+			} while (!isPositionValid(x, y, particles, minDistance, Params_IG.boxSize));
 		
 		console.log(`Creating particle: x=${x}, y=${y}, vx=${vx}, vy=${vy}`);
 
-		const atom = new Atom(
-			x, y, vx, vy, particleSize, particleMass // x, y, vx, vy, radius, mass
-		);
-        particles.push(atom);
-
-    }
+			const atom = new Atom(
+				x, y, vx, vy, .005, MassType.air // x, y, vx, vy, radius, mass
+			);
+			//particles.push(atom);
+			//console.log("create particles end:", atom);
+            particles.push(atom);
+            //console.log("After push: particles[n].x =", particles[particles.length - 1].x, "particles[n].y =", particles[particles.length - 1].y);
+	    }
 }
 
 /*
@@ -323,8 +332,8 @@ function getRandomAngle() {
 }
 
 // Helper function to ensure particles don't overlap initially
-function isPositionValid(x, y, particles, minDistance, boxWidth, boxHeight) {
-	if(Math.abs(x) > boxWidth / 2 - minDistance || Math.abs(y) > boxHeight / 2 - minDistance) {
+function isPositionValid(x, y, particles, minDistance, boxSize) {
+	if(Math.abs(x) > boxSize / 2 - minDistance || Math.abs(y) > boxSize / 2 - minDistance) {
 		return false;
 	}
     console.log(particles);
@@ -344,11 +353,11 @@ class Params_IG extends Params {
     static T = undefined;  // = new UINI_float(this, "UI_P_SM_IG_T", false);  assignment occurs in UserInterface(); see discussion there
 	static V = undefined;  // = new UINI_float(this, "UI_P_SM_IG_V", false);  assignment occurs in UserInterface(); see discussion there			!!!! not sure this is right -jg !!!!
     static N = undefined;  // = new UINI_int(this, "UI_P_SM_IG_N", false);  assignment occurs in UserInterface(); see discussion there
-    static timeStep = .00166666; //1.0 / 30.0;
-    static boxHeight = 1;
-    static boxWidth = 1;
-
-
+    static timeStep = 1.0 / 1000.0;
+    static boxSize = 1;
+    //static total_pressure = 0;
+    static total_time = 0;
+    static sim_pressure = 0;
     push_vals_to_UI() {
 		Params_IG.T.push_to_UI(this.T);
     }
@@ -410,27 +419,28 @@ class Coords_IG extends Coords {
 
 	    let numParticles = Params_IG.N.v;
     	let tempK = Params_IG.T.v;
-	    console.log("IG.js coords_IG: numParticles", numParticles);
-	    console.log("IG.js coords_IG: temp", tempK); 
+	    //console.log("IG.js coords_IG: numParticles", numParticles);
+	    //console.log("IG.js coords_IG: temp", tempK); 
 	    //console.log(timestamp);
-	    console.log("Coords_IG");
+	    //console.log("Coords_IG");
 	    //console.log(particles);
 
 
 	 
 
     	if (this.constructing_init_cond) {
-	    	console.log("Coords_IG if");
-		    console.log("numParticles:", numParticles);
+	    	//console.log("Coords_IG if");
+		    //console.log("numParticles:", numParticles);
             this.particles = [];
             /*for (let i = 0; i < numParticles; i++) {
 		        this.particles.push(new Atom(0.1 + i * 0.1 + 0.1*this.mc.unif01_rng(), 0.1 + i * 0.1, 0.3, 0.4, 0.005, 1));
             }*/
-            console.log("CIG:", this.particles);
+            //console.log("CIG:", this.particles);
 		    createParticles(numParticles, this.particles);
     		//console.log("particles created:", JSON.stringify(particles, null, 2));
             //console.log("After created: particles[n].x =", particles[particles.length - 1].x, "particles[n].y =", particles[particles.length - 1].y);
-
+            Params_IG.total_pressure = 0;
+            Params_IG.total_time = 0;
 	    } else {
 		    //console.log("Coords_IG else", this.c_prev.particles[0].x);
             this.particles = copy(this.c_prev.particles);
@@ -442,8 +452,10 @@ class Coords_IG extends Coords {
 			
     			//console.log(i, this.particles[i]);
                 //console.log(i, this.particles[i].x, this.particles[i].y, this.particles[i].vx, this.particles[i].vy);
-		    	this.particles[i].updatePosition(Params_IG.timeStep, 1, 1, false);
-			    //animate();			
+		    	Params_IG.total_time += Params_IG.timeStep;
+                this.particles[i].updatePosition(Params_IG.timeStep, Params_IG.boxSize, false);
+                Params_IG.sim_pressure = Params_IG.total_pressure / (Params_IG.total_time * Params_IG.boxSize);
+                console.log(Params_IG.sim_pressure);		
 		    }
     		//timeStep++;
 	        // this.x = this.mc.get_x_new(this.p, this.c_prev.x);
