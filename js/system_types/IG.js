@@ -360,7 +360,7 @@ class Params_IG extends Params {
     static T = undefined;  // = new UINI_float(this, "UI_P_SM_IG_T", false);  assignment occurs in UserInterface(); see discussion there
 	static V = undefined;  // = new UINI_float(this, "UI_P_SM_IG_V", false);  assignment occurs in UserInterface(); see discussion there			!!!! not sure this is right -jg !!!!
     static N = undefined;  // = new UINI_int(this, "UI_P_SM_IG_N", false);  assignment occurs in UserInterface(); see discussion there
-    static timeStep = 1.0 / 1000.0;
+    static timeStep = 1.0 / (1000*1000);
     static boxSize = 1;
     //static total_pressure = 0;
     static total_time = 0;
