@@ -1,6 +1,6 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-////////  IS = Ising Model (from SM = Statistical Mechanics)  /////////////////////////////////
+////////  IG = Insane gas (from SM = Statistical Mechanics)  /////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 const MassType = {
     air: 4.8*Math.pow(10,-26),
@@ -290,39 +290,6 @@ function createParticles(n, particles, func, particleSize = .005, particleMass =
             //console.log("After push: particles[n].x =", particles[particles.length - 1].x, "particles[n].y =", particles[particles.length - 1].y);
 	    }
 }
-
-/*
-let seed = SeededRNG(1);
-// TEMP seeded random function
-function SeededRNG(seed) {
-    // LCG constants
-    const m = 0x80000000;   // mod 2^31
-    const a = 1103515245;   // multiplier 
-    const c = 12345;        // increment, coprime with m
-
-    // IF (0/null/NaN): random | ELSE: prandom
-    let state = seed ? seed >>> 0 : Math.floor(Math.random() * m);
-
-    return {
-        nextInt: function() {
-        	// returns a prandom int
-        	state = (a * state + c) % m;
-			return state;
-        },
-        nextFloat: function() {
-            // returns a prandom float in [0, 1)
-            return this.nextInt() / m;
-        },
-        nextRange: function(min, max) {
-            // returns a prandom number between a given range
-            return Math.floor(this.nextFloat() * (max - min)) + min;
-        },
-        setSeed: function(newSeed) {
-            // restart the prandom sequence
-            state = newSeed >>> 0;
-        }
-    };
-}*/
 
 
 // Initialize with random starting positions
