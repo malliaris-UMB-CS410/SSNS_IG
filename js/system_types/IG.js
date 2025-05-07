@@ -184,7 +184,10 @@ class Atom {
 	
 }
 //const particleRadius = 6;       // set size of particle 
-const minDistance = (this.radius * 2) / 100; // Converted to simulation units
+//const minDistance = 0;// (this.radius * 2) / 100; // Converted to simulation units
+//let lastTimestamp = 0;
+//const maxTimeStep = 1.0 / 30.0;; // 30 FPS
+//const interactionType = 0; //parseInt(document.getElementById('interactionType').value); // interaction with particles
 /*
 
 // values
@@ -228,52 +231,48 @@ function handleCollisions() {
 	//else do nothing (ideal gas)
 }
 
-function createParticles(n, particles) {
-		// create numParticles number of particles in a random starting position moving in a random direction
+function createParticles(n, particles, particleSize = .005, particleMass = 1) {
+	// create numParticles number of particles in a random starting position moving in a random direction
+    const minDistance = particleSize / 2;
 
-		for (let i = 0; i < n; i++) {
-			const angle = Math.random() * Math.PI * 2; //getRandomAngle();  // Random direction (angle)
+	for (let i = 0; i < n; i++) {
+		const angle = Math.random() * Math.PI * 2; //getRandomAngle();  // Random direction (angle)
 		
-			// Calculate the x and y components of the velocity based on the random angle
-			const vx = Params_IG.T.v * Math.cos(angle); // X velocity component
-			const vy = Params_IG.T.v * Math.sin(angle); // Y velocity component
+		// Calculate the x and y components of the velocity based on the random angle
+		const vx = Params_IG.T.v * Math.cos(angle); // X velocity component
+		const vy = Params_IG.T.v * Math.sin(angle); // Y velocity component
 
+		// Try to find a valid non-overlapping position
+		let x = 0, y = 0;
+		let attempts = 0;
+		const maxAttempts = 1000;
 		
-			// Try to find a valid non-overlapping position
-			let x = 0, y = 0;
-			let attempts = 0;
-			const maxAttempts = 1000;
-
-            console.log("create particle:", particles)
-		
-			do {
-				//x = getRandomPosition(Params_IG.boxWidth / 2);
-				//y = getRandomPosition(Params_IG.boxHeight /2);
+		do {
+			//x = getRandomPosition(Params_IG.boxWidth / 2);
+			//y = getRandomPosition(Params_IG.boxHeight /2);
 		        
+            x = Math.random() * Params_IG.boxWidth - (Params_IG.boxWidth / 2);
+            y = Math.random() * Params_IG.boxHeight - (Params_IG.boxHeight / 2);
 
-                x = Math.random() * (Params_IG.boxWidth / 2);
-				y = Math.random() * (Params_IG.boxHeight /2)
-				attempts++;
+			attempts++;
 		
-				// Break out after too many attempts to prevent infinite loop
-				if (attempts > maxAttempts) {
-					console.warn('Could not find non-overlapping position after', maxAttempts, 'attempts');
-					x = 0;
-					y = 0;
-					break;
-				}
-			} while (!isPositionValid(x, y, particles, minDistance, Params_IG.boxWidth, Params_IG.boxHeight));
+			// Break out after too many attempts to prevent infinite loop
+			if (attempts > maxAttempts) {
+				console.warn('Could not find non-overlapping position after', maxAttempts, 'attempts');
+				x = 0;
+				y = 0;
+				break;
+			}
+		} while (!isPositionValid(x, y, particles, minDistance, Params_IG.boxWidth, Params_IG.boxHeight));
 		
-			console.log(`Creating particle: x=${x}, y=${y}, vx=${vx}, vy=${vy}`);
+		console.log(`Creating particle: x=${x}, y=${y}, vx=${vx}, vy=${vy}`);
 
-			const atom = new Atom(
-				x, y, vx, vy, .005, 1 // x, y, vx, vy, radius, mass
-			);
-			//particles.push(atom);
-			//console.log("create particles end:", atom);
-            particles.push(atom);
-            //console.log("After push: particles[n].x =", particles[particles.length - 1].x, "particles[n].y =", particles[particles.length - 1].y);
-	    }
+		const atom = new Atom(
+			x, y, vx, vy, particleSize, particleMass // x, y, vx, vy, radius, mass
+		);
+        particles.push(atom);
+
+    }
 }
 
 /*
@@ -345,7 +344,7 @@ class Params_IG extends Params {
     static T = undefined;  // = new UINI_float(this, "UI_P_SM_IG_T", false);  assignment occurs in UserInterface(); see discussion there
 	static V = undefined;  // = new UINI_float(this, "UI_P_SM_IG_V", false);  assignment occurs in UserInterface(); see discussion there			!!!! not sure this is right -jg !!!!
     static N = undefined;  // = new UINI_int(this, "UI_P_SM_IG_N", false);  assignment occurs in UserInterface(); see discussion there
-    static timeStep = 1.0 / 30.0;
+    static timeStep = .00166666; //1.0 / 30.0;
     static boxHeight = 1;
     static boxWidth = 1;
 
@@ -358,8 +357,8 @@ class Params_IG extends Params {
 		return "T = " + this.T;
 	}
 }
-/*
 
+/*
 function animate(timestamp) {
 	if (!lastTimestamp) lastTimestamp = timestamp;
 
@@ -379,22 +378,23 @@ function animate(timestamp) {
 	// update particles position
 
 	
-	particles.forEach(atom => {
-atom.updatePosition(timeStep, userBoxWidth, userBoxHeight, boundaryType);
+	Coords_IG.particles.forEach(atom => {
+        atom.updatePosition(timeStep, userBoxWidth, userBoxHeight, boundaryType);
 
-if (!boundaryType) {
-	const radiusOffset = atom.radius / 100;
-	atom.x = Math.max(-userBoxWidth / 2 + radiusOffset, Math.min(userBoxWidth / 2 - radiusOffset, atom.x));
-	atom.y = Math.max(-userBoxHeight / 2 + radiusOffset, Math.min(userBoxHeight / 2 - radiusOffset, atom.y));
-}
-});    
+            if (!boundaryType) {
+	            const radiusOffset = atom.radius / 100;
+	            atom.x = Math.max(-userBoxWidth / 2 + radiusOffset, Math.min(userBoxWidth / 2 - radiusOffset, atom.x));
+	            atom.y = Math.max(-userBoxHeight / 2 + radiusOffset, Math.min(userBoxHeight / 2 - radiusOffset, atom.y));
+            }
+        }
+    );    
 
 	//draw();
 	lastTimestamp = timestamp;
 	animationId = requestAnimationFrame(animate);
 }
-
-//let timeStep = 0; */
+*/
+//let timeStep = 0; 
 class Coords_IG extends Coords {
 
     //static N = undefined;  // = new UINI_Int(this, "UI_P_SM_IG_N", false);  assignment occurs in UserInterface(); see discussion there
