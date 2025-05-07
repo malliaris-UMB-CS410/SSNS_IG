@@ -52,7 +52,7 @@ class PlotTypeCV extends PlotType {
 class PlotTypeCV_IG extends PlotTypeCV {
 
     constructor(trj) {
-        console.log("hello, world");
+        //console.log("hello, world");
 
         super();
 
