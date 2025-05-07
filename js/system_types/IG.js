@@ -78,8 +78,8 @@ class Atom {
         }
 		//console.log("update position: x:", this.x)
     }
-}
-    /*
+
+    
 
     // Calculate distance between two atoms
     static distance(atom1, atom2) {
@@ -183,7 +183,9 @@ class Atom {
     }
 	
 }
-
+//const particleRadius = 6;       // set size of particle 
+const minDistance = (this.radius * 2) / 100; // Converted to simulation units
+/*
 
 // values
 let seed = SeededRNG(1);
@@ -195,7 +197,7 @@ const boundaryType = 0; //parseInt(document.getElementById('boundaryType').value
 const interactionType = 0; //parseInt(document.getElementById('interactionType').value); // interaction with particles
 //const initialSeed = parseInt(document.getElementById('initialSeed').value);
 const particles = [];
-const particleRadius = 6;       // set size of particle 
+
 const minDistance = (particleRadius * 2) / 100; // Converted to simulation units
 const userBoxHeight = 4;
 const userBoxWidth = 4;
@@ -206,7 +208,7 @@ const maxTimeStep = 1.0 / 30.0;; // 30 FPS
 
 
 
-
+*/
 // Check and resolve collisions between all particles
 function handleCollisions() {
 	// if interaction type is set to collision, collide. else ideal gas
@@ -226,33 +228,31 @@ function handleCollisions() {
 	//else do nothing (ideal gas)
 }
 
-function createParticles(n) {
+function createParticles(n, particles) {
 		// create numParticles number of particles in a random starting position moving in a random direction
-		//const particles = [];
-
-		// temp values
-		//const userVelocity = 4;
-		//const userBoxHeight = 4;
-		//const userBoxWidth = 4;
 
 		for (let i = 0; i < n; i++) {
 			const angle = Math.random() * Math.PI * 2; //getRandomAngle();  // Random direction (angle)
 		
 			// Calculate the x and y components of the velocity based on the random angle
-			const vx = userVelocity * Math.cos(angle); // X velocity component
-			const vy = userVelocity * Math.sin(angle); // Y velocity component
+			const vx = Params_IG.T.v * Math.cos(angle); // X velocity component
+			const vy = Params_IG.T.v * Math.sin(angle); // Y velocity component
 
-		
 		
 			// Try to find a valid non-overlapping position
 			let x = 0, y = 0;
 			let attempts = 0;
 			const maxAttempts = 1000;
+
+            console.log("create particle:", particles)
 		
 			do {
-				x = getRandomPosition(userBoxWidth / 2);
-				y = getRandomPosition(userBoxHeight /2);
-		
+				//x = getRandomPosition(Params_IG.boxWidth / 2);
+				//y = getRandomPosition(Params_IG.boxHeight /2);
+		        
+
+                x = Math.random() * (Params_IG.boxWidth / 2);
+				y = Math.random() * (Params_IG.boxHeight /2)
 				attempts++;
 		
 				// Break out after too many attempts to prevent infinite loop
@@ -262,21 +262,22 @@ function createParticles(n) {
 					y = 0;
 					break;
 				}
-			} while (!isPositionValid(x, y, particles, minDistance, userBoxWidth, userBoxHeight));
+			} while (!isPositionValid(x, y, particles, minDistance, Params_IG.boxWidth, Params_IG.boxHeight));
 		
 			console.log(`Creating particle: x=${x}, y=${y}, vx=${vx}, vy=${vy}`);
 
 			const atom = new Atom(
-				x, y, vx, vy, 5, 1 // x, y, vx, vy, radius, mass
+				x, y, vx, vy, .005, 1 // x, y, vx, vy, radius, mass
 			);
 			//particles.push(atom);
 			//console.log("create particles end:", atom);
             particles.push(atom);
-            console.log("After push: particles[n].x =", particles[particles.length - 1].x, "particles[n].y =", particles[particles.length - 1].y);
-		}
-		//return particles;
+            //console.log("After push: particles[n].x =", particles[particles.length - 1].x, "particles[n].y =", particles[particles.length - 1].y);
+	    }
 }
 
+/*
+let seed = SeededRNG(1);
 // TEMP seeded random function
 function SeededRNG(seed) {
     // LCG constants
@@ -306,7 +307,7 @@ function SeededRNG(seed) {
             state = newSeed >>> 0;
         }
     };
-}
+}*/
 
 
 // Initialize with random starting positions
@@ -327,7 +328,7 @@ function isPositionValid(x, y, particles, minDistance, boxWidth, boxHeight) {
 	if(Math.abs(x) > boxWidth / 2 - minDistance || Math.abs(y) > boxHeight / 2 - minDistance) {
 		return false;
 	}
-
+    console.log(particles);
 	for (const particle of particles) {
 		const dx = x - particle.x;
 		const dy = y - particle.y;
@@ -338,7 +339,7 @@ function isPositionValid(x, y, particles, minDistance, boxWidth, boxHeight) {
 	}
 	return true;
 }
-*/
+
 class Params_IG extends Params {
 
     static T = undefined;  // = new UINI_float(this, "UI_P_SM_IG_T", false);  assignment occurs in UserInterface(); see discussion there
@@ -401,52 +402,51 @@ class Coords_IG extends Coords {
 
     constructor(...args) {  // see discussion of # args at definition of abstract Coords()
 
-	super(...args);
+	    super(...args);
 	
-	/// TEMP CODE ///
-	//const computedVelocity = 5; // !!!!!!!!!!!!! This is TEMP code until max boltz is implemented !!!!!!!!!!!!!!!!
-	//const boxSize = 4;			// !!!!!!!!!!!!! TEMP code until we have a uniform size
+    	/// TEMP CODE ///
+	    //const computedVelocity = 5; // !!!!!!!!!!!!! This is TEMP code until max boltz is implemented !!!!!!!!!!!!!!!!
+	    //const boxSize = 4;			// !!!!!!!!!!!!! TEMP code until we have a uniform size
 
-	let numParticles = Params_IG.N.v;
-	let tempK = Params_IG.T.v;
-	console.log("IG.js coords_IG: numParticles", numParticles);
-	console.log("IG.js coords_IG: temp", tempK); 
-	//console.log(timestamp);
-	console.log("Coords_IG");
-	//console.log(particles);
+	    let numParticles = Params_IG.N.v;
+    	let tempK = Params_IG.T.v;
+	    console.log("IG.js coords_IG: numParticles", numParticles);
+	    console.log("IG.js coords_IG: temp", tempK); 
+	    //console.log(timestamp);
+	    console.log("Coords_IG");
+	    //console.log(particles);
 
 
 	 
 
-	if (this.constructing_init_cond) {
-		console.log("Coords_IG if");
-		console.log("numParticles:", numParticles);
-        this.particles = [];
-        for (let i = 0; i < numParticles; i++) {
-		    this.particles.push(new Atom(0.1 + i * 0.1 + 0.1*this.mc.unif01_rng(), 0.1 + i * 0.1, 0.3, 0.4, 0.05, 1));
-        }
+    	if (this.constructing_init_cond) {
+	    	console.log("Coords_IG if");
+		    console.log("numParticles:", numParticles);
+            this.particles = [];
+            /*for (let i = 0; i < numParticles; i++) {
+		        this.particles.push(new Atom(0.1 + i * 0.1 + 0.1*this.mc.unif01_rng(), 0.1 + i * 0.1, 0.3, 0.4, 0.005, 1));
+            }*/
+            console.log("CIG:", this.particles);
+		    createParticles(numParticles, this.particles);
+    		//console.log("particles created:", JSON.stringify(particles, null, 2));
+            //console.log("After created: particles[n].x =", particles[particles.length - 1].x, "particles[n].y =", particles[particles.length - 1].y);
 
-		//createParticles(numParticles);
-		//console.log("particles created:", JSON.stringify(particles, null, 2));
-        //console.log("After created: particles[n].x =", particles[particles.length - 1].x, "particles[n].y =", particles[particles.length - 1].y);
-
-	} else {
-		//console.log("Coords_IG else", this.c_prev.particles[0].x);
-        this.particles = copy(this.c_prev.particles);
-		//console.log(particles);
-		for (let i = 0; i < numParticles; i++) {
-			if (this.particles[i] == undefined) {		// If N is increased by the user create a new particle
-				createParticles(1);
-			} 
+	    } else {
+		    //console.log("Coords_IG else", this.c_prev.particles[0].x);
+            this.particles = copy(this.c_prev.particles);
+	    	//console.log(particles);
+		    for (let i = 0; i < numParticles; i++) {
+			    if (this.particles[i] == undefined) {		// If N is increased by the user create a new particle
+				    createParticles(1, this.particles);
+    			} 
 			
-			//console.log(i, this.particles[i]);
-            //console.log(i, this.particles[i].x, this.particles[i].y, this.particles[i].vx, this.particles[i].vy);
-			this.particles[i].updatePosition(Params_IG.timeStep, 1, 1, false);
-			//animate();
-			
-		}
-		//timeStep++;
-	    // this.x = this.mc.get_x_new(this.p, this.c_prev.x);
+    			//console.log(i, this.particles[i]);
+                //console.log(i, this.particles[i].x, this.particles[i].y, this.particles[i].vx, this.particles[i].vy);
+		    	this.particles[i].updatePosition(Params_IG.timeStep, 1, 1, false);
+			    //animate();			
+		    }
+    		//timeStep++;
+	        // this.x = this.mc.get_x_new(this.p, this.c_prev.x);
 		
 		}
 		//animate();
@@ -455,6 +455,8 @@ class Coords_IG extends Coords {
     //output() {
 	//console.log("x =", this.x);
     //}
+
+
 }
 
 class Trajectory_IG extends Trajectory {
