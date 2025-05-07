@@ -22,7 +22,7 @@ class ModelCalc_IG extends ModelCalc {
 	console.log("INFO:\tusing PRNG algorithm Mersenne Twister 19937 (the default) on all:", this.unif01_rng.PRNG.NAME, this.normal_rng.PRNG.NAME);
 	console.log("INFO:\tusing seed value = " + ModelCalc_Stoch.rng_seed.v);
 	console.log("INFO:\tNOTE: ModelCalc_IG **does not** extend ModelCalc_Stoch!  While PRNGs are used for initial condition, all time evolution is deterministic!");
-
+    console.log(4*1.380649*Math.pow(10,-23)*1/Params_IG.boxSize);
 	}
     model_is_stoch(){
 		return false;
