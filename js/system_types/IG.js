@@ -345,6 +345,8 @@ class Params_IG extends Params {
 	static V = undefined;  // = new UINI_float(this, "UI_P_SM_IG_V", false);  assignment occurs in UserInterface(); see discussion there			!!!! not sure this is right -jg !!!!
     static N = undefined;  // = new UINI_int(this, "UI_P_SM_IG_N", false);  assignment occurs in UserInterface(); see discussion there
     static timeStep = 1.0 / 30.0;
+    static boxHeight = 1;
+    static boxWidth = 1;
 
 
     push_vals_to_UI() {
@@ -420,8 +422,8 @@ class Coords_IG extends Coords {
 		console.log("Coords_IG if");
 		console.log("numParticles:", numParticles);
         this.particles = [];
-            for (let i = 0; i < numParticles; i++) {
-		this.particles.push(new Atom(0.1 + i * 0.1 + 0.1*this.mc.unif01_rng(), 0.1 + i * 0.1, 0.3, 0.4, 0.05, 1));
+        for (let i = 0; i < numParticles; i++) {
+		    this.particles.push(new Atom(0.1 + i * 0.1 + 0.1*this.mc.unif01_rng(), 0.1 + i * 0.1, 0.3, 0.4, 0.05, 1));
         }
 
 		//createParticles(numParticles);
@@ -434,7 +436,7 @@ class Coords_IG extends Coords {
 		//console.log(particles);
 		for (let i = 0; i < numParticles; i++) {
 			if (this.particles[i] == undefined) {		// If N is increased by the user create a new particle
-				//createParticles(1);
+				createParticles(1);
 			} 
 			
 			//console.log(i, this.particles[i]);

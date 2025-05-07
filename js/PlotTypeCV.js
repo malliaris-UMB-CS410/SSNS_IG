@@ -59,6 +59,7 @@ class PlotTypeCV_IG extends PlotTypeCV {
         this.trj = trj;
         this.canv_dim = PlotType.square_plot_width;
         this.setup_canvas();
+        
         //this.cc.beginPath();
         //this.draw_circle(this.rtoa(.5), this.rtoa(.3), this.rtoa(.1));
 
@@ -86,6 +87,7 @@ class PlotTypeCV_IG extends PlotTypeCV {
         //const drawX = (200 / 2) + atom.x * 100;
         //const drawY = this.fyc((500 / 2)) - atom.y * 100;
         //this.cc.stroke;
+        
         let scaleX = this.rtoa(x);
         let scaleY = this.rtoa(y);
         let scaleR = this.rtoa(radius);
@@ -112,7 +114,17 @@ class PlotTypeCV_IG extends PlotTypeCV {
         this.clear_canvas();
         for (let i = 0; i < Params_IG.N.v; i++) {
             let cp = this.trj.get_x(t).particles[i];
-            this.draw_circle(cp.x, cp.y, cp.radius);
+            //this.draw_circle(cp.x, cp.y, cp.radius);
+            let halfBoxW = Params_IG.boxWidth / 2;
+            let halfBoxH = Params_IG.boxHeight / 2;
+            console.log("params ig bh", Params_IG.boxWidth.v, Params_IG.boxWidth);
+
+            // Normalize positions to [0, 1]
+            let normX = (cp.x + halfBoxW) / Params_IG.boxWidth;
+            let normY = (cp.y + halfBoxH) / Params_IG.boxHeight;
+
+            this.draw_circle(normX, normY, cp.radius); // divide cp.radius by boxwidth to adjust particles sixe relative to box size
+
         }
     }
 
