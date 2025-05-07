@@ -263,11 +263,11 @@ function createParticles(n, particles, func, particleSize = .005, particleMass =
 			//x = getRandomPosition(Params_IG.boxWidth / 2);
 			//y = getRandomPosition(Params_IG.boxHeight /2);
 		        
-            x = func() * Params_IG.boxWidth - (Params_IG.boxWidth / 2);
-            y = func() * Params_IG.boxHeight - (Params_IG.boxHeight / 2);
+            //x = func() * Params_IG.boxWidth - (Params_IG.boxWidth / 2);
+            //y = func() * Params_IG.boxHeight - (Params_IG.boxHeight / 2);
 
-                x = func() * (Params_IG.boxSize / 2);
-				y = func() * (Params_IG.boxSize /2)
+                x = func() * Params_IG.boxSize - (Params_IG.boxSize / 2);
+				y = func() * Params_IG.boxSize - (Params_IG.boxSize / 2);
 				attempts++;
 		
 				// Break out after too many attempts to prevent infinite loop
