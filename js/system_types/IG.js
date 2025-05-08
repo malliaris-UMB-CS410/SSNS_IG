@@ -64,8 +64,6 @@ class Atom {
             } else if (newY > halfBox) {
                 newY = newY - boxSize;
             }
-            this.x = newX;
-            this.y = newY;
         } else {
             // Bounce mode
             const radiusOffset = this.radius;
@@ -100,7 +98,7 @@ class Atom {
 
         // Collision occurs when distance is less than sum of radii
         // We divide by 100 to convert from pixel space to simulation space
-        return distance < (this.radius + other.radius); // / 100;
+        return distance < (this.radius + other.radius);
     }
 
     // Handle collision physics with another atom
@@ -190,11 +188,11 @@ class Atom {
 }
 
 // Check and resolve collisions between all particles
-function handleCollisions(interactionType, particles) {
+function handleCollisions(particles) {
     // if interaction type is set to collision, collide. else ideal gas
     if (interactionType) {
         // Check each pair of particles exactly once
-        for (let i = 0; i <  particles.length; i++) {
+        for (let i = 0; i < particles.length; i++) {
             for (let j = i + 1; j < particles.length; j++) {
                 const particle1 = particles[i];
                 const particle2 = particles[j];
@@ -205,7 +203,6 @@ function handleCollisions(interactionType, particles) {
             }
         }
     }
-    //else do nothing (ideal gas)
 }
 
 function createParticles(n, particles, func, particleSize = .025, particleMass = 1) {
@@ -240,8 +237,6 @@ function createParticles(n, particles, func, particleSize = .025, particleMass =
             }
         } while (!isPositionValid(x, y, particles, minDistance, Params_IG.boxSize));
 
-        console.log(`Creating particle: x=${x}, y=${y}, vx=${vx}, vy=${vy}`);
-
         const atom = new Atom(
                 x, y, vx, vy, particleSize, particleMass // x, y, vx, vy, radius, mass
             );
@@ -254,7 +249,6 @@ function isPositionValid(x, y, particles, minDistance, boxSize) {
     if (Math.abs(x) > boxSize / 2 - minDistance || Math.abs(y) > boxSize / 2 - minDistance) {
         return false;
     }
-    console.log(particles);
     for (const particle of particles) {
         const dx = x - particle.x;
         const dy = y - particle.y;
@@ -273,7 +267,6 @@ class Params_IG extends Params {
     static N = undefined;
     static timeStep = 1.0 / (1000 * 1000);
     static boxSize = 1;
-    //static total_pressure = 0;
     static total_time = 0;
     static sim_pressure = 0;
     push_vals_to_UI() {
@@ -291,18 +284,13 @@ class Coords_IG extends Coords {
 
         super(...args);
 
-        const interactionType = false;   // collide = true
-        const boundaryType = false;      // bounce  = false
-
         let numParticles = Params_IG.N.v;
         let tempK = Params_IG.T.v;
-
         let particleDisplaySize = 0.025;
         let particleMass = MassType.air;
-        
+
         if (this.constructing_init_cond) {
             this.particles = [];
-
             createParticles(numParticles, this.particles, this.mc.unif01_rng, particleDisplaySize, particleMass);
             Params_IG.total_pressure = 0;
             Params_IG.total_time = 0;
@@ -313,10 +301,12 @@ class Coords_IG extends Coords {
                     createParticles(1, this.particles, this.mc.unif01_rng, particleDisplaySize, particleMass);
                 }
                 Params_IG.total_time += Params_IG.timeStep;
-                this.particles[i].updatePosition(Params_IG.timeStep, Params_IG.boxSize, boundaryType);
-                handleCollisions(interactionType, this.particles);
+                this.particles[i].updatePosition(Params_IG.timeStep, Params_IG.boxSize, false);
+
+                if (typeof window.interactionType !== 'undefined' && window.interactionType) {
+                    handleCollisions(this.particles);
+                }
                 Params_IG.sim_pressure = Params_IG.total_pressure / (Params_IG.total_time * Params_IG.boxSize);
-                //console.log(Params_IG.sim_pressure);
             }
 
         }

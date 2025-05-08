@@ -23,7 +23,6 @@ class PlotTypeCV extends PlotType {
     }
 
     setup_canvas() {
-        //this.cc = document.getElementById(this.get_html_targ_id_str()).getContext("2d", { alpha: false });  // NOTE: not sure why "{ alpha: false }" was present...copied from internet?...was causing unwanted black background!
         this.cc = document.getElementById(this.get_html_targ_id_str()).getContext("2d"); // cc = canvas context, for plotting calls
         this.plotCanvas = document.getElementById(this.get_html_targ_id_str());
         this.plotCanvas.style.border = "1px solid black";
@@ -54,8 +53,6 @@ class PlotTypeCV extends PlotType {
 class PlotTypeCV_IG extends PlotTypeCV {
 
     constructor(trj) {
-        //console.log("hello, world");
-
         super();
 
         this.trj = trj;
@@ -70,6 +67,25 @@ class PlotTypeCV_IG extends PlotTypeCV {
                 this.setup_canvas();
                 this.plot(this.trj.t);
             });
+        }
+
+        this.collisionCheckbox = document.getElementById("UI_P_SM_IG_C");
+        if (this.collisionCheckbox) {
+            this.collisionCheckbox.addEventListener("change", this.handleCollisionToggle.bind(this));
+        }
+    }
+
+    handleCollisionToggle(event) {
+        const isChecked = event.target.checked;
+        window.interactionType = isChecked;
+        if (isChecked) {
+            console.log("particles collision enabled");
+            const particles = this.trj.get_x(this.trj.t)?.particles;
+            if (particles && particles.length > 0) {
+                handleCollisions(particles);
+            }
+        } else {
+            console.log("particles collision disabled");
         }
     }
 
