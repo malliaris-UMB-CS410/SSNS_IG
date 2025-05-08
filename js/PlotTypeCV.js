@@ -25,6 +25,8 @@ class PlotTypeCV extends PlotType {
     setup_canvas() {
         //this.cc = document.getElementById(this.get_html_targ_id_str()).getContext("2d", { alpha: false });  // NOTE: not sure why "{ alpha: false }" was present...copied from internet?...was causing unwanted black background!
         this.cc = document.getElementById(this.get_html_targ_id_str()).getContext("2d"); // cc = canvas context, for plotting calls
+        this.plotCanvas = document.getElementById(this.get_html_targ_id_str());
+        this.plotCanvas.style.border = "1px solid black";
         $("#" + this.get_html_targ_id_str()).attr("width", this.canv_dim); // NOTE: CV canvas plot_targets use **attr* not *css* for h/w
         $("#" + this.get_html_targ_id_str()).attr("height", this.canv_dim); // NOTE: CV canvas plot_targets use **attr* not *css* for h/w
     }
@@ -57,30 +59,27 @@ class PlotTypeCV_IG extends PlotTypeCV {
         super();
 
         this.trj = trj;
-        this.canv_dim = PlotType.square_plot_width;
+        this.canv_dim = parseInt(document.getElementById('UI_P_SM_IG_V').value) * 100;
         this.setup_canvas();
-        
-        //this.cc.beginPath();
-        //this.draw_circle(this.rtoa(.5), this.rtoa(.3), this.rtoa(.1));
 
+        this.vInput = document.getElementById("UI_P_SM_IG_V");
+        if (this.vInput) {
+            this.updateCanvasSize();
+            this.vInput.addEventListener("input", () => {
+                this.updateCanvasSize();
+                this.setup_canvas();
+                this.plot(this.trj.t);
+            });
+        }
+    }
 
-        // this.cc.arc(10, this.fyc(10), 5, 0, Math.PI * 2);
-        // this.cc.fillStyle = 'red';
-        // this.cc.fill();
-        //this.cc.stroke;
-        // Draw each atom
-        /*particles.forEach(atom => {
-            const drawX = (200 / 2) + atom.x * 100;
-            const drawY = this.fyc((500 / 2)) - atom.y * 100;
-
-            this.cc.beginPath();
-            this.cc.arc(drawX, drawY, atom.radius, 0, Math.PI * 2);
-            //console.log(atom.radius);
-
-            this.cc.fillStyle = 'red';
-            this.cc.fill();
-            this.cc.stroke;
-        }); */
+    updateCanvasSize() {
+        const vValue = parseFloat(this.vInput.value);
+        if (!isNaN(vValue) && vValue > 0) {
+            this.canv_dim = Math.floor(vValue * 100);
+        } else {
+            this.canv_dim = PlotType.square_plot_width;
+        }
     }
 
     draw_circle(x, y, radius) {

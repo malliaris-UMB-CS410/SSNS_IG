@@ -46,36 +46,37 @@ class Atom {
         let newX = this.x + this.vx * timeStep;
         let newY = this.y + this.vy * timeStep;
 
+        const halfBox = boxSize / 2;
+
         if (boundaryType) {
             // Wrap mode
-            if (newX < -boxSize / 2) {
+            if (newX < -halfBox) {
                 newX = newX + boxSize;
-            } else if (newX > boxSize / 2) {
+            } else if (newX > halfBox) {
                 newX = newX - boxSize;
             }
 
-            if (newY < -boxSize / 2) {
+            if (newY < -halfBox) {
                 newY = newY + boxSize;
-            } else if (newY > boxSize / 2) {
+            } else if (newY > halfBox) {
                 newY = newY - boxSize;
             }
         } else {
             // Bounce mode
-            const radiusOffset = this.radius / 100;
+            const radiusOffset = this.radius;
             // Check X bounce
-            if (newX - radiusOffset < -boxSize / 2 || newX + radiusOffset > boxSize / 2) {
-                this.vx *= -1; // Reverse velocity in X
+            if (newX - radiusOffset < -halfBox || newX + radiusOffset > halfBox) {
+                this.vx *= -1;
                 Params_IG.total_pressure += 2 * this.mass * Math.abs(this.vx);
-                // prevents particles from getting stuck in boundaries
-                this.x = Math.max(-boxSize / 2 + radiusOffset, Math.min(boxSize / 2 - radiusOffset, newX));
+                newX = Math.max(-halfBox + radiusOffset, Math.min(halfBox - radiusOffset, newX));
             }
 
-            // Check Y bounce
-            if (newY - radiusOffset < -boxSize / 2 || newY + radiusOffset > boxSize / 2) {
-                this.vy *= -1; // Reverse velocity in Y
+            if (newY - radiusOffset < -halfBox || newY + radiusOffset > halfBox) {
+                this.vy *= -1;
                 Params_IG.total_pressure += 2 * this.mass * Math.abs(this.vy);
-                // prevents particles from getting stuck in boundaries
-                this.y = Math.max(-boxSize / 2 + radiusOffset, Math.min(boxSize / 2 - radiusOffset, newY));
+
+                // 防止粒子穿过边界后卡住
+                newY = Math.max(-halfBox + radiusOffset, Math.min(halfBox - radiusOffset, newY));
             }
             //console.log(Params_IG.total_pressure);
             this.x = newX;
@@ -236,7 +237,7 @@ function handleCollisions() {
 	//else do nothing (ideal gas)
 }
 
-function createParticles(n, particles, func, particleSize = .005, particleMass = 1) {
+function createParticles(n, particles, func, particleSize = .025, particleMass = 1) {
 	// create numParticles number of particles in a random starting position moving in a random direction
     const minDistance = particleSize / 2;
 
