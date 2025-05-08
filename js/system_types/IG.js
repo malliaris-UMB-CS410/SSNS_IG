@@ -211,15 +211,12 @@ function createParticles(n, particles, func, particleSize = .025, particleMass =
     const minDistance = particleSize / 2;
 
     for (let i = 0; i < n; i++) {
-        const temp = func();
-        console.log("temp", temp);
-        const angle = temp * Math.PI * 2; //getRandomAngle();  // Random direction (angle)
-
-        console.log("angle ", angle);
+        const temp = func();                // get random seeded number
+        const angle = temp * Math.PI * 2;   // Random direction (angle)
 
         // Calculate the x and y components of the velocity based on the random angle
-        const vx = Math.sqrt(2 * 1.380649 * Math.pow(10, -23) * Params_IG.T.v / MassType.air) * Math.cos(angle); // X velocity component
-        const vy = Math.sqrt(2 * 1.380649 * Math.pow(10, -23) * Params_IG.T.v / MassType.air) * Math.sin(angle); // Y velocity component
+        const vx = Math.sqrt(2 * 1.380649 * Math.pow(10, -23) * Params_IG.T.v / particleMass) * Math.cos(angle); // X velocity component
+        const vy = Math.sqrt(2 * 1.380649 * Math.pow(10, -23) * Params_IG.T.v / particleMass) * Math.sin(angle); // Y velocity component
 
         // Try to find a valid non-overlapping position
         let x = 0,
@@ -244,22 +241,10 @@ function createParticles(n, particles, func, particleSize = .025, particleMass =
         console.log(`Creating particle: x=${x}, y=${y}, vx=${vx}, vy=${vy}`);
 
         const atom = new Atom(
-                x, y, vx, vy, particleSize, MassType.air // x, y, vx, vy, radius, mass
+                x, y, vx, vy, particleSize, particleMass // x, y, vx, vy, radius, mass
             );
         particles.push(atom);
     }
-}
-
-// Initialize with random starting positions
-function getRandomPosition(range) {
-    const randomVar = seed.nextFloat() * range * 2 - range;
-    console.log('randomVar:', randomVar);
-    return randomVar;
-}
-
-// Generate random angle (in radians) between 0 and 2 * PI (360)
-function getRandomAngle() {
-    return seed.nextFloat() * Math.PI * 2; // Random angle between 0 and 2π (360 degrees)
 }
 
 // Helper function to ensure particles don't overlap initially
@@ -298,7 +283,6 @@ class Params_IG extends Params {
     }
 }
 
-//let timeStep = 0;
 class Coords_IG extends Coords {
 
     constructor(...args) { // see discussion of # args at definition of abstract Coords()
@@ -307,18 +291,19 @@ class Coords_IG extends Coords {
 
         let numParticles = Params_IG.N.v;
         let tempK = Params_IG.T.v;
-
+        let particleDisplaySize = 0.025;
+        let particleMass = MassType.air;
         if (this.constructing_init_cond) {
             this.particles = [];
 
-            createParticles(numParticles, this.particles, this.mc.unif01_rng);
+            createParticles(numParticles, this.particles, this.mc.unif01_rng, particleDisplaySize, particleMass);
             Params_IG.total_pressure = 0;
             Params_IG.total_time = 0;
         } else {
             this.particles = copy(this.c_prev.particles);
             for (let i = 0; i < numParticles; i++) {
                 if (this.particles[i] == undefined) { // If N is increased by the user create a new particle
-                    createParticles(1, this.particles, this.mc.unif01_rng);
+                    createParticles(1, this.particles, this.mc.unif01_rng, particleDisplaySize, particleMass);
                 }
                 Params_IG.total_time += Params_IG.timeStep;
                 this.particles[i].updatePosition(Params_IG.timeStep, Params_IG.boxSize, false);
