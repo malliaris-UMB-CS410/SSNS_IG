@@ -64,6 +64,8 @@ class Atom {
             } else if (newY > halfBox) {
                 newY = newY - boxSize;
             }
+            this.x = newX;
+            this.y = newY;
         } else {
             // Bounce mode
             const radiusOffset = this.radius;
@@ -286,6 +288,12 @@ class Coords_IG extends Coords {
 
         let numParticles = Params_IG.N.v;
         let tempK = Params_IG.T.v;
+
+        //const interactionType = false;   // collide = true
+        const boundaryType = false;      // bounce  = false 
+ 
+
+
         let particleDisplaySize = 0.025;
         let particleMass = MassType.air;
 
@@ -301,7 +309,7 @@ class Coords_IG extends Coords {
                     createParticles(1, this.particles, this.mc.unif01_rng, particleDisplaySize, particleMass);
                 }
                 Params_IG.total_time += Params_IG.timeStep;
-                this.particles[i].updatePosition(Params_IG.timeStep, Params_IG.boxSize, false);
+                this.particles[i].updatePosition(Params_IG.timeStep, Params_IG.boxSize, boundaryType);
 
                 if (typeof window.interactionType !== 'undefined' && window.interactionType) {
                     handleCollisions(this.particles);
