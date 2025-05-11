@@ -229,8 +229,9 @@ function createParticles(n, particles, func, particleSize = .025, particleMass =
         //assign a random velocity based on the temp using boltzman dist. 
         const boltz = Math.sqrt(1.38064852e-23 * Params_IG.T.v / particleMass);
 
-        const vx = gaussian(func, 0, boltz);
-        const vy = gaussian(func, 0, boltz);
+        const velo = gaussian(func, 0, boltz);
+        const vx = velo * Math.cos(angle);
+        const vy = velo * Math.sin(angle);
 
         /*
         // Calculate the x and y components of the velocity based on the random angle
