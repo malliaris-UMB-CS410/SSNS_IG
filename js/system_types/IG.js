@@ -207,17 +207,36 @@ function handleCollisions(particles) {
     }
 }
 
+function gaussian(func, mean = 0, stdDev = 1) {
+    // this uses the box-muller trans
+    let u1 = func(); 
+    let u2 = func();
+
+    let randomStdNormal = Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
+
+    return mean + stdDev *  randomStdNormal;
+}
+
+
+
 function createParticles(n, particles, func, particleSize = .025, particleMass = 1) {
     // create numParticles number of particles in a random starting position moving in a random direction
     const minDistance = particleSize / 2;
 
-    for (let i = 0; i < n; i++) {
-        const temp = func();                // get random seeded number
-        const angle = temp * Math.PI * 2;   // Random direction (angle)
+    for (let i = 0; i < n; i++) {              
+        const angle = func() * Math.PI * 2;   // Random direction (angle) using the prng
 
+        //assign a random velocity based on the temp using boltzman dist. 
+        const boltz = Math.sqrt(1.38064852e-23 * Params_IG.T.v / particleMass);
+
+        const vx = gaussian(func, 0, boltz);
+        const vy = gaussian(func, 0, boltz);
+
+        /*
         // Calculate the x and y components of the velocity based on the random angle
         const vx = Math.sqrt(2 * 1.380649 * Math.pow(10, -23) * Params_IG.T.v / particleMass) * Math.cos(angle); // X velocity component
         const vy = Math.sqrt(2 * 1.380649 * Math.pow(10, -23) * Params_IG.T.v / particleMass) * Math.sin(angle); // Y velocity component
+        */
 
         // Try to find a valid non-overlapping position
         let x = 0,
