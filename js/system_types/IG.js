@@ -17,6 +17,7 @@ class ModelCalc_IG extends ModelCalc {
     constructor() {
         super();
 
+        this.collisionEnabled = false;
         this.unif01_rng = randu.factory({
             'seed': ModelCalc_Stoch.rng_seed.v
         });
@@ -48,6 +49,8 @@ class Atom {
     updatePosition(timeStep, boxSize, boundaryType) {
         let newX = this.x + this.vx * timeStep;
         let newY = this.y + this.vy * timeStep;
+
+        console.log("TIME -> ", timeStep);
 
         const halfBox = boxSize / 2;
 
@@ -187,8 +190,11 @@ class Atom {
         }
     }
 
+    clone() {
+    return new Atom(this.x, this.y, this.vx, this.vy, this.radius, this.mass);
 }
 
+}
 class Particles {
     constructor(coords) {
         this.N = Params_IG.N.v;
@@ -198,7 +204,7 @@ class Particles {
         this.M = Params_IG.particleMass;
         this.R = Params_IG.R;
         this.particles = [];
-        this.createParticles(this.N, coords.mc.unif01_rng, this.particleDisplaySize, this.particleMass);
+        //this.createParticles(this.N, coords.mc.unif01_rng, this.particleDisplaySize, this.particleMass);
     }
 
     handleCollisions() {
@@ -217,34 +223,48 @@ class Particles {
         }
     }
 
-    createParticles(n, rngFunc, particleSize = this.R, particleMass = 1) {
-        const minDistance = particleSize;
+    createParticles(n, func, particleSize = .025, particleMass = 1) {
+       const minDistance = particleSize / 2;
 
-        console.warn("N IS: ", n);
-        for (let i = 0; i < n; i++) {
-            const angle = rngFunc() * Math.PI * 2;
-            const speed = Math.sqrt(
-                (2 * 1.380649e-23 * Params_IG.T.v) / particleMass
+    for (let i = 0; i < n; i++) {              
+        const angle = func() * Math.PI * 2;   // Random direction (angle) using the prng
+
+        //assign a random velocity based on the temp using boltzman dist. 
+        const boltz = Math.sqrt(1.38064852e-23 * Params_IG.T.v / particleMass);
+
+        const velo = Params_IG.gaussian(func, 0, boltz);
+        const vx = velo * Math.cos(angle);
+        const vy = velo * Math.sin(angle);
+
+        /*
+        // Calculate the x and y components of the velocity based on the random angle
+        const vx = Math.sqrt(2 * 1.380649 * Math.pow(10, -23) * Params_IG.T.v / particleMass) * Math.cos(angle); // X velocity component
+        const vy = Math.sqrt(2 * 1.380649 * Math.pow(10, -23) * Params_IG.T.v / particleMass) * Math.sin(angle); // Y velocity component
+        */
+
+        // Try to find a valid non-overlapping position
+        let x = 0,
+        y = 0;
+        let attempts = 0;
+        const maxAttempts = 1000;
+
+        do {
+            x = func() * Params_IG.boxSize - (Params_IG.boxSize / 2);
+            y = func() * Params_IG.boxSize - (Params_IG.boxSize / 2);
+            attempts++;
+
+            // Break out after too many attempts to prevent infinite loop
+            if (attempts > maxAttempts) {
+                console.warn('Could not find non-overlapping position after', maxAttempts, 'attempts');
+                x = 0;
+                y = 0;
+                break;
+            }
+        } while (!this.isPositionValid(x, y, minDistance));
+
+        const atom = new Atom(
+                x, y, vx, vy, particleSize, particleMass // x, y, vx, vy, radius, mass
             );
-
-            const vx = speed * Math.cos(angle);
-            const vy = speed * Math.sin(angle);
-
-            let x = 0, y = 0, attempts = 0;
-            const maxAttempts = 1000;
-
-            do {
-                x = rngFunc() * Params_IG.boxSize - Params_IG.boxSize / 2;
-                y = rngFunc() * Params_IG.boxSize - Params_IG.boxSize / 2;
-                attempts++;
-
-                if (attempts > maxAttempts) {
-                    console.warn('Failed to place particle after', maxAttempts, 'attempts');
-                    break;
-                }
-            } while (!this.isPositionValid(x, y, minDistance));
-
-            const atom = new Atom(x, y, vx, vy, particleSize, particleMass);
             this.particles.push(atom);
         }
     }
@@ -268,33 +288,29 @@ class Particles {
     }
 
     calculateVelocityDistribution() {
-        let freq = [];
-        let velocities = [];
+        const velocities = this.particles.map(p => Math.sqrt(p.vx ** 2 + p.vy ** 2));
+        const freq = [];
 
-        for (let i = 0; i < this.particles.length; i++) {
-            let iv = Math.sqrt(this.particles[i].vx ** 2 + this.particles[i].vy ** 2);
-            velocities.push(iv);
-        }
-        velocities.sort((a, b) => a - b);
+        if (velocities.length === 0) return { velocities: [], freq: [] };
 
-        if (velocities.length > 0) {
-            let pValue = Math.round(velocities[0] * 1e10) / 1e10;
-            freq.push(1);
-            let j = 0;
+        const maxV = Math.max(...velocities);
+        const minV = Math.min(...velocities);
+        const binCount = 50;
+        const binSize = (maxV - minV) / binCount;
 
-            for (let i = 1; i < velocities.length; i++) {
-                let cValue = Math.round(velocities[i] * 1e10) / 1e10;
-                if (Math.abs(cValue - pValue) < 0.005) {
-                    freq[j]++;
-                } else {
-                    freq.push(1);
-                    j++;
-                    pValue = cValue;
-                }
-            }
+        for (let i = 0; i < binCount; i++) freq[i] = 0;
+
+        for (let v of velocities) {
+            const index = Math.min(Math.floor((v - minV) / binSize), binCount - 1);
+            freq[index]++;
         }
 
-        return { velocities, freq }; // ✅ Return both
+        const binCenters = [];
+        for (let i = 0; i < binCount; i++) {
+            binCenters[i] = minV + binSize * (i + 0.5);
+        }
+
+        return { velocities: binCenters, freq };
     }
 }
 
@@ -310,7 +326,7 @@ class Params_IG extends Params {
     static total_time = 0;
     static sim_pressure = 0;
     static particleDisplaySize = 0.025;
-    static particleMass = 1;
+    static particleMass = MassType.air;
 
     push_vals_to_UI() {
         Params_IG.T.push_to_UI(this.T);
@@ -319,14 +335,52 @@ class Params_IG extends Params {
     get_info_str() {
         return "T = " + this.T;
     }
+
+    static gaussian(func, mean = 0, stdDev = 1) {
+        let u1 = func(); 
+        let u2 = func();
+        let randomStdNormal = Math.sqrt(-2.0 * Math.log(u1)) * Math.cos(2.0 * Math.PI * u2);
+        return mean + stdDev * randomStdNormal;
+    }
 }
 
 class Coords_IG extends Coords {
     constructor(...args) {
         super(...args);
-        this.constructing_init_cond = true; // or whatever is appropriate
 
-        this.particles = new Particles(this);
+        const numParticles = Params_IG.N.v;
+        const particleDisplaySize = Params_IG.particleDisplaySize;
+        const particleMass = Params_IG.particleMass;
+        const boundaryType = false; // bounce mode
+
+        if (this.constructing_init_cond) {
+            // Initial condition
+            this.particles = new Particles();
+            this.particles.createParticles(numParticles, this.mc.unif01_rng, particleDisplaySize, particleMass);
+            Params_IG.total_pressure = 0;
+            Params_IG.total_time = 0;
+            console.warn("CREATING NEW PARTICLES (init)");
+        } else {
+            // Evolution step: clone particles from c_prev
+            this.particles = new Particles();
+            this.particles.particles = this.c_prev.particles.particles.map(atom => atom.clone());  // deep clone
+
+            for (let i = 0; i < numParticles; i++) {
+                // If N increased
+                if (this.particles.particles[i] === undefined) {
+                    this.particles.createParticles(1, this.mc.unif01_rng, particleDisplaySize, particleMass);
+                }
+
+                Params_IG.total_time += Params_IG.timeStep;
+                this.particles.particles[i].updatePosition(Params_IG.timeStep, Params_IG.boxSize, boundaryType);
+            }
+            console.log("THIS IS MC: ",this.mc);
+            if (this.mc.collisionEnabled) {
+                    this.particles.handleCollisions();
+                }
+
+            Params_IG.sim_pressure = Params_IG.total_pressure / (Params_IG.total_time * Params_IG.boxSize);
+        }
     }
 }
 

@@ -86,24 +86,17 @@ class PlotTypeCV_IG extends PlotTypeCV {
         const isChecked = event.target.checked;
         window.interactionType = isChecked;
 
+        console.warn("collision toggle");
         if (isChecked) {
-            const particlesObj = this.trj.get_x(this.trj.t)?.particles;
-            if (particlesObj && typeof particlesObj.handleCollisions === "function") {
-                particlesObj.handleCollisions();  // ✅ No argument
-            }
+            this.trj.mc.collisionEnabled = true;
+        }else{
+            this.trj.mc.collisionEnabled = false;
         }
     }
 
     handleVelocityDistributionToggle(event) {
         const isChecked = event.target.checked;
-        window.interactionType = isChecked;
-        if (isChecked) {
-            console.warn("CHECKED FOR DISPLAY VELOCITY DISTRIBUTION");
-            this.display = "Distribution";
-        } else {
-            this.display = "ATOM";
-            console.warn("VELOCITY DISTRIBUTION DISABLED");
-        }
+        this.display = isChecked ? "Distribution" : "ATOM";
     }
 
     updateCanvasSize() {
@@ -144,20 +137,21 @@ class PlotTypeCV_IG extends PlotTypeCV {
 
     update_canvas(t) {
         this.clear_canvas();
-        
         if (this.display == "ATOM") {
-            console.warn("SHOULD DISPLAY ATOMS IN CANVAS");
             for (let i = 0; i < Params_IG.N.v; i++) {
                 let cp = this.trj.get_x(t).particles.particles[i];
+                let halfBoxW = Params_IG.boxSize / 2;
+                let halfBoxH = Params_IG.boxSize / 2;
 
-                let halfBox = Params_IG.boxSize / 2;
-                let normX = (cp.x + halfBox) / Params_IG.boxSize;
-                let normY = (cp.y + halfBox) / Params_IG.boxSize;
-                this.draw_circle(normX, normY, Params_IG.R);
+                // Normalize positions to [0, 1]
+                let normX = (cp.x + halfBoxW) / Params_IG.boxSize;
+                let normY = (cp.y + halfBoxH) / Params_IG.boxSize;
+                this.draw_circle(normX, normY, cp.radius); // divide cp.radius by boxwidth to adjust particles size relative to box size
             }
+
         } else {
             let { velocities, freq } = this.trj.get_x(t).particles.calculateVelocityDistribution();
-            console.warn("SHOULD DISPLAY FREQUENCY IN CANVAS | Total: ", velocities.length, " - ", freq.length);
+
 
             if (velocities.length && freq.length) {
                 const canvasW = this.cc.canvas.width;
@@ -174,8 +168,6 @@ class PlotTypeCV_IG extends PlotTypeCV {
                     let rawHeight = (freq[i] / maxFrequency) * (canvasH * 0.8);
                     const barHeight = Math.max(minHeight, rawHeight);
                     const y = canvasH - barHeight;
-
-                    console.log(`DRAWING BAR: x=${x}, y=${y}, w=${barWidth}, h=${barHeight}`);
                     this.draw_bar(x, y, barWidth, barHeight);
                     x += barWidth + spacing;
                 }
