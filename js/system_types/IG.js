@@ -335,9 +335,9 @@ class Coords_IG extends Coords {
                 if (typeof window.interactionType !== 'undefined' && window.interactionType) {
                     handleCollisions(this.particles);
                 }
-                Params_IG.sim_pressure = Params_IG.total_pressure / (Params_IG.total_time * Params_IG.boxSize);
             }
-
+            Params_IG.sim_pressure = Params_IG.total_pressure / (Params_IG.total_time * Params_IG.boxSize);
+            console.log(Params_IG.sim_pressure);
         }
     }
 }
