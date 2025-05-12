@@ -358,7 +358,7 @@
                                 </div>
                                 <label for="UI_P_SM_IG_N"></label>
                                 <input id="UI_P_SM_IG_N" class="form-control" type="number" min="1" max="1000" step="1"
-                                       value="9" onchange="Params_IG.N.try_update(this.value); ">
+                                       value="100" onchange="Params_IG.N.try_update(this.value); ">
                             </div>
                         </div>
 
@@ -827,6 +827,19 @@
                             </div><!-- CLOSES div class="btn-group" -->
                         </div><!-- CLOSES div class="col-12 ..." -->
 
+                        <div class="col-12 col-md-6 col-lg-4 col-xl-3 mb-1">
+                            <div class="input-group input-group-lg d-flex">
+                                <div class="input-group-prepend flex-grow-1"
+                                     onclick="window.sim.ui.hv.show_view('HV_C_RNG_RECR_TRAJ'); "><span
+                                        class="input-group-text flex-grow-1 ctrl_eff_immed"> $$ \mathrm{Velocity Distribution?} $$ </span>
+                                </div>
+                                <div class="input-group-append">
+                                    <div class="input-group-text lrg_bg_areas"><label
+                                            for="UI_P_SM_IG_VD"></label><input type="checkbox"
+                                                                              id="UI_P_SM_IG_VD"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div><!-- CLOSES div class="row" -->
 
                 </div>

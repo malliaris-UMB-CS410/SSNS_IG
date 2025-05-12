@@ -189,88 +189,129 @@ class Atom {
 
 }
 
-// Check and resolve collisions between all particles
-function handleCollisions(particles) {
-    // if interaction type is set to collision, collide. else ideal gas
-    if (interactionType) {
-        // Check each pair of particles exactly once
-        for (let i = 0; i < particles.length; i++) {
-            for (let j = i + 1; j < particles.length; j++) {
-                const particle1 = particles[i];
-                const particle2 = particles[j];
+class Particles {
+    constructor(coords) {
+        this.N = Params_IG.N.v;
+        this.T = Params_IG.T.v;
+        this.V = Params_IG.V.v;
+        this.S = Params_IG.particleDisplaySize;
+        this.M = Params_IG.particleMass;
+        this.R = Params_IG.R;
+        this.particles = [];
+        this.createParticles(this.N, coords.mc.unif01_rng, this.particleDisplaySize, this.particleMass);
+    }
 
-                if (particle1.checkCollision(particle2)) {
-                    particle1.resolveCollision(particle2);
+    handleCollisions() {
+        if (typeof interactionType !== 'undefined' && interactionType) {
+            console.warn("HANDLE COLLISIONS CALLED");
+            for (let i = 0; i < this.particles.length; i++) {
+                for (let j = i + 1; j < this.particles.length; j++) {
+                    const p1 = this.particles[i];
+                    const p2 = this.particles[j];
+
+                    if (p1.checkCollision(p2)) {
+                        p1.resolveCollision(p2);
+                    }
                 }
             }
         }
     }
-}
 
-function createParticles(n, particles, func, particleSize = .025, particleMass = 1) {
-    // create numParticles number of particles in a random starting position moving in a random direction
-    const minDistance = particleSize / 2;
+    createParticles(n, rngFunc, particleSize = this.R, particleMass = 1) {
+        const minDistance = particleSize;
 
-    for (let i = 0; i < n; i++) {
-        const temp = func();                // get random seeded number
-        const angle = temp * Math.PI * 2;   // Random direction (angle)
-
-        // Calculate the x and y components of the velocity based on the random angle
-        const vx = Math.sqrt(2 * 1.380649 * Math.pow(10, -23) * Params_IG.T.v / particleMass) * Math.cos(angle); // X velocity component
-        const vy = Math.sqrt(2 * 1.380649 * Math.pow(10, -23) * Params_IG.T.v / particleMass) * Math.sin(angle); // Y velocity component
-
-        // Try to find a valid non-overlapping position
-        let x = 0,
-        y = 0;
-        let attempts = 0;
-        const maxAttempts = 1000;
-
-        do {
-            x = func() * Params_IG.boxSize - (Params_IG.boxSize / 2);
-            y = func() * Params_IG.boxSize - (Params_IG.boxSize / 2);
-            attempts++;
-
-            // Break out after too many attempts to prevent infinite loop
-            if (attempts > maxAttempts) {
-                console.warn('Could not find non-overlapping position after', maxAttempts, 'attempts');
-                x = 0;
-                y = 0;
-                break;
-            }
-        } while (!isPositionValid(x, y, particles, minDistance, Params_IG.boxSize));
-
-        const atom = new Atom(
-                x, y, vx, vy, particleSize, particleMass // x, y, vx, vy, radius, mass
+        console.warn("N IS: ", n);
+        for (let i = 0; i < n; i++) {
+            const angle = rngFunc() * Math.PI * 2;
+            const speed = Math.sqrt(
+                (2 * 1.380649e-23 * Params_IG.T.v) / particleMass
             );
-        particles.push(atom);
-    }
-}
 
-// Helper function to ensure particles don't overlap initially
-function isPositionValid(x, y, particles, minDistance, boxSize) {
-    if (Math.abs(x) > boxSize / 2 - minDistance || Math.abs(y) > boxSize / 2 - minDistance) {
-        return false;
-    }
-    for (const particle of particles) {
-        const dx = x - particle.x;
-        const dy = y - particle.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        if (distance < minDistance) {
-            return false;
+            const vx = speed * Math.cos(angle);
+            const vy = speed * Math.sin(angle);
+
+            let x = 0, y = 0, attempts = 0;
+            const maxAttempts = 1000;
+
+            do {
+                x = rngFunc() * Params_IG.boxSize - Params_IG.boxSize / 2;
+                y = rngFunc() * Params_IG.boxSize - Params_IG.boxSize / 2;
+                attempts++;
+
+                if (attempts > maxAttempts) {
+                    console.warn('Failed to place particle after', maxAttempts, 'attempts');
+                    break;
+                }
+            } while (!this.isPositionValid(x, y, minDistance));
+
+            const atom = new Atom(x, y, vx, vy, particleSize, particleMass);
+            this.particles.push(atom);
         }
     }
-    return true;
+
+    isPositionValid(x, y, minDistance) {
+        const box = Params_IG.boxSize;
+
+        if (Math.abs(x) > box / 2 - minDistance || Math.abs(y) > box / 2 - minDistance) {
+            return false;
+        }
+
+        for (const p of this.particles) {
+            const dx = x - p.x;
+            const dy = y - p.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < minDistance) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    calculateVelocityDistribution() {
+        let freq = [];
+        let velocities = [];
+
+        for (let i = 0; i < this.particles.length; i++) {
+            let iv = Math.sqrt(this.particles[i].vx ** 2 + this.particles[i].vy ** 2);
+            velocities.push(iv);
+        }
+        velocities.sort((a, b) => a - b);
+
+        if (velocities.length > 0) {
+            let pValue = Math.round(velocities[0] * 1e10) / 1e10;
+            freq.push(1);
+            let j = 0;
+
+            for (let i = 1; i < velocities.length; i++) {
+                let cValue = Math.round(velocities[i] * 1e10) / 1e10;
+                if (Math.abs(cValue - pValue) < 0.005) {
+                    freq[j]++;
+                } else {
+                    freq.push(1);
+                    j++;
+                    pValue = cValue;
+                }
+            }
+        }
+
+        return { velocities, freq }; // ✅ Return both
+    }
 }
+
 
 class Params_IG extends Params {
 
     static T = undefined;
     static V = undefined;
     static N = undefined;
+    static R = 0.025;
     static timeStep = 1.0 / (1000 * 1000);
     static boxSize = 1;
     static total_time = 0;
     static sim_pressure = 0;
+    static particleDisplaySize = 0.025;
+    static particleMass = 1;
+
     push_vals_to_UI() {
         Params_IG.T.push_to_UI(this.T);
     }
@@ -281,43 +322,11 @@ class Params_IG extends Params {
 }
 
 class Coords_IG extends Coords {
-
-    constructor(...args) { // see discussion of # args at definition of abstract Coords()
-
+    constructor(...args) {
         super(...args);
+        this.constructing_init_cond = true; // or whatever is appropriate
 
-        let numParticles = Params_IG.N.v;
-        let tempK = Params_IG.T.v;
-
-        //const interactionType = false;   // collide = true
-        const boundaryType = false;      // bounce  = false 
- 
-
-
-        let particleDisplaySize = 0.025;
-        let particleMass = MassType.air;
-
-        if (this.constructing_init_cond) {
-            this.particles = [];
-            createParticles(numParticles, this.particles, this.mc.unif01_rng, particleDisplaySize, particleMass);
-            Params_IG.total_pressure = 0;
-            Params_IG.total_time = 0;
-        } else {
-            this.particles = copy(this.c_prev.particles);
-            for (let i = 0; i < numParticles; i++) {
-                if (this.particles[i] == undefined) { // If N is increased by the user create a new particle
-                    createParticles(1, this.particles, this.mc.unif01_rng, particleDisplaySize, particleMass);
-                }
-                Params_IG.total_time += Params_IG.timeStep;
-                this.particles[i].updatePosition(Params_IG.timeStep, Params_IG.boxSize, boundaryType);
-
-                if (typeof window.interactionType !== 'undefined' && window.interactionType) {
-                    handleCollisions(this.particles);
-                }
-                Params_IG.sim_pressure = Params_IG.total_pressure / (Params_IG.total_time * Params_IG.boxSize);
-            }
-
-        }
+        this.particles = new Particles(this);
     }
 }
 

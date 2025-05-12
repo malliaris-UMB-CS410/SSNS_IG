@@ -55,7 +55,9 @@ class PlotTypeCV_IG extends PlotTypeCV {
     constructor(trj) {
         super();
 
+        console.warn("PLOT TYPE CONSTRUCTOR");
         this.trj = trj;
+        this.display = "ATOM";
         this.canv_dim = parseInt(document.getElementById('UI_P_SM_IG_V').value) * 100;
         this.setup_canvas();
 
@@ -73,19 +75,34 @@ class PlotTypeCV_IG extends PlotTypeCV {
         if (this.collisionCheckbox) {
             this.collisionCheckbox.addEventListener("change", this.handleCollisionToggle.bind(this));
         }
+
+        this.velocityDistributionCheckbox = document.getElementById("UI_P_SM_IG_VD");
+        if (this.velocityDistributionCheckbox) {
+            this.velocityDistributionCheckbox.addEventListener("change", this.handleVelocityDistributionToggle.bind(this));
+        }
     }
 
     handleCollisionToggle(event) {
         const isChecked = event.target.checked;
         window.interactionType = isChecked;
+
         if (isChecked) {
-            console.log("particles collision enabled");
-            const particles = this.trj.get_x(this.trj.t)?.particles;
-            if (particles && particles.length > 0) {
-                handleCollisions(particles);
+            const particlesObj = this.trj.get_x(this.trj.t)?.particles;
+            if (particlesObj && typeof particlesObj.handleCollisions === "function") {
+                particlesObj.handleCollisions();  // ✅ No argument
             }
+        }
+    }
+
+    handleVelocityDistributionToggle(event) {
+        const isChecked = event.target.checked;
+        window.interactionType = isChecked;
+        if (isChecked) {
+            console.warn("CHECKED FOR DISPLAY VELOCITY DISTRIBUTION");
+            this.display = "Distribution";
         } else {
-            console.log("particles collision disabled");
+            this.display = "ATOM";
+            console.warn("VELOCITY DISTRIBUTION DISABLED");
         }
     }
 
@@ -108,6 +125,11 @@ class PlotTypeCV_IG extends PlotTypeCV {
         this.cc.fill();
     }
 
+    draw_bar(x, height, bar_width, bar_height){
+    this.cc.fillStyle = "blue";
+    this.cc.fillRect(x, height, bar_width, bar_height);
+    }
+
     get_ext_x_axis_lbl_str() {
         return "x";
     }
@@ -122,17 +144,42 @@ class PlotTypeCV_IG extends PlotTypeCV {
 
     update_canvas(t) {
         this.clear_canvas();
-        for (let i = 0; i < Params_IG.N.v; i++) {
-            let cp = this.trj.get_x(t).particles[i];
-            let halfBoxW = Params_IG.boxSize / 2;
-            let halfBoxH = Params_IG.boxSize / 2;
+        
+        if (this.display == "ATOM") {
+            console.warn("SHOULD DISPLAY ATOMS IN CANVAS");
+            for (let i = 0; i < Params_IG.N.v; i++) {
+                let cp = this.trj.get_x(t).particles.particles[i];
 
-            // Normalize positions to [0, 1]
-            let normX = (cp.x + halfBoxW) / Params_IG.boxSize;
-            let normY = (cp.y + halfBoxH) / Params_IG.boxSize;
+                let halfBox = Params_IG.boxSize / 2;
+                let normX = (cp.x + halfBox) / Params_IG.boxSize;
+                let normY = (cp.y + halfBox) / Params_IG.boxSize;
+                this.draw_circle(normX, normY, Params_IG.R);
+            }
+        } else {
+            let { velocities, freq } = this.trj.get_x(t).particles.calculateVelocityDistribution();
+            console.warn("SHOULD DISPLAY FREQUENCY IN CANVAS | Total: ", velocities.length, " - ", freq.length);
 
-            this.draw_circle(normX, normY, cp.radius); // divide cp.radius by boxwidth to adjust particles size relative to box size
+            if (velocities.length && freq.length) {
+                const canvasW = this.cc.canvas.width;
+                const canvasH = this.cc.canvas.height;
 
+                const maxFrequency = Math.max(...freq);
+                const barWidth = Math.max(1, (canvasW * 0.8) / freq.length);
+                const spacing = Math.max(1, (canvasW * 0.2) / (freq.length + 1));
+                const minHeight = 2;  // Minimum visible bar height
+
+                let x = spacing;
+
+                for (let i = 0; i < freq.length; i++) {
+                    let rawHeight = (freq[i] / maxFrequency) * (canvasH * 0.8);
+                    const barHeight = Math.max(minHeight, rawHeight);
+                    const y = canvasH - barHeight;
+
+                    console.log(`DRAWING BAR: x=${x}, y=${y}, w=${barWidth}, h=${barHeight}`);
+                    this.draw_bar(x, y, barWidth, barHeight);
+                    x += barWidth + spacing;
+                }
+            }
         }
     }
 
