@@ -207,8 +207,9 @@ function handleCollisions(particles) {
     }
 }
 
+// function to to make the 2D boltz dist to sample the prng velocity 
 function gaussian(func, mean = 0, stdDev = 1) {
-    // this uses the box-muller trans
+    // this uses the box-muller transform
     let u1 = func(); 
     let u2 = func();
 
