@@ -226,46 +226,45 @@ class Particles {
     createParticles(n, func, particleSize = .025, particleMass = 1) {
        const minDistance = particleSize / 2;
 
-    for (let i = 0; i < n; i++) {              
-        const angle = func() * Math.PI * 2;   // Random direction (angle) using the prng
+        for (let i = 0; i < n; i++) {              
+            const angle = func() * Math.PI * 2;   // Random direction (angle) using the prng
 
-        //assign a random velocity based on the temp using boltzman dist. 
-        const boltz = Math.sqrt(1.38064852e-23 * Params_IG.T.v / particleMass);
+            //assign a random velocity based on the temp using boltzman dist. 
+            const boltz = Math.sqrt(1.38064852e-23 * Params_IG.T.v / particleMass);
 
-        const velo = Params_IG.gaussian(func, 0, boltz);
-        const vx = velo * Math.cos(angle);
-        const vy = velo * Math.sin(angle);
+            const velo = Params_IG.gaussian(func, 0, boltz);
+            const vx = velo * Math.cos(angle);
+            const vy = velo * Math.sin(angle);
+            /*
+            // Calculate the x and y components of the velocity based on the random angle
+            const vx = Math.sqrt(2 * 1.380649 * Math.pow(10, -23) * Params_IG.T.v / particleMass) * Math.cos(angle); // X velocity component
+            const vy = Math.sqrt(2 * 1.380649 * Math.pow(10, -23) * Params_IG.T.v / particleMass) * Math.sin(angle); // Y velocity component
+            */
 
-        /*
-        // Calculate the x and y components of the velocity based on the random angle
-        const vx = Math.sqrt(2 * 1.380649 * Math.pow(10, -23) * Params_IG.T.v / particleMass) * Math.cos(angle); // X velocity component
-        const vy = Math.sqrt(2 * 1.380649 * Math.pow(10, -23) * Params_IG.T.v / particleMass) * Math.sin(angle); // Y velocity component
-        */
+            // Try to find a valid non-overlapping position
+            let x = 0,
+            y = 0;
+            let attempts = 0;
+            const maxAttempts = 1000;
 
-        // Try to find a valid non-overlapping position
-        let x = 0,
-        y = 0;
-        let attempts = 0;
-        const maxAttempts = 1000;
+            do {
+                x = func() * Params_IG.boxSize - (Params_IG.boxSize / 2);
+                y = func() * Params_IG.boxSize - (Params_IG.boxSize / 2);
+                attempts++;
 
-        do {
-            x = func() * Params_IG.boxSize - (Params_IG.boxSize / 2);
-            y = func() * Params_IG.boxSize - (Params_IG.boxSize / 2);
-            attempts++;
+                // Break out after too many attempts to prevent infinite loop
+                if (attempts > maxAttempts) {
+                    console.warn('Could not find non-overlapping position after', maxAttempts, 'attempts');
+                    x = 0;
+                    y = 0;
+                    break;
+                }
+            } while (!this.isPositionValid(x, y, minDistance));
 
-            // Break out after too many attempts to prevent infinite loop
-            if (attempts > maxAttempts) {
-                console.warn('Could not find non-overlapping position after', maxAttempts, 'attempts');
-                x = 0;
-                y = 0;
-                break;
-            }
-        } while (!this.isPositionValid(x, y, minDistance));
-
-        const atom = new Atom(
-                x, y, vx, vy, particleSize, particleMass // x, y, vx, vy, radius, mass
-            );
-            this.particles.push(atom);
+            const atom = new Atom(
+                    x, y, vx, vy, particleSize, particleMass // x, y, vx, vy, radius, mass
+                );
+                this.particles.push(atom);
         }
     }
 
@@ -290,7 +289,6 @@ class Particles {
     calculateVelocityDistribution() {
         const velocities = this.particles.map(p => Math.sqrt(p.vx ** 2 + p.vy ** 2));
         const freq = [];
-
         if (velocities.length === 0) return { velocities: [], freq: [] };
 
         const maxV = Math.max(...velocities);
@@ -312,6 +310,56 @@ class Particles {
 
         return { velocities: binCenters, freq };
     }
+
+    redistributeThermalEnergy(rngFunc = Math.random) {
+        const k = 1.380649e-23;
+        const m = Params_IG.particleMass;
+        const targetTemp = Params_IG.T.v;
+
+        const targetE = this.N * k * targetTemp;
+
+        // Compute current total kinetic energy
+        let currentE = 0;
+        for (let p of this.particles) {
+            const v2 = p.vx ** 2 + p.vy ** 2;
+            currentE += 0.5 * m * v2;
+        }
+
+        const deltaE_total = targetE - currentE;
+
+        // If T = 0 or target energy is 0, zero all velocities
+        if (targetE <= 0) {
+            for (let p of this.particles) {
+                p.vx = 0;
+                p.vy = 0;
+            }
+            return;
+        }
+
+        // Generate Gaussian weights (positive-only)
+        let weights = [];
+        let totalWeight = 0;
+        for (let i = 0; i < this.N; i++) {
+            let w = Math.abs(Params_IG.gaussian(rngFunc));
+            weights.push(w);
+            totalWeight += w;
+        }
+
+        // Apply energy change to each particle
+        for (let i = 0; i < this.N; i++) {
+            const p = this.particles[i];
+            const angle = Math.atan2(p.vy, p.vx);
+            const v2 = p.vx ** 2 + p.vy ** 2;
+            const deltaE_i = (weights[i] / totalWeight) * deltaE_total;
+            const v2_new = v2 + (2 * deltaE_i / m);
+            const v_new = Math.sqrt(Math.max(v2_new, 0));
+            p.vx = v_new * Math.cos(angle);
+            p.vy = v_new * Math.sin(angle);
+        }
+    }
+
+
+
 }
 
 
@@ -327,6 +375,7 @@ class Params_IG extends Params {
     static sim_pressure = 0;
     static particleDisplaySize = 0.025;
     static particleMass = MassType.air;
+    static expectedVelocity = 0;
 
     push_vals_to_UI() {
         Params_IG.T.push_to_UI(this.T);
@@ -351,7 +400,9 @@ class Coords_IG extends Coords {
         const numParticles = Params_IG.N.v;
         const particleDisplaySize = Params_IG.particleDisplaySize;
         const particleMass = Params_IG.particleMass;
+        this.temperature = Params_IG.T.v;
         const boundaryType = false; // bounce mode
+        let sum = 0;
 
         if (this.constructing_init_cond) {
             // Initial condition
@@ -367,6 +418,7 @@ class Coords_IG extends Coords {
 
             for (let i = 0; i < numParticles; i++) {
                 // If N increased
+                 sum += Math.sqrt(this.particles.particles[i].vx ** 2 + this.particles.particles[i].vy ** 2);
                 if (this.particles.particles[i] === undefined) {
                     this.particles.createParticles(1, this.mc.unif01_rng, particleDisplaySize, particleMass);
                 }
@@ -374,10 +426,15 @@ class Coords_IG extends Coords {
                 Params_IG.total_time += Params_IG.timeStep;
                 this.particles.particles[i].updatePosition(Params_IG.timeStep, Params_IG.boxSize, boundaryType);
             }
-            console.log("THIS IS MC: ",this.mc);
+            Params_IG.expectedVelocity = sum/Params_IG.N.v;
+
+            console.log("Temp: ", Params_IG.T.v, " | N: ", Params_IG.N.v, " | Volume: ", Params_IG.V.v, " | Sim_Pressure: ", Params_IG.sim_pressure, 
+                        " | Expected Velocity: ", Params_IG.expectedVelocity);
             if (this.mc.collisionEnabled) {
                     this.particles.handleCollisions();
                 }
+
+            if(this.c_prev.temperature != this.temperature) this.particles.redistributeThermalEnergy(this.mc.unif01_rng);
 
             Params_IG.sim_pressure = Params_IG.total_pressure / (Params_IG.total_time * Params_IG.boxSize);
         }
