@@ -209,7 +209,6 @@ class Particles {
 
     handleCollisions() {
         if (typeof interactionType !== 'undefined' && interactionType) {
-            console.warn("HANDLE COLLISIONS CALLED");
             for (let i = 0; i < this.particles.length; i++) {
                 for (let j = i + 1; j < this.particles.length; j++) {
                     const p1 = this.particles[i];
@@ -312,54 +311,33 @@ class Particles {
     }
 
     redistributeThermalEnergy(rngFunc = Math.random) {
-        const k = 1.380649e-23;
+        const k = Params_IG.boltzmanConstant;
         const m = Params_IG.particleMass;
-        const targetTemp = Params_IG.T.v;
+        const N = this.N;
+        const T = Params_IG.T.v;
+        const targetE_total = N * k * T;
 
-        const targetE = this.N * k * targetTemp;
-
-        // Compute current total kinetic energy
-        let currentE = 0;
-        for (let p of this.particles) {
-            const v2 = p.vx ** 2 + p.vy ** 2;
-            currentE += 0.5 * m * v2;
-        }
-
-        const deltaE_total = targetE - currentE;
-
-        // If T = 0 or target energy is 0, zero all velocities
-        if (targetE <= 0) {
-            for (let p of this.particles) {
-                p.vx = 0;
-                p.vy = 0;
-            }
-            return;
-        }
-
-        // Generate Gaussian weights (positive-only)
+        // Generate positive Gaussian weights
         let weights = [];
         let totalWeight = 0;
-        for (let i = 0; i < this.N; i++) {
+        for (let i = 0; i < N; i++) {
             let w = Math.abs(Params_IG.gaussian(rngFunc));
             weights.push(w);
             totalWeight += w;
         }
 
-        // Apply energy change to each particle
-        for (let i = 0; i < this.N; i++) {
+        // Scale each particle's velocity based on energy share
+        for (let i = 0; i < N; i++) {
             const p = this.particles[i];
-            const angle = Math.atan2(p.vy, p.vx);
-            const v2 = p.vx ** 2 + p.vy ** 2;
-            const deltaE_i = (weights[i] / totalWeight) * deltaE_total;
-            const v2_new = v2 + (2 * deltaE_i / m);
+            const angle = Math.atan2(p.vy, p.vx);  // preserve direction
+            const energy_share = (weights[i] / totalWeight) * targetE_total;
+            const v2_new = (2 * energy_share) / m;
             const v_new = Math.sqrt(Math.max(v2_new, 0));
+
             p.vx = v_new * Math.cos(angle);
             p.vy = v_new * Math.sin(angle);
         }
     }
-
-
-
 }
 
 
@@ -369,13 +347,15 @@ class Params_IG extends Params {
     static V = undefined;
     static N = undefined;
     static R = 0.025;
-    static timeStep = 1.0 / (1000 * 1000);
+    static timeStep = 1.0 / (1000 * 100);
     static boxSize = 1;
     static total_time = 0;
     static sim_pressure = 0;
+    static sim_kinetic_energy = 0;
     static particleDisplaySize = 0.025;
     static particleMass = MassType.air;
     static expectedVelocity = 0;
+    static boltzmanConstant = 1.380649e-23;
 
     push_vals_to_UI() {
         Params_IG.T.push_to_UI(this.T);
@@ -383,6 +363,22 @@ class Params_IG extends Params {
 
     get_info_str() {
         return "T = " + this.T;
+    }
+    static get_expected_kinetic_energy() {
+        const N = Params_IG.N.v;
+        const T = Params_IG.T.v;
+        const k = Params_IG.boltzmanConstant;
+
+        // For 2D ideal gas: E_kinetic_total = N * k * T
+        return N * k * T;
+    }
+
+    static get_expected_pressure(){
+        const N = Params_IG.N.v;
+        const T = Params_IG.T.v;
+        const V = Params_IG.V.v;  // interpreted as box area in 2D
+        const k = Params_IG.boltzmanConstant;
+        return (N * k * T) / V;
     }
 
     static gaussian(func, mean = 0, stdDev = 1) {
@@ -418,18 +414,23 @@ class Coords_IG extends Coords {
 
             for (let i = 0; i < numParticles; i++) {
                 // If N increased
-                 sum += Math.sqrt(this.particles.particles[i].vx ** 2 + this.particles.particles[i].vy ** 2);
                 if (this.particles.particles[i] === undefined) {
                     this.particles.createParticles(1, this.mc.unif01_rng, particleDisplaySize, particleMass);
                 }
-
+                sum += Math.sqrt(this.particles.particles[i].vx ** 2 + this.particles.particles[i].vy ** 2);
                 Params_IG.total_time += Params_IG.timeStep;
                 this.particles.particles[i].updatePosition(Params_IG.timeStep, Params_IG.boxSize, boundaryType);
             }
             Params_IG.expectedVelocity = sum/Params_IG.N.v;
 
-            console.log("Temp: ", Params_IG.T.v, " | N: ", Params_IG.N.v, " | Volume: ", Params_IG.V.v, " | Sim_Pressure: ", Params_IG.sim_pressure, 
+            console.log("Temp: ", Params_IG.T.v, " | N: ", Params_IG.N.v, " | Volume: ", Params_IG.V.v);
+            
+            console.log("Expected Pressure -> ", Params_IG.get_expected_pressure(), " <||> Simulated Pressure -> ", Params_IG.sim_pressure);
+            console.log("Expected Kinetic Energy -> ", Params_IG.get_expected_kinetic_energy(), " <||> Simulated Kinetic Energy -> ", Params_IG.sim_pressure);
+            /*
+            " | Sim_Pressure: ", Params_IG.sim_pressure, 
                         " | Expected Velocity: ", Params_IG.expectedVelocity);
+            */
             if (this.mc.collisionEnabled) {
                     this.particles.handleCollisions();
                 }
