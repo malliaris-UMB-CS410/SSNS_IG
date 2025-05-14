@@ -366,12 +366,15 @@
                             <div class="input-group input-group-lg d-flex">
                                 <div class="input-group-prepend flex-grow-1"
                                      onclick="window.sim.ui.hv.show_view('HV_C_RNG_RECR_TRAJ'); "><span
-                                        class="input-group-text flex-grow-1 ctrl_eff_immed"> $$ \mathrm{Collision?} $$ </span>
+                                        class="input-group-text flex-grow-1 ctrl_eff_immed"> $$ \mathrm{Collision} $$ </span>
                                 </div>
                                 <div class="input-group-append">
-                                    <div class="input-group-text lrg_bg_areas"><label
-                                            for="UI_P_SM_IG_C"></label><input type="checkbox"
-                                                                              id="UI_P_SM_IG_C"></div>
+                                    <div class="input-group-text lrg_bg_areas">
+                                        <label for="UI_P_SM_IG_C"></label>
+                                        <!-- on update passes the negation of the current value as an integer converted to a String -->
+                                        <input id="UI_P_SM_IG_C" class="form-control" type="checkbox" min="0" max="1" step="1"
+                                               value="0" onchange="console.log(this.value);Params_IG.C.try_update(String(+!(parseInt(this.value)))); ">
+                                    </div>
                                 </div>
                             </div>
                         </div>
