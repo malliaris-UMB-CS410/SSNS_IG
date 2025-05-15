@@ -191,17 +191,14 @@ class Atom {
 
 // Check and resolve collisions between all particles
 function handleCollisions(particles) {
-    // if interaction type is set to collision, collide. else ideal gas
-    if (interactionType) {
-        // Check each pair of particles exactly once
-        for (let i = 0; i < particles.length; i++) {
-            for (let j = i + 1; j < particles.length; j++) {
-                const particle1 = particles[i];
-                const particle2 = particles[j];
-
-                if (particle1.checkCollision(particle2)) {
-                    particle1.resolveCollision(particle2);
-                }
+    // Check each pair of particles exactly once
+    for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+            const particle1 = particles[i];
+            const particle2 = particles[j];
+            
+            if (particle1.checkCollision(particle2)) {
+                particle1.resolveCollision(particle2);
             }
         }
     }
@@ -310,7 +307,6 @@ class Coords_IG extends Coords {
         let numParticles = Params_IG.N.v;
         let tempK = Params_IG.T.v;
 
-        //const interactionType = false;   // collide = true
         const boundaryType = false;      // bounce  = false 
  
 
@@ -329,10 +325,11 @@ class Coords_IG extends Coords {
                 if (this.particles[i] == undefined) { // If N is increased by the user create a new particle
                     createParticles(1, this.particles, this.mc.unif01_rng, particleDisplaySize, particleMass);
                 }
+
                 Params_IG.total_time += Params_IG.timeStep;
                 this.particles[i].updatePosition(Params_IG.timeStep, Params_IG.boxSize, boundaryType);
 
-                if (typeof window.interactionType !== 'undefined' && window.interactionType) {
+                if (Params_IG.C.v) {
                     handleCollisions(this.particles);
                 }
             }

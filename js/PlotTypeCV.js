@@ -69,7 +69,7 @@ class PlotTypeCV_IG extends PlotTypeCV {
             });
         }
 
-        this.collisionCheckbox = document.getElementById("UI_P_SM_IG_C");
+        /*this.collisionCheckbox = document.getElementById("UI_P_SM_IG_C");
         if (this.collisionCheckbox) {
             this.collisionCheckbox.addEventListener("change", this.handleCollisionToggle.bind(this));
         }
@@ -86,7 +86,7 @@ class PlotTypeCV_IG extends PlotTypeCV {
             }
         } else {
             console.log("particles collision disabled");
-        }
+        }*/
     }
 
     updateCanvasSize() {
