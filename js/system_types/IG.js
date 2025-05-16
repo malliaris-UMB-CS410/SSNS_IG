@@ -231,11 +231,6 @@ function createParticles(n, particles, func, particleSize = .025, particleMass =
         const vx = velo * Math.cos(angle);
         const vy = velo * Math.sin(angle);
 
-        /*
-        // Calculate the x and y components of the velocity based on the random angle
-        const vx = Math.sqrt(2 * 1.380649 * Math.pow(10, -23) * Params_IG.T.v / particleMass) * Math.cos(angle); // X velocity component
-        const vy = Math.sqrt(2 * 1.380649 * Math.pow(10, -23) * Params_IG.T.v / particleMass) * Math.sin(angle); // Y velocity component
-        */
 
         // Try to find a valid non-overlapping position
         let x = 0,
